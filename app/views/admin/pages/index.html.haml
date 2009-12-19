@@ -1,0 +1,40 @@
+- content_for :meta_title do
+  Pages
+
+- content_for :head do
+  %style{:type => "text/css", :media => "screen"}
+    ul.sortable { list-style: none; margin: 4px 0 0 -30px; }
+    ul.sortable ul { margin: 4px 0 0 -20px; }
+    ul.sortable li { line-height: 2em; }
+    div.page-title-header { float: left; width: 60px; font-weight: bold; color: #666; margin: 0 0 0 10px; }
+    div.page-options-header { float: right; width: 60px; text-align: left; font-weight: bold; color: #666; }
+    div.page-images-header { float: right; width: 100px; text-align: left; font-weight: bold; margin-right: 20px; color: #666; }
+    div.page-testimonials-header { float: right; width: 100px; text-align: left; font-weight: bold; margin-right: 20px; color: #666; }
+    div.page-title { float: left; margin-right: 20px; }
+    div.page-options { text-align: right; float: right; width: 60px; }
+    div.page-images { float: right; margin-right: 20px; width: 100px; text-align: left; }
+    div.page-testimonials { float: right; margin-right: 20px; width: 100px; text-align: left; }
+%h1= large_icon('Clipboard Copy') + ' ' + yield(:meta_title).strip
+
+.box
+  #reorder_status.gray.float-right{:style => "display: none"}
+    = spinner
+    Reordering pages...
+  %span.hmenu
+    = icon "Plus", new_admin_page_path
+    = link_to "Make a new page", new_admin_page_path
+  %span.hmenu
+    = icon "Plus", footer_admin_pages_path
+    = link_to "Organize Footer Menus", footer_admin_pages_path
+%br
+%div.page-title-header
+  Title
+%div.page-options-header
+  Options
+- if @cms_config['features']['testimonials']
+  %div.page-images-header
+    Testimonials
+%div.page-images-header
+  Images
+= clear
+- build_menu

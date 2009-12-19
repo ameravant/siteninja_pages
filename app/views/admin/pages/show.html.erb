@@ -1,0 +1,63 @@
+<%- content_for :title do -%><%= h @page.title %><%- end -%>
+
+<%- content_for :crumb do -%>
+  <%= link_to "Dashboard", "/admin" %> &gt;
+  <%= link_to "Pages", admin_pages_path %> &gt;
+  <%= yield :title %>
+<%- end -%>
+
+<h1><%= yield :title %></h1>
+
+<div>
+  <div id="reorder_status" class="gray float-right" style="display: none;">
+    <%= spinner %> Reordering images...
+    <span id="reorder_success" class="bold green" style="display: none;">Done!</span>
+    <span id="reorder_failure" class="bold red" style="display: none;">FAILED!</span>
+  </div>
+  <span class="hmenu">
+    <%= icon "Plus", new_admin_page_image_path(@page) %>
+    <%= link_to "Add a image to this page", new_admin_page_image_path(@page) %>
+  </span>
+  <span class="hmenu">
+    <%= icon "Gear", edit_admin_page_path(@page) %>
+    <%= link_to "Edit page", edit_admin_page_path(@page) %>
+  </span>
+</div>
+
+<br/>
+
+<%- unless @images.empty? -%>
+  <ul id="images">
+  <%- for image in @images -%>
+    <li class="image" id="<%= dom_id image %>">
+      <div class="image-thumb">
+        <%= image_tag(image.image.url(:small), :alt => h(image.caption)) %>
+      </div>
+      <div class="image-options">
+        <%= link_to icon("Search"), image.image.url(:large), :class => "icon", :rel => "lightbox[page]", :title => h(image.caption), :class => "fancy" %>
+        <%= icon "Write", edit_admin_page_image_path(@page, image) %>
+        <%= link_to_remote icon("Trash"),
+          :url => [:admin, @page, image],
+          :method => :delete,
+          :class => "icon",
+          :confirm => "Really delete this image? This cannot be undone." %>
+      </div>
+    </li>
+  <%- end -%>
+  </ul>
+  <%= clear %>
+
+  <%= sortable_element :images,
+    :constraint => false,
+    :url => [:reorder, :admin, @page, :images],
+    :method => :put,
+    :loading => "$('reorder_success').hide(); $('reorder_failure').hide(); $('reorder_status').show()",
+    :success => "$('reorder_success').show()",
+    :failure => "$('reorder_failure').show()",
+    :complete => visual_effect(:fade, "reorder_status", :delay => 1) if @images.size > 1 %>
+
+  <p>
+    <%= icon "Info2" %> Reorder images by clicking and dragging them with your mouse. The first image in 
+    page will be used for the main page image.
+  </p>
+<%- end -%>

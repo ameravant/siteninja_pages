@@ -1,0 +1,5 @@
+var tinyMCELinkList = new Array(
+  <%- @tinymce_assets.each_with_index do |a, i| -%>
+  ["<%= a.name.gsub(/\"/,'\"') %>", "<%= a.file.url %>"]<%= ',' unless i == (@tinymce_assets.size - 1) %>
+  <%- end -%>
+);

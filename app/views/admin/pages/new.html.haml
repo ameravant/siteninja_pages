@@ -1,0 +1,18 @@
+- content_for :head do
+  %script{:type => "text/javascript"} 
+    Event.observe(window, "load", function() {
+    Event.observe($("page_name"),"blur",function() {
+    if (tinyMCE.activeEditor.getContent() == "") tinyMCE.activeEditor.setContent("<h1>" + $("page_name").value + "</h1>");
+    })
+    Event.observe($("test"),"click",function() {
+    tinyMCE.activeEditor.updateContent("<p>test</p>");
+    })
+    });
+
+- content_for :meta_title do
+  Make a new page
+
+%h1
+  = yield :meta_title
+- form_for :page, :url => admin_pages_path, :html => { :onsubmit => "form_submitted();" } do |f|
+  = render :partial => "form", :locals => { :f => f }

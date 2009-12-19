@@ -1,0 +1,23 @@
+- content_for :meta_title do
+  Pages
+
+- content_for :head do
+  %style{:type => "text/css", :media => "screen"}
+    ul.sortable { list-style: none; }
+    ul.sortable li { line-height: 2em; }
+
+%h1= yield :meta_title
+
+.box
+  #reorder_status.gray.float-right{:style => "display: none"}
+    = spinner
+    Reordering pages...
+  %span.hmenu
+    = icon "Plus", new_admin_page_path
+    = link_to "Make a new page", new_admin_page_path
+  %span.hmenu
+    = icon "Plus", footer_admin_pages_path
+    = link_to "Organize Footer Menus", footer_admin_pages_path
+%br
+
+- build_footer_menu

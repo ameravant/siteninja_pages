@@ -1,0 +1,5 @@
+= render :partial => "/newsletters/signup_for_sidebar", :locals => { :testimonial => @testimonial } if @page.show_newsletter_signup?  and @cms_config['modules']['newsletters']
+= render :partial => "/events/events_for_sidebar" if @page.show_events? and @cms_config['modules']['events']
+= render :partial => "/articles/articles_for_sidebar" if @page.show_articles? and @cms_config['modules']['blog']
+= render :partial => "/articles/categories_for_sidebar" if @page.show_article_cats? and @cms_config['modules']['blog']
+= render :partial => "/testimonials/testimonial_for_sidebar", :locals => { :testimonial => @testimonial } if @page.show_featured_testimonial?  and @cms_config['features']['testimonials']

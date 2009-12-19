@@ -1,0 +1,42 @@
+#features.galleryview
+  - if @cms_config['website']['demo'] && @cms_config['website']['demo_message']
+    %div{:style => "float: left; background: #e6e6e6; color: #333; position: absolute; z-index: 100; padding: 5px; font-size: 1.2em; font-family: Georgia, \"Times New Roman\", Serif; font-weight: bold;"}
+      = @cms_config['website']['demo_message']
+  - for feature in @features
+    - if feature.featurable_type == "Image"
+      .panel
+        = link_to (image_tag(feature.featurable.featured, :title => feature.featurable.title, :alt => feature.featurable.title), [feature.featurable.viewable, feature.featurable])
+        .panel-overlay
+          %h2
+            = h feature.featurable.title if feature.featurable.title
+          %p
+            = h feature.featurable.caption
+            = link_to "Read more &raquo;", [feature.featurable.viewable, feature.featurable]
+    - elsif feature.featurable_type == "Page"
+      .panel
+        = link_to (image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{feature.featurable.permalink}")
+        .panel-overlay
+          %h2
+            = h feature.featurable.title if feature.featurable.title
+          %p
+            = h feature.featurable.description
+            = link_to "Read more &raquo;", "/#{feature.featurable.permalink}"
+    - else
+      .panel
+        = link_to (image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable)
+        .panel-overlay
+          %h2
+            = h feature.featurable.title
+          %p
+            = h feature.featurable.description.gsub(/<\/?[^>]*>/, "")
+            = link_to "Read more &raquo;", [feature.featurable]
+  - if @settings.show_feature_thumbs
+    %ul.filmstrip
+      - for feature in @features
+        %li
+          - unless feature.featurable_type == "Image"
+            = image_tag(feature.featurable.images.sort_by(&:position).first.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px")
+          - else
+            = image_tag(feature.featurable.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px")
+- @slideshow = true
+

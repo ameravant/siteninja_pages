@@ -1,0 +1,84 @@
+= f.error_messages :message => "Please fix these things and try again:", :header_message => "We couldn't save your page"
+
+.options
+  %h3
+    =icon('Gear')
+    Options
+  #options
+    
+    = f.check_box :automatically_embed_videos_and_images
+    = f.label :automatically_embed_videos_and_images, "Automatically embed videos/images"
+    %br
+    = f.check_box :show_in_footer
+    = f.label :show_in_footer, "Show in Footer Menu"
+    - if @cms_config['features']['testimonials']
+      %br
+      = f.check_box :show_featured_testimonial
+      = f.label :show_featured_testimonial, "Show Testimonial in Sidebar"
+      %br
+      %div{ :class => "small gray", :style => "margin: 0 0 0 20px;" } Displays a random featured testimonial.
+    - if @cms_config['modules']['newsletters']
+      = f.check_box :show_newsletter_signup
+      = f.label :show_newsletter_signup
+      %div{ :class => "small gray", :style => "margin: 0 0 0 20px;" } Displays sign up box in sidebar.
+      = f.check_box :show_articles
+      = f.label :show_articles, "Show articles on this page?"
+      %br
+      = f.check_box :show_article_cats
+      = f.label :show_article_cats, "Show article categories in sidebar"
+      %br
+      = label_tag :author, "Filter by Author"
+      = collection_select(:page, :author_id, @authors, :id, :name, {:include_blank => "All"})
+      %br
+      = label_tag :category, "Filter by Category"
+      = collection_select(:page, :article_category_id, @article_categories, :id, :name, {:include_blank => "All"})
+    -if @cms_config['modules']['events']
+      %br
+        = f.check_box :show_events
+        = f.label :show_events, "Show events on this page?"
+
+
+%table{:cellspacing => 0, :style => "float: left; width: 550px;"}
+  %tr{:class => cycle('odd', 'even')}
+    %td
+      = f.label :title, "Name"
+      .small *required
+    %td= f.text_field :title, :size => 25, :class => "big"
+  %tr{:class => cycle('odd', 'even')}
+    %td Show in menu
+    %td{:class => "radio-buttons"}
+      = f.radio_button :status, "visible"
+      %label{:for => "page_status_visible"} Visible
+      = f.radio_button :status, "hidden"
+      %label{:for => "page_status_hidden"} Hidden
+  %tr{:class => cycle('odd', 'even')}
+    %td= f.label :parent_id, "Menu placement"
+    %td
+      %select{:name => "page[parent_id]", :id => "page_parent_id"}
+        - for o in @options_for_parent_id
+          %option{:value => o[1] , :selected => (@page.parent_id and o[1] == @page.parent_id ? "selected" : nil)}= o[0]
+  %tr.top{:class => cycle('odd', 'even')}
+    %td
+      = f.label :meta_title
+      .small *required
+    %td
+      = f.text_area :meta_title, :size => "44x2"
+  %tr.top{:class => cycle('odd', 'even')}
+    %td= f.label :meta_description
+    %td= f.text_area :meta_description, :size => "44x2"
+
+= clear
+
+%h2= f.label :body
+.options
+  - unless @page.images.empty?
+    = render :partial => "admin/shared/image_options", :locals => {:images => @page.images}
+  - unless @page.testimonials.empty?
+    = render :partial => "admin/testimonials/testimonial_options", :locals => {:testimonials => @page.testimonials}
+
+%div
+  = f.text_area :body, :size => "100x40", :class => "mceEditor"
+
+- fancy_submit admin_pages_path do
+  = submit_tag "Save page"
+
