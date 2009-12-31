@@ -20,6 +20,7 @@
     - if @cms_config['modules']['newsletters']
       = f.check_box :show_newsletter_signup
       = f.label :show_newsletter_signup
+    - if @cms_config['modules']['blog']
       %div{ :class => "small gray", :style => "margin: 0 0 0 20px;" } Displays sign up box in sidebar.
       = f.check_box :show_articles
       = f.label :show_articles, "Show articles on this page?"
