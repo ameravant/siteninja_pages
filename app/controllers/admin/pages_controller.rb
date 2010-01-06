@@ -2,8 +2,9 @@ class Admin::PagesController < AdminController
   unloadable # http://dev.rubyonrails.org/ticket/6001
   # cache_sweeper :page_sweeper
   before_filter :authenticate
-  before_filter :get_pages, :only => [ :index, :edit, :new, :create ]
-  before_filter :build_options, :only => [ :edit, :new, :create ]
+  before_filter :get_pages, :only => [ :index, :edit, :new, :create, :update ]
+  before_filter :build_options, :only => [ :edit, :new, :create, :update ]
+  before_filter :get_articles, :only => [ :edit, :new, :create, :update ]
   before_filter :find_page, :only => [ :edit, :update, :show ]
   
   # Configure breadcrumbs
@@ -16,8 +17,6 @@ class Admin::PagesController < AdminController
   
   def edit
     add_breadcrumb @page.name
-    @authors = Person.all
-    @article_categories = ArticleCategory.active
   end
   
   def show
@@ -26,8 +25,6 @@ class Admin::PagesController < AdminController
   
   def new
     @page = Page.new
-    @authors = Person.all
-    @article_categories = ArticleCategory.active
   end
   
   def create
@@ -62,7 +59,7 @@ class Admin::PagesController < AdminController
       flash[:notice] = "#{@page.name} page updated."
       redirect_to admin_pages_path
     else
-      render edit_admin_page_path(@page)
+      render :edit, :id => @page
     end
   end
   
@@ -110,7 +107,6 @@ class Admin::PagesController < AdminController
   def build_options(parent_id=nil)
     children = @pages.select { |menu_page| menu_page.parent_id == parent_id }
     @options_for_parent_id_level = @options_for_parent_id_level + 1
-  
     unless children.empty?
       for child in children
         nbsp_string = '&nbsp;' * (@options_for_parent_id_level * @options_for_parent_id_level) unless @options_for_parent_id_level == 1
@@ -120,6 +116,11 @@ class Admin::PagesController < AdminController
     end
     
     @options_for_parent_id_level = @options_for_parent_id_level - 1
+  end
+  
+  def get_articles
+    @authors = Person.all
+    @article_categories = ArticleCategory.active
   end
   
   def authenticate
