@@ -62,7 +62,7 @@ class Admin::PagesController < AdminController
       flash[:notice] = "#{@page.name} page updated."
       redirect_to admin_pages_path
     else
-      render edit_admin_page_path(@page)
+      render :action => "edit", :id => @page
     end
   end
   
