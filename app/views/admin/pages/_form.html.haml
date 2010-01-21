@@ -11,6 +11,9 @@
     %br
     = f.check_box :show_in_footer
     = f.label :show_in_footer, "Show in Footer Menu"
+    %br
+    = f.check_box :show_side_column_text
+    = f.label :show_side_column_text
     - if @cms_config['features']['testimonials']
       %br
       = f.check_box :show_featured_testimonial
