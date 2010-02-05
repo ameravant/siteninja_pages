@@ -23,8 +23,8 @@
     - if @cms_config['modules']['newsletters']
       = f.check_box :show_newsletter_signup
       = f.label :show_newsletter_signup
-    - if @cms_config['modules']['blog']
       %div{ :class => "small gray", :style => "margin: 0 0 0 20px;" } Displays sign up box in sidebar.
+    - if @cms_config['modules']['blog']
       = f.check_box :show_articles
       = f.label :show_articles, "Show articles on this page?"
       %br
@@ -45,7 +45,7 @@
 %table{:cellspacing => 0, :style => "float: left; width: 550px;"}
   %tr{:class => cycle('odd', 'even')}
     %td
-      = f.label :title, "Name"
+      = f.label :title, "Menu Title"
       .small *required
     %td= f.text_field :title, :size => 25, :class => "big"
   %tr{:class => cycle('odd', 'even')}
@@ -63,7 +63,7 @@
           %option{:value => o[1] , :selected => (@page.parent_id and o[1] == @page.parent_id ? "selected" : nil)}= o[0]
   %tr.top{:class => cycle('odd', 'even')}
     %td
-      = f.label :meta_title
+      = f.label :meta_title, "Page Title"
       .small *required
     %td
       = f.text_area :meta_title, :size => "44x2"
