@@ -4,6 +4,7 @@ class PagesController < ApplicationController
   def show
     begin
       @page = Page.find_by_permalink! params[:id]
+      @menu = @page.menus.first
       @images = @page.images
       @footer_pages = Page.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
       if @page.permalink == "home"

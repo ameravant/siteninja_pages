@@ -3,38 +3,55 @@
 
 - content_for :head do
   %style{:type => "text/css", :media => "screen"}
-    ul.sortable { list-style: none; margin: 4px 0 0 -30px; }
-    ul.sortable ul { margin: 4px 0 0 -20px; }
+    ul.sortable { list-style: none; margin: 0 0 0 -30px; }
+    ul.sortable ul { margin: 0 0 0 -20px; list-style: none; }
     ul.sortable li { line-height: 2em; }
     div.page-title-header { float: left; width: 60px; font-weight: bold; color: #666; margin: 0 0 0 10px; }
     div.page-options-header { float: right; width: 60px; text-align: left; font-weight: bold; color: #666; }
     div.page-images-header { float: right; width: 100px; text-align: left; font-weight: bold; margin-right: 20px; color: #666; }
+    div.page-type-header { float: right; width: 75px; text-align: left; font-weight: bold; margin-right: 20px; color: #666; }
     div.page-testimonials-header { float: right; width: 100px; text-align: left; font-weight: bold; margin-right: 20px; color: #666; }
     div.page-title { float: left; margin-right: 20px; }
     div.page-options { text-align: right; float: right; width: 60px; }
     div.page-images { float: right; margin-right: 20px; width: 100px; text-align: left; }
+    div.page-type { float: right; margin-right: 20px; width: 75px; text-align: left; font-size: .8em; }
     div.page-testimonials { float: right; margin-right: 20px; width: 100px; text-align: left; }
-%h1= large_icon('Clipboard Copy') + ' ' + yield(:meta_title).strip
+    ul.sortable .drop_hover { background: url(http://files.artweb-design.de/javascript/scriptaculous-sortabletree/demo/drag.png) no-repeat bottom left; }
+    ul.sortable .drop_top {	background-position: top left; }
+    ul.sortable .drop_bottom { background-position: bottom left; }
+    ul.sortable .drop_insert { background-position: 20px 100%; }
+    div#droppable_top { height: 10px; background: #efefef; margin: 0 0 0 10px; }
+    div#droppable_top span, div.droppable span { display: none; font-size: .9em; font-weight: bold; }
+    div.droppable { height: 10px; background: #efefef; margin-left: 20px; }
+    div.draghover span { display: block !important; padding: 5px; background: #e7ffe1 !important; border-left: 1px dotted #296e19; line-height: 25px; position: relative; z-index: 5000000; top: -40px; border: 1px dotted #5a9605; }
+    div.draghover { background: #3b6232; }
+#page-index
+  %h1= large_icon('Clipboard Copy') + ' ' + yield(:meta_title).strip
 
-.box
-  #reorder_status.gray.float-right{:style => "display: none"}
-    = spinner
-    Reordering pages...
-  %span.hmenu
-    = icon "Plus", new_admin_page_path
-    = link_to "Make a new page", new_admin_page_path
-  %span.hmenu
-    = icon "Plus", footer_admin_pages_path
-    = link_to "Organize Footer Menus", footer_admin_pages_path
-%br
-%div.page-title-header
-  Title
-%div.page-options-header
-  Options
-- if @cms_config['features']['testimonials']
+  .box
+    #reorder_status.gray.float-right{:style => "display: none"}
+      = spinner
+      Reordering pages...
+    %span.hmenu
+      = icon "Plus", new_admin_page_path
+      = link_to "Make a new page", new_admin_page_path
+    %span.hmenu
+      = icon "Plus", footer_admin_pages_path
+      = link_to "Organize Footer Menus", footer_admin_pages_path
+  %br
+  %div.page-title-header
+    Title
+  %div.page-options-header
+    Options
+  - if @cms_config['features']['testimonials']
+    %div.page-images-header
+      Testimonials
   %div.page-images-header
-    Testimonials
-%div.page-images-header
-  Images
-= clear
-- build_menu
+    Images
+  %div.page-type-header
+    Type
+  = clear
+  .draggable#droppable_top
+    %span Drop to top level navigation.
+  = drop_receiving_element("droppable_top", :hoverclass => "draghover", :url => receive_drop_admin_pages_path + "?parent_id=", :method => :get, :loading => "$('ajax_spinner').src='#{spinner_loc}'; $('reorder_status').show();", :success => "$('ajax_spinner').src='#{ok_loc}'", :failure => "$('ajax_spinner').src='#{exclamation_loc}'", :update => "page-index" )
+  - build_menu

@@ -74,10 +74,16 @@ class Admin::PagesController < AdminController
     render :nothing => true
   end
   
-  def restore
-    @page = Page.find_by_permalink params[:id]
-    @page.update_attributes(:status => 'visible')
-    respoadd_dashboard_breadcrumbnd_to :js    
+  def receive_drop
+    menu_id = params[:id].to_s.gsub("menu_", "").to_i
+    menu = Menu.find(menu_id)
+    children = Menu.find(:all, :conditions => {:parent_id => params[:parent_id]})
+    for child in children
+      child.update_attributes(:position => child.position + 1)
+    end
+    menu.update_attributes(:parent_id => params[:parent_id], :position => 1) unless params[:parent_id] == menu.id or menu.id == 1
+    @menus = Menu.all
+    render :action => :index, :layout => false
   end
   
   def reorder_footer
