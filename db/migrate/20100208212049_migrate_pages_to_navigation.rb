@@ -1,13 +1,17 @@
 class MigratePagesToNavigation < ActiveRecord::Migration
   def self.up
-    unless ActiveRecord::Base.connection.tables.include?("menus")
+    begin
       add_column :pages, :menus_count, :integer, :default => 0
+    rescue
+      #do nothing
     end
   end
 
   def self.down
-    unless ActiveRecord::Base.connection.tables.include?("menus")
+    begin
       remove_column :pages, :menus_count
+    rescue
+      #do nothing
     end
   end
 end

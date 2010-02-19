@@ -81,7 +81,7 @@ class Admin::PagesController < AdminController
     for child in children
       child.update_attributes(:position => child.position + 1)
     end
-    menu.update_attributes(:parent_id => params[:parent_id], :position => 1) unless params[:parent_id] == menu.id or menu.id == 1
+    menu.update_attributes(:parent_id => params[:parent_id], :position => 1) unless params[:parent_id].to_i == menu.id.to_i or menu.id == 1
     @menus = Menu.all
     render :action => :index, :layout => false
   end
