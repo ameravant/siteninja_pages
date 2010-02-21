@@ -56,12 +56,13 @@ module Admin::PagesHelper
         else
           concat ' ' + "<div style='width: 16px; height: 16px; float: right; margin-left: 4px;'></div>"
         end
-        
-        concat '</div><div class="page-testimonials">'
-        if @cms_config['features']['testimonials'] and child.navigatable_type == "Page"
-          concat icon("Bubble 1", [:admin, child.navigatable, :testimonials]) + ' ' + link_to(child.navigatable.testimonials_count, [:admin, child.navigatable, :testimonials])
-        else
-          concat "&nbsp;"
+        if @cms_config['features']['testimonials']
+          concat '</div><div class="page-testimonials">'
+          if child.navigatable_type == "Page"
+            concat icon("Bubble 1", [:admin, child.navigatable, :testimonials]) + ' ' + link_to(child.navigatable.testimonials_count, [:admin, child.navigatable, :testimonials])
+          else
+            concat "&nbsp;"
+          end
         end
         concat '</div><div class="page-images">'
         concat icon("Picture", [:admin, child.navigatable, :images]) + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images])
