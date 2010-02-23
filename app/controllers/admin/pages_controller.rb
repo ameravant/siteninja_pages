@@ -94,7 +94,7 @@ class Admin::PagesController < AdminController
   end
   
   def footer
-    @footer_pages = Page.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
+    @footer_menus = Menu.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
   end
   
   

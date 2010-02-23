@@ -105,10 +105,10 @@ module Admin::PagesHelper
   def build_footer_menu()
     
     concat "<ul id=\"footer_menu_admin\" class=\"sortable\">\n"
-      for page in @footer_pages
-        concat "<li id=\"#{dom_id page}\">"
+      for menu in @footer_menus
+        concat "<li id=\"#{dom_id menu}\">"
         concat image_tag("#{move_loc}", :class => "icon handle")
-        concat link_to(h(page.title), edit_admin_page_path(page))
+        concat link_to(h(menu.navigatable.title), [:edit, :admin, menu.navigatable])
         concat "</li>\n"
       end
     concat "</ul>\n"
