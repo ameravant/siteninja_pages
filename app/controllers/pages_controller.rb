@@ -27,7 +27,7 @@ class PagesController < ApplicationController
     end
     @pages_tmp = []
       build_tree(@page)
-      add_breadcrumb "Home", "/" unless @page.permalink == "home" or @page.parent_id == 1
+      add_breadcrumb "Home", "/" unless @page.permalink == "home" or @page.menus.first.parent_id == 1
       for page in @pages_tmp.reverse
         unless page == @page
           add_breadcrumb page.name, page_path(page)
@@ -44,8 +44,8 @@ private
  def build_tree(current_page)
   @pages_tmp << current_page
   @members = true if current_page.permalink == "members"
-  if current_page.parent
-    parent_page = current_page.parent
+  if current_page.menus.first.parent_id
+    parent_page = Page.find(current_page.menus.first.parent_id)
     build_tree(parent_page)
   end  
 end
