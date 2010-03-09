@@ -130,7 +130,7 @@ class Admin::PagesController < AdminController
   end
   
   def get_articles
-    @authors = Person.all
+    @authors = Person.all(:conditions => ["articles_count > ?", 0])
     @article_categories = ArticleCategory.active
   end
   

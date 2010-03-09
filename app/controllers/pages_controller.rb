@@ -25,14 +25,18 @@ class PagesController < ApplicationController
     rescue ActiveRecord::RecordNotFound
       redirect_to '/404.html'
     end
-    @pages_tmp = []
-      build_tree(@page)
-      add_breadcrumb "Home", "/" unless @page.permalink == "home" or @page.menus.first.parent_id == 1
-      for page in @pages_tmp.reverse
-        unless page == @page
-          add_breadcrumb page.name, page_path(page)
+    @menus_tmp = []
+      build_tree(@menu)
+      add_breadcrumb "Home", "/" unless @page.permalink == "home" or @menu.parent_id == 1
+      for menu in @menus_tmp.reverse
+        unless menu == @menu
+          if menu.navigatable_type == "Page"
+            add_breadcrumb menu.navigatable.title, "/#{menu.navigatable.permalink}"
+          else
+            add_breadcrumb menu.navigatable.title, menu.navigatable
+          end
         else  
-          add_breadcrumb page.name unless @page.permalink == "home" 
+          add_breadcrumb @menu.navigatable.title unless @page.permalink == "home" 
         end
       end
       session[:redirect] = request.request_uri if @members
@@ -41,12 +45,12 @@ class PagesController < ApplicationController
 
 private
 
- def build_tree(current_page)
-  @pages_tmp << current_page
-  @members = true if current_page.permalink == "members"
-  if current_page.menus.first.parent_id
-    parent_page = Page.find(current_page.menus.first.parent_id)
-    build_tree(parent_page)
+ def build_tree(current_menu)
+  @menus_tmp << current_menu
+  @members = true if current_menu.navigatable.permalink == "members"
+  if current_menu.parent_id
+    parent_menu = Menu.find(current_menu.parent_id)
+    build_tree(parent_menu)
   end  
 end
 
