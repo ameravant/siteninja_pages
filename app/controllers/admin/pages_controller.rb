@@ -121,8 +121,12 @@ class Admin::PagesController < AdminController
     @options_for_parent_id_level = @options_for_parent_id_level + 1
     unless children.empty?
       for child in children
-        nbsp_string = '&nbsp;' * (@options_for_parent_id_level * @options_for_parent_id_level) unless @options_for_parent_id_level == 1
-        @options_for_parent_id << ["#{nbsp_string}#{child.navigatable.title}", child.id]
+        nbsp_string = '&nbsp;' * (@options_for_parent_id_level * @options_for_parent_id_level) unless @options_for_parent_id_level == 1 
+        if params[:id]
+          @options_for_parent_id << ["#{nbsp_string}#{child.navigatable.title}", child.id] unless child.navigatable_id == Page.find_by_permalink(params[:id]).id
+        else
+          @options_for_parent_id << ["#{nbsp_string}#{child.navigatable.title}", child.id] 
+        end
         build_options(child.id)
       end
     end
