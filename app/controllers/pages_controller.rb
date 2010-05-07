@@ -5,6 +5,7 @@ class PagesController < ApplicationController
     begin
       @page = Page.find_by_permalink! params[:id]
       @menu = @page.menus.first
+      @side_column_sections = ColumnSection.all(:conditions => {:column => "side", :visible => true})
       @images = @page.images
       @footer_pages = Page.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
       if @page.permalink == "home"
@@ -18,7 +19,7 @@ class PagesController < ApplicationController
       @article_archive = articles.group_by { |a| [a.published_at.month, a.published_at.year] }
       @article_authors = Person.active.find(:all, :conditions => "articles_count > 0")
       @article_tags = Article.published.tag_counts.sort_by(&:name)
-      @recent_articles = articles[0...5]
+      @recent_articles = articles
       if @page.show_events? and @cms_config['modules']['events']
         @events = Event.future[0..2]
       end
