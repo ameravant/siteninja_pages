@@ -117,3 +117,32 @@
               = image_tag(feature.featurable.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px")
 - @slideshow = true
 
+:javascript
+  jQuery('#features').galleryView({
+  panel_width: 542,
+  panel_height: 300,
+  frame_width: 85,
+  frame_height: 55,
+  overlay_color: '#222',
+  overlay_height: 80,
+  overlay_text_color: 'white',
+  caption_text_color: '#222',
+  background_color: '#ccc',
+  nav_theme: 'custom',
+  transition_speed: 800
+  });
+  jQuery(document).ready(function() {
+  jQuery('#wide-features').galleryView({
+  panel_width: 870,
+  panel_height: 300,
+  frame_width: 85,
+  frame_height: 55,
+  overlay_color: '#222',
+  overlay_height: 80,
+  overlay_text_color: 'white',
+  caption_text_color: '#222',
+  background_color: '#ccc',
+  nav_theme: 'custom',
+  transition_speed: 800
+  });
+  });
