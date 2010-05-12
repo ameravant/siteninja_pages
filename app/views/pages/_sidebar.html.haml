@@ -12,7 +12,6 @@
   - elsif section.section_type == "content"
     - if !section.body.blank? 
       - content_for :side_column do
-        = section.body
+        = ninja_parse(section.body)
   - else
     = render :partial => "/#{section.section_type}/#{section.partial_name}"
-
