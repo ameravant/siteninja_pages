@@ -7,7 +7,7 @@
       - for feature in @features
         - if feature.featurable_type == "Image"
           .panel
-            .panel-overlay-outer
+            %div{:class => "panel-overlay-outer #{(feature.featurable.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.feature_box_overlay_position)}"}
               .panel-overlay-inner
                 %h2
                   = h feature.featurable.title if feature.featurable.title
@@ -18,7 +18,7 @@
             = link_to (image_tag(feature.featurable.featured, :title => feature.featurable.title, :alt => feature.featurable.title), [feature.featurable.viewable, feature.featurable])
         - elsif feature.featurable_type == "Page"
           .panel
-            %div{:class => "panel-overlay-outer #{@cms_config['site_settings']['feature_box_overlay_position']}"}
+            %div{:class => "panel-overlay-outer #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
               .panel-overlay-inner
                 %h2
                   = h feature.featurable.title if feature.featurable.title
@@ -29,7 +29,7 @@
             = link_to (image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{feature.featurable.permalink}")
         - elsif feature.featurable_type == "Event"
           .panel
-            %div{:class => "panel-overlay-outer #{@cms_config['site_settings']['feature_box_overlay_position']}"}
+            %div{:class => "panel-overlay-outer #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
               .panel-overlay-inner
                 %h2
                   = h feature.featurable.title if feature.featurable.title
@@ -40,7 +40,7 @@
             = link_to (image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable)
         - else
           .panel
-            %div{:class => "panel-overlay-outer #{@cms_config['site_settings']['feature_box_overlay_position']}"}
+            %div{:class => "panel-overlay-outer #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
               .panel-overlay-inner
                 %h2
                   = h feature.featurable.title if feature.featurable.title
@@ -81,7 +81,7 @@
     - for feature in @features
       - if feature.featurable_type == "Image"
         .panel
-          .panel-overlay-outer
+          %div{:class => "panel-overlay-outer #{(feature.featurable.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.feature_box_overlay_position)}"}
             .panel-overlay-inner
               %h2
                 = h feature.featurable.title if feature.featurable.title
@@ -92,7 +92,7 @@
           = link_to (image_tag(feature.featurable.featured, :title => feature.featurable.title, :alt => feature.featurable.title), [feature.featurable.viewable, feature.featurable])
       - elsif feature.featurable_type == "Page"
         .panel
-          %div{:class => "panel-overlay-outer #{@cms_config['site_settings']['feature_box_overlay_position']}"}
+          %div{:class => "panel-overlay-outer #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
             .panel-overlay-inner
               %h2
                 = h feature.featurable.title if feature.featurable.title
@@ -103,7 +103,7 @@
           = link_to (image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{feature.featurable.permalink}")
       - elsif feature.featurable_type == "Event"
         .panel
-          %div{:class => "panel-overlay-outer #{@cms_config['site_settings']['feature_box_overlay_position']}"}
+          %div{:class => "panel-overlay-outer #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
             .panel-overlay-inner
               %h2
                 = h feature.featurable.title if feature.featurable.title
@@ -114,7 +114,7 @@
           = link_to (image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable)
       - else
         .panel
-          %div{:class => "panel-overlay-outer #{@cms_config['site_settings']['feature_box_overlay_position']}"}
+          %div{:class => "panel-overlay-outer #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
             .panel-overlay-inner
               %h2
                 = h feature.featurable.title if feature.featurable.title
