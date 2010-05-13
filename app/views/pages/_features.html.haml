@@ -49,6 +49,20 @@
                   = link_to "Read more &raquo;", [feature.featurable], :class => "read-more"
                 = clear
             = link_to (image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable)
+      :javascript
+        jQuery('#wide-features').galleryView({
+        panel_width: 870,
+        panel_height: 300,
+        frame_width: 85,
+        frame_height: 55,
+        overlay_color: '#222',
+        overlay_height: 80,
+        overlay_text_color: 'white',
+        caption_text_color: '#222',
+        background_color: '#ccc',
+        nav_theme: 'custom',
+        transition_speed: 800
+        });
       - if @settings.show_feature_thumbs
         %ul.filmstrip
           - for feature in @features
@@ -57,6 +71,8 @@
                 = image_tag(feature.featurable.images.sort_by(&:position).first.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px")
               - else
                 = image_tag(feature.featurable.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px")
+
+
 - else
   #features.galleryview
     - if @cms_config['website']['demo_message']
@@ -107,6 +123,20 @@
                 = link_to "Read more &raquo;", [feature.featurable], :class => "read-more"
               = clear
           = link_to (image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable)
+    :javascript
+      jQuery('#features').galleryView({
+      panel_width: 542,
+      panel_height: 300,
+      frame_width: 85,
+      frame_height: 55,
+      overlay_color: '#222',
+      overlay_height: 80,
+      overlay_text_color: 'white',
+      caption_text_color: '#222',
+      background_color: '#ccc',
+      nav_theme: 'custom',
+      transition_speed: 800
+      });
     - if @settings.show_feature_thumbs
       %ul.filmstrip
         - for feature in @features
@@ -117,32 +147,4 @@
               = image_tag(feature.featurable.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px")
 - @slideshow = true
 
-:javascript
-  jQuery('#features').galleryView({
-  panel_width: 542,
-  panel_height: 300,
-  frame_width: 85,
-  frame_height: 55,
-  overlay_color: '#222',
-  overlay_height: 80,
-  overlay_text_color: 'white',
-  caption_text_color: '#222',
-  background_color: '#ccc',
-  nav_theme: 'custom',
-  transition_speed: 800
-  });
-  jQuery(document).ready(function() {
-  jQuery('#wide-features').galleryView({
-  panel_width: 870,
-  panel_height: 300,
-  frame_width: 85,
-  frame_height: 55,
-  overlay_color: '#222',
-  overlay_height: 80,
-  overlay_text_color: 'white',
-  caption_text_color: '#222',
-  background_color: '#ccc',
-  nav_theme: 'custom',
-  transition_speed: 800
-  });
-  });
+
