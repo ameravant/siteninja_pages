@@ -7,7 +7,8 @@
 
 - if @page.permalink == "home"
   = render :partial => "features" unless (@settings.show_features == false or @features.empty?)
-  
+  - if @cms_config['site_settings']['wide_feature_box'] and !(@settings.show_features == false or @features.empty?) and @settings.show_feature_thumbs
+    .film-strip
 = # render :partial => "/shared/image_box", :locals => { :owner => @page } unless @page.images.empty?
 - if @page.automatically_embed_videos_and_images?
   = ninja_parse(@page.body)
