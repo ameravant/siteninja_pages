@@ -9,7 +9,7 @@
     = render :partial => "/article_categories/article_categories_for_side_column", :locals => { :count => section.count } if @page.show_article_cats? and @cms_config['modules']['blog']
   - elsif section.section_type == "testimonials"
     = render :partial => "/testimonials/testimonial_for_sidebar", :locals => { :count => section.count, :testimonial => @testimonial } if @page.show_featured_testimonial?  and @cms_config['features']['testimonials'] and @testimonial
-  - elsif section.section_type == "content"
+  - elsif section.section_type == "content" and @page.side_column_content
     - if !section.body.blank? 
       - content_for :side_column do
         = ninja_parse(section.body)
