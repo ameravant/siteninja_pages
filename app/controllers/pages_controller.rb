@@ -7,9 +7,19 @@ class PagesController < ApplicationController
       @menu = @page.menus.first
       @images = @page.images
       @footer_pages = Page.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
-      if @page.permalink == "home"
-        @features = Feature.find(:all, :order => :position)
+      @features = []
+      @menu.featurable_sections.each do |fs|
+        @features += fs.features
       end
+      feature_sections = FeaturableSection.all.reject{|fs| !fs.site_wide}
+      if feature_sections
+        feature_sections.each do |fs|
+          @features += fs.features
+        end
+      end
+      # if @page.permalink == "home"
+      #   @features = Feature.find(:all, :order => :position)
+      # end
       #should refactor the following into scopes and add scoping by scoping
       ops = "person_id = #{@page.author_id}" if @page.author_id
       articles = @page.article_category_id.nil? ? Article.published.find(:all, :conditions => ops) : @page.article_category.articles.published.find(:all, :conditions => ops)

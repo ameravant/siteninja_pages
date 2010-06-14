@@ -1,4 +1,18 @@
-= render :partial => "show"
+- content_for :meta_title do
+  = @page.meta_title
+- content_for :meta_description do
+  = @page.meta_description
+- content_for :meta_keywords do
+  = @page.meta_keywords
+
+- if @menu.id == 1
+  = render :partial => "homepage_feature" , :locals => {:features => @features.reject{|f| f.featurable_section_id != 1}}unless (@features.reject{|f| f.featurable_section_id != 1}.empty?)
+ 
+= # render :partial => "/shared/image_box", :locals => { :owner => @page } unless @page.images.empty?
+- if @page.automatically_embed_videos_and_images?
+  = ninja_parse(@page.body)
+- else
+  = @page.body
 
 = render :partial => "sidebar"
 
