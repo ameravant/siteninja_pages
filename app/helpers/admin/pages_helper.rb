@@ -14,17 +14,19 @@ module Admin::PagesHelper
         concat ' ' + content_tag('span', '&mdash; hidden from menus', :class => ' small gray') if child.status == 'hidden'
         concat ' &mdash; ' + link_to("Manage Homepage Features", admin_features_path) if (child.navigatable.permalink == "home")
         concat '</div><div class="page-options">'
-          if child.navigatable.images_count > 0
-            if child.navigatable.features_count > 0
-              concat defeature_icon(child.navigatable, "/admin/#{child.navigatable_type.downcase.pluralize}/#{child.navigatable.to_param}/features/1", child.navigatable.title, "inline")
-              concat feature_icon(child.navigatable, [:admin, child.navigatable, :features], child.navigatable.title, "none")
-            else
-              concat feature_icon(child.navigatable, [:admin, child.navigatable, :features], child.navigatable.title, "inline")
-              concat defeature_icon(child.navigatable, "/admin/#{child.navigatable_type.downcase.pluralize}/#{child.navigatable.to_param}/features/1", child.navigatable.title, "none")
-            end
-          else
-            concat disabled_feature_icon(child.navigatable, [:new, :admin, child.navigatable, :feature], child.navigatable.title)
-          end
+        concat feature_icon_select(child.navigatable, child.navigatable.title)
+          # Old feature code
+          # if child.navigatable.images_count > 0
+          #   if child.navigatable.features_count > 0
+          #     concat defeature_icon(child.navigatable, "/admin/#{child.navigatable_type.downcase.pluralize}/#{child.navigatable.to_param}/features/1", child.navigatable.title, "inline")
+          #     concat feature_icon(child.navigatable, [:admin, child.navigatable, :features], child.navigatable.title, "none")
+          #   else
+          #     concat feature_icon(child.navigatable, [:admin, child.navigatable, :features], child.navigatable.title, "inline")
+          #     concat defeature_icon(child.navigatable, "/admin/#{child.navigatable_type.downcase.pluralize}/#{child.navigatable.to_param}/features/1", child.navigatable.title, "none")
+          #   end
+          # else
+          #   concat disabled_feature_icon(child.navigatable, [:new, :admin, child.navigatable, :feature], child.navigatable.title)
+          # end
         concat ' ' + icon("Write", [:edit, :admin, child.navigatable]) + ' '
         #Check page is allowed to be deleted and provide icon to allow it
         if child.can_delete

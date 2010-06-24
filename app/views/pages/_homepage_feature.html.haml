@@ -92,7 +92,7 @@
     - if @cms_config['website']['demo_message']
       %div{:style => "float: left; background: #e6e6e6; color: #333; position: absolute; z-index: 100; padding: 5px; font-size: 1.2em; font-family: Georgia, \"Times New Roman\", Serif; font-weight: bold;"}
         = @cms_config['website']['demo_message']
-    - for feature in @features
+    - for feature in features
       - if feature.featurable_type == "Image"
         %div{:class => "panel #{(feature.featurable.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.feature_box_overlay_position)}"}
           .panel-overlay-outer
@@ -156,7 +156,7 @@
 
     - if @settings.show_feature_thumbs
       %ul.filmstrip
-        - for feature in @features
+        - for feature in features
           %li
             - unless feature.featurable_type == "Image"
               = image_tag(feature.featurable.images.sort_by(&:position).first.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px")

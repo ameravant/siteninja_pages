@@ -1,7 +1,4 @@
+
 = render :partial => "show"
 
 = render :partial => "sidebar"
-
-- if @page.permalink == "home" and !@settings.homepage_banner.blank?
-  - content_for :banner do
-    = @settings.homepage_banner

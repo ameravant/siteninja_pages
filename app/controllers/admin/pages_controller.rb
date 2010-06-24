@@ -6,6 +6,7 @@ class Admin::PagesController < AdminController
   before_filter :build_options, :only => [ :edit, :new, :create, :update ]
   before_filter :get_articles, :only => [ :edit, :new, :create, :update ]
   before_filter :find_page, :only => [ :edit, :update, :show ]
+
   
   # Configure breadcrumbs
   add_breadcrumb "Pages", "admin_pages_path", :only => [ :new, :create, :edit, :update ]
