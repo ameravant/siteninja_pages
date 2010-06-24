@@ -12,7 +12,7 @@
   - elsif section.section_type == "content"
     - if !section.body.blank?
       - content_for :side_column do
-        = ninja_parse(section.body) if @page.show_side_column_text
+        .side-column-section
+          = ninja_parse(section.body) if @page.show_side_column_text
   - else
-    .side-column-section
-      = render :partial => "/#{section.section_type}/#{section.partial_name}"
+    = render :partial => "/#{section.section_type}/#{section.partial_name}"
