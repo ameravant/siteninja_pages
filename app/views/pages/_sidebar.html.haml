@@ -1,3 +1,4 @@
+- @show_site_search = @page.show_site_search
 - for section in @side_column_sections
   - if section.section_type == "newsletters"
     = render :partial => "/newsletters/#{section.partial_name}" if @page.show_newsletter_signup?  and @cms_config['modules']['newsletters']
