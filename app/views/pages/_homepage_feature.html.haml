@@ -20,6 +20,7 @@
         %div{:style => "float: left; background: #e6e6e6; color: #333; position: absolute; z-index: 100; padding: 5px; font-size: 1.2em; font-family: Georgia, \"Times New Roman\", Serif; font-weight: bold;"}
           = @cms_config['website']['demo_message']
       - for feature in @features[0..4]
+        =feature.featurable_type
         - if feature.featurable_type == "Image"
           %div{:class => "panel #{(feature.featurable.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.feature_box_overlay_position)}"}
             .panel-overlay-outer
@@ -43,6 +44,17 @@
                 = clear
             = link_to (image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{feature.featurable.permalink}", :class => "feature-image")
         - elsif feature.featurable_type == "Event"
+          %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
+            .panel-overlay-outer
+              .panel-overlay-inner
+                %h2
+                  = h feature.featurable.title if feature.featurable.title
+                %p
+                  = h feature.featurable.blurb
+                  = link_to "Read more &raquo;", [feature.featurable], :class => "read-more"
+                = clear
+            = link_to (image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable, :class => "feature-image")
+        - elsif feature.featurable_type == "Product"
           %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
             .panel-overlay-outer
               .panel-overlay-inner
