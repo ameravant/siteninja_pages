@@ -1,7 +1,7 @@
 module Admin::PagesHelper
 
   def build_menu(parent_id=nil)
-    children = @menus.select { |menu| menu.parent_id == parent_id }
+    children = Menu.all.select { |menu| menu.parent_id == parent_id }
     ul_id = "menu_list_#{parent_id || '0'}"
     unless children.empty?
       concat "<ul id=\"#{ul_id}\" class=\"sortable\">"
