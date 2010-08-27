@@ -8,21 +8,11 @@ class Page < ActiveRecord::Base
   belongs_to :author, :class_name => 'Person'
   belongs_to :article_category
   validates_presence_of :title, :meta_title, :body
-  validate :title_validation
+  validates_uniqueness_of :title
   default_scope :order => "parent_id, position"
   named_scope :visible, :conditions => "status = 'visible'"
   named_scope :hidden, :conditions => "status = 'hidden'"
   before_save :titleize_title
-  
-  
-  def title_validation
-    conditions = ["title = '#{self.title.titleize}'"]
-    conditions << "and id != #{self.id}" unless self.new_record?
-    conditions << "AND account_id = #{$CURRENT_ACCOUNT.id}" if self.respond_to?(:account_id)
-    if Page.find(:first, :conditions => conditions.join(" "))
-      self.errors.add_to_base("Title already taken")
-    end
-  end
   
   def to_param
     self.permalink
