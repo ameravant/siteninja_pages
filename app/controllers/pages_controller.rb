@@ -4,7 +4,6 @@ class PagesController < ApplicationController
   
   def show
     begin
-      @page = Page.find_by_permalink! params[:id]
       @menu = @page.menus.first
       @side_column_sections = ColumnSection.all(:conditions => {:column => "side", :visible => true})
       @images = @page.images
@@ -34,9 +33,6 @@ class PagesController < ApplicationController
       if @page.show_events? and @cms_config['modules']['events']
         @events = Event.future[0..2]
       end
-    rescue ActiveRecord::RecordNotFound
-      render_404 and return
-    end
     @menus_tmp = []
       build_tree(@menu)
       add_breadcrumb "Home", "/" unless @page.permalink == "home" or @menu.parent_id == 1
@@ -65,7 +61,7 @@ private
     build_tree(parent_menu)
   end  
 end
-def get_page_or_404
-  render_404 unless Page.find_by_permalink(params[:id])
-end
+  def get_page_or_404
+    render_404 unless @page = Page.find_by_permalink(params[:id])
+  end
 end
