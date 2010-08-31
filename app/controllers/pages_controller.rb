@@ -33,6 +33,7 @@ class PagesController < ApplicationController
       if @page.show_events? and @cms_config['modules']['events']
         @events = Event.future[0..2]
       end
+    end
     @menus_tmp = []
       build_tree(@menu)
       add_breadcrumb "Home", "/" unless @page.permalink == "home" or @menu.parent_id == 1
