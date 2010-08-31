@@ -4,6 +4,7 @@ class PagesController < ApplicationController
   def show
     begin
       @page = Page.find_by_permalink! params[:id]
+      render_404 if @page.nil? 
       @menu = @page.menus.first
       @side_column_sections = ColumnSection.all(:conditions => {:column => "side", :visible => true})
       @images = @page.images
