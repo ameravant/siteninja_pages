@@ -34,7 +34,7 @@ class PagesController < ApplicationController
         @events = Event.future[0..2]
       end
     rescue ActiveRecord::RecordNotFound
-      redirect_to '/404.html'
+      render_404
     end
     @menus_tmp = []
       build_tree(@menu)
