@@ -69,7 +69,7 @@
                   = h feature.featurable.blurb
                   = link_to "Read more &raquo;", [LinkCategory.find(feature.featurable.link_category_id), feature.featurable], :class => "read-more"
                 = clear
-            = link_to (image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable, :class => "feature-image")
+            = link_to (image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), [LinkCategory.find(feature.featurable.link_category_id), feature.featurable], :class => "feature-image")
         - else
           %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
             .panel-overlay-outer
