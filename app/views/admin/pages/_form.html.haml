@@ -29,6 +29,9 @@
         = f.check_box :show_articles
         = f.label :show_articles, "Show articles"
         %br
+        = f.check_box :show_comment_disclaimer
+        = f.label :show_comment_disclaimer, "Show comment disclaimer"
+        %br
         = collection_select(:page, :author_id, @authors, :id, :name, {:include_blank => "Filter by Author"}, :style => "width: 125px; margin: 0 0 0 20px;")
         %br
         = collection_select(:page, :article_category_id, @article_categories, :id, :name, {:include_blank => "Filter by Category"}, :style => "width: 125px; margin: 0 0 0 20px;")

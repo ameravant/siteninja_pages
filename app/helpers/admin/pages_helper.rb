@@ -1,7 +1,7 @@
 module Admin::PagesHelper
 
   def build_menu(parent_id=nil)
-    children = @menus.select { |menu| menu.parent_id == parent_id }
+    children = Menu.all.select { |menu| menu.parent_id == parent_id }
     ul_id = "menu_list_#{parent_id || '0'}"
     unless children.empty?
       concat "<ul id=\"#{ul_id}\" class=\"sortable\">"
@@ -13,8 +13,8 @@ module Admin::PagesHelper
         concat link_to(h(child.navigatable.title), [:edit, :admin, child.navigatable], :class => child.hidden? ? 'gray' : nil)
         concat ' ' + content_tag('span', '&mdash; hidden from menus', :class => ' small gray') if child.status == 'hidden'
         concat ' &mdash; ' + link_to("Manage Homepage Features", admin_features_path) if (child.navigatable.permalink == "home")
-        concat '</div><div class="page-options">'
-        concat feature_icon_select(child.navigatable, child.navigatable.title)
+        concat '</div><div class="page-options">' 
+        concat feature_icon_select(child.navigatable, child.navigatable.name) unless feature_icon_select(child.navigatable, child.navigatable.name).blank?
           # Old feature code
           # if child.navigatable.images_count > 0
           #   if child.navigatable.features_count > 0
