@@ -75,6 +75,7 @@
           %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
             .panel-overlay-outer
               .panel-overlay-inner
+                =feature.featurable_type
                 %h2
                   = h feature.featurable.title if feature.featurable.title
                 %p
