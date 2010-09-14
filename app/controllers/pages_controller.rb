@@ -1,9 +1,9 @@
 class PagesController < ApplicationController
+  before_filter :get_page_or_404
   unloadable # http://dev.rubyonrails.org/ticket/6001
   
   def show
     begin
-      @page = Page.find_by_permalink! params[:id]
       @menu = @page.menus.first
       @side_column_sections = ColumnSection.all(:conditions => {:column_id => 1, :visible => true})
       @images = @page.images
@@ -34,8 +34,6 @@ class PagesController < ApplicationController
       if @page.show_events? and @cms_config['modules']['events']
         @events = Event.future[0..2]
       end
-    rescue ActiveRecord::RecordNotFound
-      redirect_to '/404.html'
     end
     @menus_tmp = []
       build_tree(@menu)
@@ -65,7 +63,7 @@ private
     build_tree(parent_menu)
   end  
 end
-
-
-
+  def get_page_or_404
+    render_404 unless @page = Page.find_by_permalink(params[:id])
+  end
 end
