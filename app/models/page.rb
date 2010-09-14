@@ -13,7 +13,6 @@ class Page < ActiveRecord::Base
   default_scope :order => "parent_id, position"
   named_scope :visible, :conditions => "status = 'visible'"
   named_scope :hidden, :conditions => "status = 'hidden'"
-  before_save :titleize_title
   
   def to_param
     self.permalink
@@ -25,10 +24,6 @@ class Page < ActiveRecord::Base
   
   def description
     self.meta_description
-  end
-  
-  def titleize_title
-    self.title = self.title.titleize
   end
   
   def hidden?
