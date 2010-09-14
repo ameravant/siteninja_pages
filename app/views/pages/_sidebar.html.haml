@@ -1,20 +1,20 @@
 - @show_site_search = @page.show_site_search
 - for section in @side_column_sections
-  - if section.section_type == "newsletters"
+  - if section.column_section_type == "newsletters"
     = render :partial => "/newsletters/#{section.partial_name}" if @page.show_newsletter_signup?  and @cms_config['modules']['newsletters']
-  - elsif section.section_type == "events"
+  - elsif section.column_section_type == "events"
     = render :partial => "/events/events_for_side_column", :locals => { :count => section.count, :show_blurb => section.show_blurb } if @page.show_events? and @cms_config['modules']['events']
-  - elsif section.section_type == "articles"
+  - elsif section.column_section_type == "articles"
     = render :partial => "/articles/articles_for_side_column", :locals => { :count => section.count, :show_blurb => section.show_blurb } if @page.show_articles? and @cms_config['modules']['blog']
-  - elsif section.section_type == "article_categories"
+  - elsif section.column_section_type == "article_categories"
     = render :partial => "/article_categories/article_categories_for_side_column", :locals => { :count => section.count } if @page.show_article_cats? and @cms_config['modules']['blog']
-  - elsif section.section_type == "testimonials"
+  - elsif section.column_section_type == "testimonials"
     = render :partial => "/testimonials/testimonial_for_sidebar", :locals => { :count => section.count, :testimonial => @testimonial } if @page.show_featured_testimonial?  and @cms_config['features']['testimonials'] and @testimonial
-  - elsif section.section_type == "content"
+  - elsif section.column_section_type == "content"
     - if !section.body.blank?
       - content_for :side_column do
         - if @page.show_side_column_text
           .side-column-section
             = ninja_parse(section.body)
   - else
-    = render :partial => "/#{section.section_type}/#{section.partial_name}"
+    = render :partial => "/#{section.controller_name}/#{section.partial_name}"

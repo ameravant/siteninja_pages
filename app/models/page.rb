@@ -7,6 +7,7 @@ class Page < ActiveRecord::Base
   has_many :menus, :as => :navigatable, :dependent => :destroy
   belongs_to :author, :class_name => 'Person'
   belongs_to :article_category
+  belongs_to :column
   validates_presence_of :title, :meta_title, :body
   validates_uniqueness_of :title
   default_scope :order => "parent_id, position"

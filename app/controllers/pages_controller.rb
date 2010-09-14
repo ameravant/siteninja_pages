@@ -5,7 +5,7 @@ class PagesController < ApplicationController
     begin
       @page = Page.find_by_permalink! params[:id]
       @menu = @page.menus.first
-      @side_column_sections = ColumnSection.all(:conditions => {:column => "side", :visible => true})
+      @side_column_sections = ColumnSection.all(:conditions => {:column_id => 1, :visible => true})
       @images = @page.images
       @footer_pages = Page.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
       @features = []
@@ -18,6 +18,7 @@ class PagesController < ApplicationController
           @features += fs.features
         end
       end
+      @side_column = @page.column_id
       # if @page.permalink == "home"
       #   @features = Feature.find(:all, :order => :position)
       # end

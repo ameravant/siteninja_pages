@@ -11,11 +11,10 @@
       = m.label :show_in_footer, "Show in Footer Menu"
       %br
       %h3== #{icon('Gear')} Sidebar options
+      = collection_select(:page, :column_id, @side_columns, :id, :title, {:include_blank => "Select a Side Column"}, :style => "width: 160px; margin: 0 0 0 0;")
+      %br
       = f.check_box :show_site_search
       = f.label :show_site_search
-      %br
-      = f.check_box :show_side_column_text
-      = f.label :show_side_column_text
       - if @cms_config['features']['testimonials']
         %br
         = f.check_box :show_featured_testimonial

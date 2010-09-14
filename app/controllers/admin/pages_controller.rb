@@ -137,6 +137,7 @@ class Admin::PagesController < AdminController
   def get_articles
     @authors = Person.all(:conditions => ["articles_count > ?", 0])
     @article_categories = ArticleCategory.active
+    @side_columns = Column.all
   end
   
   def authenticate
