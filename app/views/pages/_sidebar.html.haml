@@ -1,7 +1,7 @@
 - @show_site_search = @page.show_site_search
 - for section in @side_column_sections
   - if section.column_section_type.partial_name == "signup_for_side_column"
-    = render :partial => "/newsletters/#{section.partial_name}" if @page.show_newsletter_signup?  and @cms_config['modules']['newsletters']
+    = render :partial => "/newsletters/signup_for_side_column" if @page.show_newsletter_signup?  and @cms_config['modules']['newsletters']
   - elsif section.column_section_type.partial_name == "events_for_side_column"
     = render :partial => "/events/events_for_side_column", :locals => { :count => section.count, :show_blurb => section.show_blurb } if @page.show_events? and @cms_config['modules']['events']
   - elsif section.column_section_type.partial_name == "articles_for_side_column"

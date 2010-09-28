@@ -15,6 +15,9 @@
       %br
       = f.check_box :show_site_search
       = f.label :show_site_search
+      %br
+      = f.check_box :show_side_column_text
+      = f.label :show_side_column_text
       - if @cms_config['features']['testimonials']
         %br
         = f.check_box :show_featured_testimonial
