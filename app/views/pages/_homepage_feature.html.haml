@@ -91,10 +91,7 @@
           div#wide-features { height: 280px !important; }
           ul.filmstrip { width: 480px !important; background: none !important; }
           div.film-strip { height: 80px; background: #eee; margin-top: -20px; width: 554px; }
-        <!--[if gt IE 7]>
-        %style{:tyle => "text/css"}
-          div#pointer{ margin: -4px 0 0 -4px !important }
-        <![endif]-->         
+        <!--[if gt IE 7]><style type="text/css">div#pointer{ margin: -4px 0 0 -4px !important }<![endif]-->
         %ul.filmstrip
           - for feature in @features[0..4]
             %li
