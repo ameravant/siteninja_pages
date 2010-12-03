@@ -44,7 +44,6 @@ class Page < ActiveRecord::Base
   	  false
   	end
   end
-
   
   # def make_navigatable
   #     menu = self.menus.new
