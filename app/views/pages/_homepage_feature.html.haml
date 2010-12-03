@@ -1,6 +1,6 @@
 - if @cms_config['site_settings']['wide_feature_box']
   - content_for :wide_feature_box do
-    :javascript
+    %script{:type => "text/javascript"}
       jQuery(document).ready(function() {
       jQuery('#wide-features').galleryView({
       panel_width: 870,
