@@ -18,6 +18,10 @@ class Page < ActiveRecord::Base
     self.permalink
   end
   
+  def is_homepage?
+    self.permalink == "home"
+  end
+  
   def name # for model consistency, title is treated as name
     self.title
   end
