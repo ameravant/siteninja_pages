@@ -35,6 +35,7 @@ class PagesController < ApplicationController
         @events = Event.future[0..2]
       end
     end
+    @home = true if @page.permalink == "home"
     @menus_tmp = []
       build_tree(@menu)
       add_breadcrumb "Home", "/" unless @page.permalink == "home" or @menu.parent_id == 1
