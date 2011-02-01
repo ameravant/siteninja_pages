@@ -108,7 +108,7 @@
     jQuery(document).ready(function() {
     jQuery('#features').galleryView({
     panel_width: 542,
-    panel_height: 300,
+    == panel_height: '#{!@cms_config['site_settings']['feature_box_height'].blank? ? @cms_config['site_settings']['feature_box_height'] : '300'}',
     frame_width: 85,
     frame_height: 55,
     overlay_color: '#222',
