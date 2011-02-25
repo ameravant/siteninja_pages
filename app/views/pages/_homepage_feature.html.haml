@@ -21,7 +21,8 @@
       - if @cms_config['website']['demo'] && @cms_config['website']['demo_message']
         %div{:style => "float: left; background: #e6e6e6; color: #333; position: absolute; z-index: 100; padding: 5px; font-size: 1.2em; font-family: Georgia, \"Times New Roman\", Serif; font-weight: bold;"}
           = @cms_config['website']['demo_message']
-      - for feature in @features[0..4]
+      - @settings.show_feature_thumbs ? limit = 4 : limit = 999
+      - for feature in @features[0..limit]
         - if feature.featurable_type == "Image"
           %div{:class => "panel #{(feature.featurable.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.feature_box_overlay_position)}"}
             .panel-overlay-outer
