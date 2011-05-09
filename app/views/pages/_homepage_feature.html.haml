@@ -155,8 +155,14 @@
 
         .gv-panel-content
           
+          - if feature.featurable_type == "Video"
+            %div{:class => "panel #{(feature.featurable.images.first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.first.feature_box_overlay_position)}"}
+              .panel-overlay-outer
+                .panel-overlay-inner{:style => "padding: 0; background: #000; height: 309px;"}
+                  = ninja_parse(feature.featurable.video_url)
+                  = clear
 
-          - if feature.featurable_type == "Image"
+          - elsif feature.featurable_type == "Image"
             %div{:class => "panel #{(feature.featurable.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.feature_box_overlay_position)}"}
               .panel-overlay-outer
                 .panel-overlay-inner
