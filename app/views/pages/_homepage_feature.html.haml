@@ -133,6 +133,14 @@
     jQuery(document).everyTime("transition");
     paused = false;
     });
+    jQuery('.gv-nav-prev').click(function(){
+    jQuery(document).everyTime("transition");
+    paused = false;
+    });
+    jQuery('.gv-nav-next').click(function(){
+    jQuery(document).everyTime("transition");
+    paused = false;
+    });
     });
   %style{:type => "text/css"}
     ==div#features { background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'}; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; }
