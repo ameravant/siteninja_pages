@@ -121,7 +121,8 @@
     show_filmstrip_nav: true,
     filmstrip_position: "bottom",
     == transition_speed: #{@cms_config['site_settings']['feature_box_transition_speed'] ? @cms_config['site_settings']['feature_box_transition_speed'] : '800'},
-    == transition_interval: #{@cms_config['site_settings']['feature_box_transition_delay'] ? @cms_config['site_settings']['feature_box_transition_delay'] : '4000'}
+    == transition_interval: #{@cms_config['site_settings']['feature_box_transition_delay'] ? @cms_config['site_settings']['feature_box_transition_delay'] : '4000'},
+    == show_filmstrip: #{@settings.show_feature_thumbs}
     });
     });
     jQuery(document).ready(function(){
