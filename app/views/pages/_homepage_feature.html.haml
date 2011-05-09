@@ -120,9 +120,10 @@
     == panel_animation: '#{@cms_config['site_settings']['feature_box_animation'] ? @cms_config['site_settings']['feature_box_animation'] : 'crossfade'}',
     show_filmstrip_nav: true,
     filmstrip_position: "bottom",
-    == transition_speed: #{@cms_config['site_settings']['feature_box_transition_speed'] ? @cms_config['site_settings']['feature_box_transition_speed'] : '800'},
-    == transition_interval: #{@cms_config['site_settings']['feature_box_transition_delay'] ? @cms_config['site_settings']['feature_box_transition_delay'] : '4000'},
-    == show_filmstrip: #{@settings.show_feature_thumbs}
+    == transition_speed: #{!@cms_config['site_settings']['feature_box_transition_speed'].blank? ? @cms_config['site_settings']['feature_box_transition_speed'] : '800'},
+    == transition_interval: #{!@cms_config['site_settings']['feature_box_transition_delay'].blank? ? @cms_config['site_settings']['feature_box_transition_delay'] : '4000'},
+    == show_filmstrip: #{@settings.show_feature_thumbs},
+    == show_panel_nav: #{@settings.show_feature_thumbs? ? "false" : "true"}
     });
     });
     jQuery(document).ready(function(){
@@ -139,6 +140,14 @@
     paused = false;
     });
     jQuery('.gv-nav-next').click(function(){
+    jQuery(document).everyTime("transition");
+    paused = false;
+    });
+    jQuery('.gv-panel-nav-next').click(function(){
+    jQuery(document).everyTime("transition");
+    paused = false;
+    });
+    jQuery('.gv-panel-nav-prev').click(function(){
     jQuery(document).everyTime("transition");
     paused = false;
     });
