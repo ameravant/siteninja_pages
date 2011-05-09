@@ -144,12 +144,12 @@
     });
   %style{:type => "text/css"}
     ==div#features { background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'}; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; }
-    = "div#features { height: 364px !important; }" if @settings.show_feature_thumbs
+    = "#features { height: 364px !important; }" if @settings.show_feature_thumbs
     = "div.gv-pointer { margin-top: -4px; }" if @settings.show_feature_thumbs
     div.gv-panel-content { overflow: hidden; }
     div.gv-nav-prev { width: 30px; height: 30px; margin-left: -4px; }
     div.gv-nav-next { width: 30px; height: 30px; margin-right: -4px; }
-    div.galleryview .auto_video { margin: 0; }
+    ==.galleryview .auto_video { margin: 0; }
   %ul#features.galleryview
     - if @cms_config['website']['demo_message']
       %div{:style => "float: left; background: #e6e6e6; color: #333; position: absolute; z-index: 100; padding: 5px; font-size: 1.2em; font-family: Georgia, \"Times New Roman\", Serif; font-weight: bold;"}
