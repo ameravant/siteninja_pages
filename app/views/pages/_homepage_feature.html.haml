@@ -141,6 +141,7 @@
     div.gv-panel-content { overflow: hidden; }
     div.gv-nav-prev { width: 30px; height: 30px; margin-left: -4px; }
     div.gv-nav-next { width: 30px; height: 30px; margin-right: -4px; }
+    div.panel-overlay-inner .auto_video { margin: 0; }
   %ul#features.galleryview
     - if @cms_config['website']['demo_message']
       %div{:style => "float: left; background: #e6e6e6; color: #333; position: absolute; z-index: 100; padding: 5px; font-size: 1.2em; font-family: Georgia, \"Times New Roman\", Serif; font-weight: bold;"}
@@ -157,10 +158,8 @@
           
           - if feature.featurable_type == "Video"
             %div{:class => "panel #{(feature.featurable.images.first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.first.feature_box_overlay_position)}"}
-              .panel-overlay-outer
-                .panel-overlay-inner{:style => "padding: 0; background: #000; height: 309px;"}
-                  = ninja_parse(feature.featurable.video_url)
-                  = clear
+              = ninja_parse(feature.featurable.video_url)
+              = clear
 
           - elsif feature.featurable_type == "Image"
             %div{:class => "panel #{(feature.featurable.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.feature_box_overlay_position)}"}
