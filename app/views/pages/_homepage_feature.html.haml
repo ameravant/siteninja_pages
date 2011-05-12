@@ -164,7 +164,7 @@
     - if @cms_config['website']['demo_message']
       %div{:style => "float: left; background: #e6e6e6; color: #333; position: absolute; z-index: 100; padding: 5px; font-size: 1.2em; font-family: Georgia, \"Times New Roman\", Serif; font-weight: bold;"}
         = @cms_config['website']['demo_message']
-    - for feature in features
+    - for feature in @features
       %li
         - if @settings.show_feature_thumbs
           - unless feature.featurable_type == "Image"
