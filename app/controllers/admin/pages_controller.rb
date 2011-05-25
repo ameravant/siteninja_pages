@@ -41,6 +41,75 @@ class Admin::PagesController < AdminController
     end
   end
   
+  def preview
+    params[:page_id].blank? ? @page = Page.new : @page = Page.find(params[:page_id])
+    @menu = @page.menus.first
+    @menu = Menu.first if @menu.blank?
+    @admin = false
+    @menus = Menu.all
+    @settings = Setting.first
+    @footer_menus = Menu.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
+    @hide_admin_menu = true
+    @images = @page.images
+    @owner = @page
+    @page.column_id = params[:page_column_id]
+    @page.body = params[:page_body]
+    @page.title = params[:page_title]
+    @page.parent_id = params[:page_parent_id]
+    @page.meta_description = params[:page_meta_description]
+    @page.show_in_footer = params[:page_show_in_footer]
+    @page.show_site_search = params[:page_show_site_search]
+    @page.show_side_column_text = params[:page_show_side_column_text]
+    @page.show_featured_testimonial = params[:page_show_featured_testimonial]
+    @page.show_newsletter_signup = params[:page_show_newsletter_signup]
+    @page.show_articles = params[:page_show_articles]
+    @page.show_article_cats = params[:page_show_article_cats]
+    @page.show_events = params[:page_show_events]
+    @page.meta_description = params[:page_meta_description]
+    @menu.show_in_footer = params[:menu_show_in_footer]
+    @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
+    @side_column_sections = ColumnSection.all(:conditions => {:column_id => 1, :visible => true}) if @page.column_id.blank?
+    @features = []
+    # @menu.featurable_sections.each do |fs|
+    #   @features += fs.features
+    # end
+    # feature_sections = FeaturableSection.all.reject{|fs| !fs.site_wide}
+    # if feature_sections
+    #   feature_sections.each do |fs|
+    #     @features += fs.features
+    #   end
+    # end
+    @side_column = @page.column_id
+    ops = "person_id = #{@page.author_id}" if @page.author_id
+    articles = @page.article_category_id.nil? ? Article.published.find(:all, :conditions => ops) : @page.article_category.articles.published.find(:all, :conditions => ops)
+    @testimonial = Testimonial.featured.sort_by(&:rand).first
+    @article_categories = ArticleCategory.active
+    @article_archive = articles.group_by { |a| [a.published_at.month, a.published_at.year] }
+    @article_authors = Person.active.find(:all, :conditions => "articles_count > 0")
+    @article_tags = Article.published.tag_counts.sort_by(&:name)
+    @recent_articles = articles
+    if @page.show_events? and @cms_config['modules']['events']
+      @events = Event.future[0..2]
+    end
+    @home = true if @page.permalink == "home"
+    @menus_tmp = []
+    build_tree(@menu)
+    add_breadcrumb "Home", "/" unless @page.permalink == "home" or @menu.parent_id == 1
+    for menu in @menus_tmp.reverse
+      unless menu == @menu
+        if menu.navigatable_type == "Page"
+          add_breadcrumb menu.navigatable.title, "/#{menu.navigatable.permalink}"
+        else
+          add_breadcrumb menu.navigatable.title, menu.navigatable
+        end
+      else  
+        add_breadcrumb @menu.navigatable.title unless @page.permalink == "home" 
+      end
+    end
+    session[:redirect] = request.request_uri if @members
+    authorize("Member", "Members") if @members
+  end
+  
   def destroy
     # begin
     #       @page = Page.find_by_permalink_and_can_delete! params[:id], true
@@ -133,6 +202,16 @@ class Admin::PagesController < AdminController
       end
     end
     @options_for_parent_id_level = @options_for_parent_id_level - 1
+  end
+  
+  
+  def build_tree(current_menu)
+    @menus_tmp << current_menu
+    @members = true if current_menu.navigatable.permalink == "members"
+    if current_menu.parent_id
+      parent_menu = Menu.find(current_menu.parent_id)
+      build_tree(parent_menu)
+    end  
   end
   
   def get_articles
