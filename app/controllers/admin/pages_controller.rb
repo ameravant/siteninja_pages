@@ -53,7 +53,7 @@ class Admin::PagesController < AdminController
     @images = @page.images
     @owner = @page
     @page.column_id = params[:page_column_id]
-    #@page.body = params[:page_body]
+    @page.body = params[:page_body]
     @page.title = params[:page_title]
     @page.parent_id = params[:page_parent_id]
     @page.meta_description = params[:page_meta_description]
