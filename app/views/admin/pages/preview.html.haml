@@ -7,7 +7,7 @@
   
 = # render :partial => "/shared/image_box", :locals => { :owner => @page } unless @page.images.empty?
 - if @page.automatically_embed_videos_and_images?
-  = ninja_parse(@page.body)
+  = ninja_parse(cookies[:page_body])
 - else
   = @page.body
 
