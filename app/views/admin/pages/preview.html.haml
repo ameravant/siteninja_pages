@@ -18,3 +18,13 @@
 = render :partial => "pages/sidebar"
 
 
+- content_for :head do
+  :javascript
+    window.onload = check_reload();
+    function check_reload() {
+    if (document.cookie == "reload=true")
+    {
+    document.cookie= "reload=false";
+    window.location.reload();
+    };
+    };
