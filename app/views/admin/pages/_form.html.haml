@@ -16,8 +16,10 @@
     }); 
     }); 
     function setLink(){
+    document.getElementById('post_preview_body').value = tinyMCE.get('page_body').getContent();
+    document.getElementById('submit-preview').click();
     =#=document.cookie = "page_body=" + escape(tinyMCE.get('page_body').getContent())+"; path=/admin/pages/; host=#{self.request.domain}";
-    - link = "document.getElementById('preview-link').href = '/admin/pages/preview?page_id=#{@page.id}&page_body=' + escape(tinyMCE.get('page_body').getContent()) + '&page_title=' + escape(document.getElementById('page_title').value) + '&menu_show_in_footer=' + document.getElementById('menu_show_in_footer').checked + '&page_column_id=' + document.getElementById('page_column_id').value + '&page_show_site_search=' + document.getElementById('page_show_site_search').checked +  '&page_show_side_column_text=' + document.getElementById('page_show_side_column_text').checked + '&page_meta_description=' + escape(document.getElementById('page_meta_description').value)"
+    - link = "document.getElementById('preview-link').href = '/admin/pages/preview?page_id=#{@page.id}&page_title=' + escape(document.getElementById('page_title').value) + '&menu_show_in_footer=' + document.getElementById('menu_show_in_footer').checked + '&page_column_id=' + document.getElementById('page_column_id').value + '&page_show_site_search=' + document.getElementById('page_show_site_search').checked +  '&page_show_side_column_text=' + document.getElementById('page_show_side_column_text').checked + '&page_meta_description=' + escape(document.getElementById('page_meta_description').value)"
     - if @cms_config['features']['testimonials']
       - link += " + '&page_show_featured_testimonial=' + document.getElementById('page_show_featured_testimonial').checked"
     - if @cms_config['modules']['newsletters']
@@ -127,3 +129,8 @@
     div#options h3 { margin: 10px 0 0 0; }
   %script{:type => "text/javascript"}
     - #function show_preview { document.getElementById('preview-div').innerHTML = document.getElementById('page_body').value };
+- content_for :pre_footer do
+  %div{:style => "width: 1px; height: 1px; overflow: hidden;"}
+    - form_remote_tag :url => post_preview_admin_pages_path, :method => "put", :html => {:name => "post_preview"} do
+      = text_area :post_preview, :body
+      = submit_tag "submit", :id => "submit-preview"

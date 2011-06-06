@@ -53,7 +53,7 @@ class Admin::PagesController < AdminController
     @images = @page.images
     @owner = @page
     @page.column_id = params[:page_column_id]
-    @page.body = params[:page_body]
+    #@page.body = params[:page_body]
     @page.title = params[:page_title]
     @page.parent_id = params[:page_parent_id]
     @page.meta_description = params[:page_meta_description]
@@ -108,6 +108,11 @@ class Admin::PagesController < AdminController
     end
     session[:redirect] = request.request_uri if @members
     authorize("Member", "Members") if @members
+  end
+  
+  def post_preview
+    @cms_config['site_settings']['preview'] = params[:post_preview][:body]
+    File.open("#{RAILS_ROOT}/config/cms.yml", 'w') { |f| YAML.dump(@cms_config, f) }
   end
   
   def destroy
