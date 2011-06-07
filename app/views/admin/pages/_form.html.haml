@@ -18,9 +18,7 @@
     function setLink(){
     document.getElementById('post_preview_body').value = tinyMCE.get('page_body').getContent();
     document.getElementById('submit-preview').click();
-    document.cookie="reload=true; path=/";
-    =#=document.cookie = "page_body=" + escape(tinyMCE.get('page_body').getContent())+"; path=/admin/pages/; host=#{self.request.domain}";
-    - link = "document.getElementById('preview-link').href = '/admin/pages/preview?page_id=#{@page.id}&page_title=' + escape(document.getElementById('page_title').value) + '&menu_show_in_footer=' + document.getElementById('menu_show_in_footer').checked + '&page_column_id=' + document.getElementById('page_column_id').value + '&page_show_site_search=' + document.getElementById('page_show_site_search').checked +  '&page_show_side_column_text=' + document.getElementById('page_show_side_column_text').checked + '&page_meta_description=' + escape(document.getElementById('page_meta_description').value)"
+    - link = "document.getElementById('preview-link').href = '/admin/pages/preview?reload=true&page_id=#{@page.id}&page_title=' + escape(document.getElementById('page_title').value) + '&menu_show_in_footer=' + document.getElementById('menu_show_in_footer').checked + '&page_column_id=' + document.getElementById('page_column_id').value + '&page_show_site_search=' + document.getElementById('page_show_site_search').checked +  '&page_show_side_column_text=' + document.getElementById('page_show_side_column_text').checked + '&page_meta_description=' + escape(document.getElementById('page_meta_description').value)"
     - if @cms_config['features']['testimonials']
       - link += " + '&page_show_featured_testimonial=' + document.getElementById('page_show_featured_testimonial').checked"
     - if @cms_config['modules']['newsletters']
