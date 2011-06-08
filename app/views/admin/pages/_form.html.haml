@@ -1,3 +1,34 @@
+- content_for :head do
+  %style{:type => "text/css"}
+    a#preview-link {font-size: 16px; font-weight: bold; vertical-align: baseline; text-decoration: none; font-family: Tahoma; float: right; display: block; margin-right: 75px; line-height: 16px; }
+  %script{:type => "text/javascript"}
+    jQuery(document).ready(function() {
+    jQuery("a#preview-link").fancybox({ 
+    'zoomSpeedIn': 300,
+    'zoomSpeedOut': 300,
+    'overlayShow': true,
+    'hideOnContentClick': false,
+    'easingOut': 'easeOutQuad',
+    'easingIn': 'easeInQuad',
+    'type': 'iframe',
+    'width': '90%',
+    'height': '90%'
+    }); 
+    }); 
+    function setLink(){
+    document.getElementById('post_preview_body').value = tinyMCE.get('page_body').getContent();
+    document.getElementById('submit-preview').click();
+    - link = "document.getElementById('preview-link').href = '/admin/pages/preview?reload=true&page_id=#{@page.id}&page_title=' + escape(document.getElementById('page_title').value) + '&menu_show_in_footer=' + document.getElementById('menu_show_in_footer').checked + '&page_column_id=' + document.getElementById('page_column_id').value + '&page_show_site_search=' + document.getElementById('page_show_site_search').checked +  '&page_show_side_column_text=' + document.getElementById('page_show_side_column_text').checked + '&page_meta_description=' + escape(document.getElementById('page_meta_description').value)"
+    - if @cms_config['features']['testimonials']
+      - link += " + '&page_show_featured_testimonial=' + document.getElementById('page_show_featured_testimonial').checked"
+    - if @cms_config['modules']['newsletters']
+      - link += " + '&page_show_newsletter_signup=' + (document.getElementById('page_show_newsletter_signup').checked)"
+    - link += " + '&page_show_articles=' + (document.getElementById('page_show_articles').value) + '&page_show_article_cats=' + (document.getElementById('page_show_article_cats').checked)"
+    - if @cms_config['modules']['events']
+      - link += " + '&page_show_events=' + (document.getElementById('page_show_events').checked)"
+    = link
+    }
+
 = f.error_messages :message => "Please fix these things and try again:", :header_message => "We couldn't save your page"
 - fields_for :menu do |m|
   - unless @no_edit
@@ -76,7 +107,9 @@
       %td= f.text_area :meta_description, :size => "44x2"
 
   = clear
-  %h2= f.label :body
+  %h2{:style => "width: 630px;"}
+    = f.label :body
+    =link_to("#{icon("Search")} Preview Page", "", :id => "preview-link", :class => "preview-link", :onclick => "setLink()")
   .options
     - unless @page.images.empty?
       = render :partial => "admin/shared/image_options", :locals => {:images => @page.images}
@@ -95,3 +128,8 @@
     div#options h3 { margin: 10px 0 0 0; }
   %script{:type => "text/javascript"}
     - #function show_preview { document.getElementById('preview-div').innerHTML = document.getElementById('page_body').value };
+- content_for :pre_footer do
+  %div{:style => "width: 1px; height: 1px; overflow: hidden;"}
+    - form_remote_tag :url => post_preview_admin_pages_path, :method => "put", :html => {:name => "post_preview"} do
+      = text_area :post_preview, :body
+      = submit_tag "submit", :id => "submit-preview"
