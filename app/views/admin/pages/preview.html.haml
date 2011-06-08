@@ -24,7 +24,7 @@
     - link += " + '&page_show_featured_testimonial=' + getQueryVariable('page_show_featured_testimonial')"
   - if @cms_config['modules']['newsletters']
     - link += " + '&page_show_newsletter_signup=' + getQueryVariable('page_show_newsletter_signup')"
-  - link += " + '&page_show_articles=' + (getQueryVariable('page_show_articles').value) + '&page_show_article_cats=' + getQueryVariable('page_show_article_cats')"
+  - link += " + '&page_show_articles=' + getQueryVariable('page_show_articles') + '&page_show_article_cats=' + getQueryVariable('page_show_article_cats')"
   - if @cms_config['modules']['events']
     - link += " + '&page_show_events=' + getQueryVariable('page_show_events')"
   :javascript
