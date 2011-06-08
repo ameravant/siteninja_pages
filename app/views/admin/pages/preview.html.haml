@@ -17,7 +17,8 @@
       = @settings.homepage_banner
     
   = render :partial => "pages/sidebar"
-
+- else
+  %h1 Loading Preview...
 
 - content_for :head do
   - link = "'/admin/pages/preview?reload=false&page_id=' + getQueryVariable('page_id') + '&page_title=' + getQueryVariable('page_title') + '&menu_show_in_footer=' + getQueryVariable('menu_show_in_footer') + '&page_column_id=' + getQueryVariable('page_column_id') + '&page_show_site_search=' + getQueryVariable('page_show_site_search') +  '&page_show_side_column_text=' + getQueryVariable('page_show_side_column_text') + '&page_meta_description=' + getQueryVariable('page_meta_description')"
