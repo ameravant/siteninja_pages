@@ -13,6 +13,8 @@ class Page < ActiveRecord::Base
   default_scope :order => "parent_id, position"
   named_scope :visible, :conditions => "status = 'visible'"
   named_scope :hidden, :conditions => "status = 'hidden'"
+  accepts_nested_attributes_for :images
+  
   
   def to_param
     self.permalink
