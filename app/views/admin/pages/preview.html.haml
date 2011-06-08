@@ -1,21 +1,22 @@
-- content_for :meta_title do
-  = @page.meta_title
-- content_for :meta_description do
-  = @page.meta_description
-- content_for :meta_keywords do
-  = @page.meta_keywords
+- unless params[:reload]?
+  - content_for :meta_title do
+    = @page.meta_title
+  - content_for :meta_description do
+    = @page.meta_description
+  - content_for :meta_keywords do
+    = @page.meta_keywords
   
-= # render :partial => "/shared/image_box", :locals => { :owner => @page } unless @page.images.empty?
-- if @page.automatically_embed_videos_and_images?
-  = ninja_parse(@cms_config['site_settings']['preview']) if @cms_config['site_settings']['preview']
-- else
-  = @cms_config['site_settings']['preview']
+  = # render :partial => "/shared/image_box", :locals => { :owner => @page } unless @page.images.empty?
+  - if @page.automatically_embed_videos_and_images?
+    = ninja_parse(@cms_config['site_settings']['preview']) if @cms_config['site_settings']['preview']
+  - else
+    = @cms_config['site_settings']['preview']
 
-- if @page.permalink == "home" and !@settings.homepage_banner.blank?
-  - content_for :banner do
-    = @settings.homepage_banner
+  - if @page.permalink == "home" and !@settings.homepage_banner.blank?
+    - content_for :banner do
+      = @settings.homepage_banner
     
-= render :partial => "pages/sidebar"
+  = render :partial => "pages/sidebar"
 
 
 - content_for :head do
