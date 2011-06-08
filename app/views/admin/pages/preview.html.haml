@@ -1,4 +1,4 @@
-- unless params[:reload]?
+- unless params[:reload] == "true"
   - content_for :meta_title do
     = @page.meta_title
   - content_for :meta_description do
