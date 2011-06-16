@@ -58,6 +58,7 @@
       == div.gv-nav-next { width: 30px; height: 30px; left: 504px !important; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
       ==.gv-strip_wrapper { left: 50px !important; width: 445px !important; }
       ==.galleryview .auto_video { margin: 0; }
+      ==.galleryview { visibility: hidden; }
       - if @settings.show_feature_thumbs
         ==#wide-features { margin-bottom: -50px !important; }
         ==.film-strip { height: 60px; }
@@ -198,6 +199,7 @@
     ==div.gv-nav-prev { width: 30px; height: 30px; margin-left: -4px; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
     ==div.gv-nav-next { width: 30px; height: 30px; margin-right: -4px; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
     ==.galleryview .auto_video { margin: 0; }
+    ==.galleryview { visibility: hidden; }
   %ul#features.galleryview
     - if @cms_config['website']['demo_message']
       %div{:style => "float: left; background: #e6e6e6; color: #333; position: absolute; z-index: 100; padding: 5px; font-size: 1.2em; font-family: Georgia, \"Times New Roman\", Serif; font-weight: bold;"}
