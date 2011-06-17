@@ -1,6 +1,6 @@
 - content_for :head do
   %style{:type => "text/css"}
-    a#preview-link {font-size: 16px; font-weight: bold; vertical-align: baseline; text-decoration: none; font-family: Tahoma; float: right; display: block; margin-right: 75px; line-height: 16px; }
+    ==.advanced-side-column-options { padding: 5px; border: 1px solid #ccc; background: #fff; color: #333; position: absolute; -moz-box-shadow: 0 4px 10px rgba(0,0,0,.6); -webkit-box-shadow: 0 4px 10px rgba(0,0,0,.6); box-shadow: 0 4px 10px rgba(0,0,0,.6); }
   %script{:type => "text/javascript"}
     jQuery(document).ready(function() {
     jQuery("a#preview-link").fancybox({ 
@@ -33,9 +33,9 @@
 - fields_for :menu do |m|
   - unless @no_edit
     .options
-      %h3==#{icon('Gear')} Page Options
-      #options
       
+      #options
+        %h3==#{icon('Gear')} Page Options
         = f.check_box :automatically_embed_videos_and_images
         = f.label :automatically_embed_videos_and_images, "Automatically embed videos/images"
         %br
@@ -44,35 +44,45 @@
         %br
         %h3== #{icon('Gear')} Sidebar options
         = collection_select(:page, :column_id, @side_columns, :id, :title, {:include_blank => "Select a Side Column"}, :style => "width: 160px; margin: 0 0 0 0;")
-        %br
-        = f.check_box :show_site_search
-        = f.label :show_site_search
-        %br
-        = f.check_box :show_side_column_text
-        = f.label :show_side_column_text
-        - if @cms_config['features']['testimonials']
+        - content_for :head do
+          :javascript
+            jQuery(document).ready(function() {
+            jQuery(".advanced-side-column-options").hide();
+            jQuery(".display-advanced-side-column-options").click(function()
+            {
+            jQuery(this).next(".advanced-side-column-options").slideToggle();
+            });
+            });
+        %div.display-advanced-side-column-options=link_to("Advanced Options", "javascript:null(0)")
+        .advanced-side-column-options
+          = f.check_box :show_site_search
+          = f.label :show_site_search
           %br
-          = f.check_box :show_featured_testimonial
-          = f.label :show_featured_testimonial, "Show random featured testimonial"
-        - if @cms_config['modules']['newsletters']
-          %br
-          = f.check_box :show_newsletter_signup
-          = f.label :show_newsletter_signup, "Show newsletter signup"
-        - if @cms_config['modules']['blog']
-          %br
-          = f.check_box :show_articles
-          = f.label :show_articles, "Show articles"
-          %br 
-          = collection_select(:page, :author_id, @authors, :id, :name, {:include_blank => "Filter by Author"}, :style => "width: 125px; margin: 0 0 0 20px;")
-          %br
-          = collection_select(:page, :article_category_id, @article_categories, :id, :name, {:include_blank => "Filter by Category"}, :style => "width: 125px; margin: 0 0 0 20px;")
-          %br
-          = f.check_box :show_article_cats
-          = f.label :show_article_cats, "Show article categories"
-        -if @cms_config['modules']['events']
-          %br
-          = f.check_box :show_events
-          = f.label :show_events, "Show events"
+          = f.check_box :show_side_column_text
+          = f.label :show_side_column_text
+          - if @cms_config['features']['testimonials']
+            %br
+            = f.check_box :show_featured_testimonial
+            = f.label :show_featured_testimonial, "Show random featured testimonial"
+          - if @cms_config['modules']['newsletters']
+            %br
+            = f.check_box :show_newsletter_signup
+            = f.label :show_newsletter_signup, "Show newsletter signup"
+          - if @cms_config['modules']['blog']
+            %br
+            = f.check_box :show_articles
+            = f.label :show_articles, "Show articles"
+            %br 
+            = collection_select(:page, :author_id, @authors, :id, :name, {:include_blank => "Filter by Author"}, :style => "width: 125px; margin: 0 0 0 20px;")
+            %br
+            = collection_select(:page, :article_category_id, @article_categories, :id, :name, {:include_blank => "Filter by Category"}, :style => "width: 125px; margin: 0 0 0 20px;")
+            %br
+            = f.check_box :show_article_cats
+            = f.label :show_article_cats, "Show article categories"
+          -if @cms_config['modules']['events']
+            %br
+            = f.check_box :show_events
+            = f.label :show_events, "Show events"
 
   %table{:cellspacing => 0, :style => "float: left; width: 550px;"}
     %tr{:class => cycle('odd', 'even')}
@@ -125,7 +135,8 @@
 - content_for :head do
   %style{:type => "text/css"}
     div#options { font-size: .8em; }
-    div#options h3 { margin: 10px 0 0 0; }
+    div#options input { margin: 0; }
+    div#options h3 { padding: 10px 0 5px 0; margin:0; }
   %script{:type => "text/javascript"}
     - #function show_preview { document.getElementById('preview-div').innerHTML = document.getElementById('page_body').value };
 - content_for :pre_footer do
