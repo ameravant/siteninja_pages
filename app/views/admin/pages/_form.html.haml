@@ -117,9 +117,12 @@
       %td= f.text_area :meta_description, :size => "44x2"
 
   = clear
-  %h2{:style => "width: 630px;"}
-    = f.label :body
-    =link_to("#{icon("Search")} Preview Page", "", :id => "preview-link", :class => "preview-link", :onclick => "setLink()")
+  %div{:style => "width: 560px;"}
+    %div{:style => "position: absolute; margin: 14px 0 0 555px;"}
+      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
+    %h2.form-label
+      = f.label :body
+      =link_to("#{icon("Search")} Preview Page", "", :id => "preview-link", :class => "preview-link", :onclick => "setLink()")
   .options
     - unless @page.images.empty?
       = render :partial => "admin/shared/image_options", :locals => {:images => @page.images}
