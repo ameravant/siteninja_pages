@@ -1,6 +1,9 @@
 - content_for :head do
   %style{:type => "text/css"}
     ==.advanced-side-column-options { padding: 5px; border: 1px solid #ccc; background: #fff; color: #333; position: absolute; -moz-box-shadow: 0 4px 10px rgba(0,0,0,.6); -webkit-box-shadow: 0 4px 10px rgba(0,0,0,.6); box-shadow: 0 4px 10px rgba(0,0,0,.6); }
+    ==#main-details { font-size: .85em; }
+    ==#main-details label.title { font-weight: bold; }
+    ==#page_title { font-size: 1.2em; }
   %script{:type => "text/javascript"}
     jQuery(document).ready(function() {
     jQuery("a#preview-link").fancybox({ 
@@ -32,10 +35,25 @@
 = f.error_messages :message => "Please fix these things and try again:", :header_message => "We couldn't save your page"
 - fields_for :menu do |m|
   - unless @no_edit
-    .options
+    #main-details.options
       
       #options
-        %h3==#{icon('Gear')} Page Options
+        %h3 Page Details
+        =m.label :status_visible, "Show in menu", :class => "title"
+        .radio-buttons
+          = m.radio_button :status, "visible", :disabled => @no_edit
+          %label{:for => "menu_status_visible"} Visible
+          = m.radio_button :status, "hidden", :disabled => @no_edit
+          %label{:for => "menu_status_hidden"} Hidden
+        = m.label :parent_id, "Menu placement", :class => "title"
+        %br
+        %select{:name => "menu[parent_id]", :id => "menu_parent_id", :disabled => @no_edit}
+          - for o in @options_for_parent_id
+            - unless @page.menus.first.blank?
+              %option{:value => o[1] , :selected => (@page.menus.first.parent_id and o[1] == @page.menus.first.parent_id ? "selected" : nil)}= o[0]
+            - else
+              %option{:value => o[1] , :selected => nil}= o[0]
+        %br
         = f.check_box :automatically_embed_videos_and_images
         = f.label :automatically_embed_videos_and_images, "Automatically embed videos/images"
         %br
@@ -55,6 +73,7 @@
             });
         %div.display-advanced-side-column-options=link_to("Advanced Options", "javascript:null(0)")
         .advanced-side-column-options
+          %img{:src =>"#{css_icon("Cancel","","16x16","red")}", :title =>"close", :alt=> "close box icon", :class => "close-icon", :onclick => "jQuery('.advanced-side-column-options').slideUp()"}
           = f.check_box :show_site_search
           = f.label :show_site_search
           %br
@@ -84,64 +103,40 @@
             = f.check_box :show_events
             = f.label :show_events, "Show events"
 
-  %table{:cellspacing => 0, :style => "float: left; width: 550px;"}
-    %tr{:class => cycle('odd', 'even')}
-      %td
-        = f.label :title, "Menu Title"
-        .small *required
-      %td= f.text_field :title, :size => 25, :class => "big", :disabled => @no_edit
-    %tr{:class => cycle('odd', 'even')}
-      %td Show in menu
-      %td{:class => "radio-buttons"}
-        = m.radio_button :status, "visible", :disabled => @no_edit
-        %label{:for => "menu_status_visible"} Visible
-        = m.radio_button :status, "hidden", :disabled => @no_edit
-        %label{:for => "menu_status_hidden"} Hidden
-    %tr{:class => cycle('odd', 'even')}
-      %td= f.label :parent_id, "Menu placement"
-      %td
-        %select{:name => "menu[parent_id]", :id => "menu_parent_id", :disabled => @no_edit}
-          - for o in @options_for_parent_id
-            - unless @page.menus.first.blank?
-              %option{:value => o[1] , :selected => (@page.menus.first.parent_id and o[1] == @page.menus.first.parent_id ? "selected" : nil)}= o[0]
-            - else
-              %option{:value => o[1] , :selected => nil}= o[0]
-    %tr.top{:class => cycle('odd', 'even')}
-      %td
-        = f.label :meta_title, "Page Title"
-        .small *required
-      %td
-        = f.text_area :meta_title, :size => "44x2", :disabled => @no_edit
-    %tr.top{:class => cycle('odd', 'even')}
-      %td= f.label :meta_description
-      %td= f.text_area :meta_description, :size => "44x2"
+  %h2.form-label= f.label :title, "Menu Title"
+  .note
+    %span.required *Required
+    Short title displayed in site menu.
+  = f.text_field :title, :class => "big", :size => 80, :style => "width: 550px;"
+  %h2.form-label= f.label :meta_title, "Page Title"
+  .note
+    %span.required *Required
+    Long title displayed as browser title and used to generate the page permalink.
+  = f.text_field :meta_title, :class => "big", :size => 80, :disabled => @no_edit, :style => "width: 550px;"
+  %h2.form-label= f.label :meta_description, "Short Description"
+  .note Used in the Feature Box and as the Meta Description.
+  = f.text_area :meta_description, :style => "width: 550px; height: 50px;"
+  
 
   = clear
-  %div{:style => "width: 560px;"}
-    %div{:style => "position: absolute; margin: 14px 0 0 555px;"}
-      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
-    %h2.form-label
-      = f.label :body
-      =link_to("#{icon("Search")} Preview Page", "", :id => "preview-link", :class => "preview-link", :onclick => "setLink()")
   .options
     - unless @page.images.empty?
       = render :partial => "admin/shared/image_options", :locals => {:images => @page.images}
     - unless @page.testimonials.empty?
       = render :partial => "admin/testimonials/testimonial_options", :locals => {:testimonials => @page.testimonials}
 
+  %div{:style => "width: 560px;"}
+    %div{:style => "position: absolute; margin: 17px 0 0 552px;"}
+      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
+    %h2.form-label
+      = f.label :body
+      =link_to("#{icon("Search")} Preview Page", "", :id => "preview-link", :class => "preview-link", :onclick => "setLink()")
+
   #preview-div
   = f.text_area :body, :size => "100x40", :class => "mceEditor"
   %div
   - fancy_submit admin_pages_path do
     = submit_tag "Save page"
-  - #%iframe{:src => "/admin/setting/preview?owner_type=Page&owner_id=#{@page.id}&preview=#{@page.body}"}
-- content_for :head do
-  %style{:type => "text/css"}
-    div#options { font-size: .8em; }
-    div#options input { margin: 0; }
-    div#options h3 { padding: 10px 0 5px 0; margin:0; }
-  %script{:type => "text/javascript"}
-    - #function show_preview { document.getElementById('preview-div').innerHTML = document.getElementById('page_body').value };
 - content_for :pre_footer do
   %div{:style => "width: 1px; height: 1px; overflow: hidden;"}
     - form_remote_tag :url => post_preview_admin_pages_path, :method => "put", :html => {:name => "post_preview"} do
