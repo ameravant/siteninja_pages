@@ -118,7 +118,7 @@
   = f.text_area :meta_description, :style => "width: 550px; height: 50px;"
   
 
-  = clear
+  %div{:style => "clear: both; height: 20px; "}
   .options
     - unless @page.images.empty?
       = render :partial => "admin/shared/image_options", :locals => {:images => @page.images}
