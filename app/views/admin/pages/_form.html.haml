@@ -47,7 +47,7 @@
           %label{:for => "menu_status_hidden"} Hidden
         = m.label :parent_id, "Menu placement", :class => "title"
         %br
-        %select{:name => "menu[parent_id]", :id => "menu_parent_id", :disabled => @no_edit}
+        %select{:name => "menu[parent_id]", :id => "menu_parent_id", :disabled => @no_edit, :style => "width: 250px;"}
           - for o in @options_for_parent_id
             - unless @page.menus.first.blank?
               %option{:value => o[1] , :selected => (@page.menus.first.parent_id and o[1] == @page.menus.first.parent_id ? "selected" : nil)}= o[0]
