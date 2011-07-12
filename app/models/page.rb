@@ -5,7 +5,6 @@ class Page < ActiveRecord::Base
   has_many :features, :as => :featurable, :dependent => :destroy
   has_many :testimonials, :as => :quotable, :dependent => :destroy
   has_many :menus, :as => :navigatable, :dependent => :destroy
-  belongs_to :column, :foreign_key => 'main_column_id'
   belongs_to :author, :class_name => 'Person'
   belongs_to :article_category
   belongs_to :column

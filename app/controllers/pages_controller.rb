@@ -5,9 +5,10 @@ class PagesController < ApplicationController
   def show
     begin
       @menu = @page.menus.first
-      @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true, :column_location => "side_column"})
+      @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
       @side_column_sections = ColumnSection.all(:conditions => {:column_id => 1, :visible => true}) if @page.column_id.blank?
       @main_column = Column.find(@page.main_column_id)
+      @main_column_sections = ColumnSection.all(:conditions => {:column_id => @page.main_column_id, :visible => true})
       @images = @page.images
       @footer_pages = Page.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
       @features = []
