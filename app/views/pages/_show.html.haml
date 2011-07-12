@@ -4,20 +4,19 @@
   = @page.meta_description
 - content_for :meta_keywords do
   = @page.meta_keywords
-- if @menu.is_homepage?
-  - if @cms_config['features']['advanced_feature_box']
-    = render :partial => "homepage_advanced_feature" , :locals => {:features => @features.reject{|f| f.featurable_section.title != "Home Page Feature Box"}} unless (@features.reject{|f| f.featurable_section.title != "Home Page Feature Box"}.empty?)
-  - else
+
+- for section in @main_column.column_sections
+  = debug(section.title)
+  - if section.column_section_type.title == "Body Content"
+    = @page.automatically_embed_videos_and_images? ? ninja_parse(@page.body) : @page.body
+  - elsif section.column_section_type.title == "Feature Box"
     = render :partial => "homepage_feature" , :locals => {:features => @features.reject{|f| f.featurable_section.title != "Home Page Feature Box"}} unless (@features.reject{|f| f.featurable_section.title != "Home Page Feature Box"}.empty?)
     - if @cms_config['site_settings']['wide_feature_box'] and !(@settings.show_features == false or @features.empty?) and @settings.show_feature_thumbs
-      .film-strip
-  
-= # render :partial => "/shared/image_box", :locals => { :owner => @page } unless @page.images.empty?
-- if @page.automatically_embed_videos_and_images?
-  = ninja_parse(@page.body)
-- else
-  = @page.body
-
+      .film-strip    
+  - elsif section.column_section_type.title == "HTML Section"
+    = section.body
+  - else
+    = render :partial => "/#{section.column_section_type.controller_name}/#{section.column_section_type.partial_name}", :locals => { :title => section.title, :show_author => section.show_author, :show_blurb => section.show_author  }
 - if @page.permalink == "home" and !@settings.homepage_banner.blank?
   - content_for :banner do
     = @settings.homepage_banner
