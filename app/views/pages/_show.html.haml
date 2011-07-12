@@ -15,7 +15,7 @@
   - elsif section.column_section_type.title == "HTML Section"
     = section.body
   - else
-    = render :partial => "/#{section.column_section_type.controller_name}/#{section.column_section_type.partial_name}", :locals => { :title => section.title, :show_author => section.show_author, :show_blurb => section.show_author  }
+    = render :partial => "/#{section.column_section_type.controller_name}/#{section.column_section_type.partial_name}", :locals => {:section => section}
 - if @page.permalink == "home" and !@settings.homepage_banner.blank?
   - content_for :banner do
     = @settings.homepage_banner

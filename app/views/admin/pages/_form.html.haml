@@ -34,74 +34,79 @@
 
 = f.error_messages :message => "Please fix these things and try again:", :header_message => "We couldn't save your page"
 - fields_for :menu do |m|
-  - unless @no_edit
-    #main-details.options
-      
-      #options
-        %h3 Page Details
-        =m.label :status_visible, "Show in menu", :class => "title"
-        .radio-buttons
-          = m.radio_button :status, "visible", :disabled => @no_edit
-          %label{:for => "menu_status_visible"} Visible
-          = m.radio_button :status, "hidden", :disabled => @no_edit
-          %label{:for => "menu_status_hidden"} Hidden
-        = m.label :parent_id, "Menu placement", :class => "title"
+  #main-details.options
+    
+    #options
+      %h3 Page Details
+      =m.label :status_visible, "Show in Menu", :class => "title"
+      .radio-buttons
+        = m.radio_button :status, "visible", :disabled => @no_edit
+        %label{:for => "menu_status_visible"} Visible
+        = m.radio_button :status, "hidden", :disabled => @no_edit
+        %label{:for => "menu_status_hidden"} Hidden
+      = m.label :parent_id, "Menu placement", :class => "title"
+      %br
+      %select{:name => "menu[parent_id]", :id => "menu_parent_id", :disabled => @no_edit, :style => "width: 250px;"}
+        - for o in @options_for_parent_id
+          - unless @page.menus.first.blank?
+            %option{:value => o[1] , :selected => (@page.menus.first.parent_id and o[1] == @page.menus.first.parent_id ? "selected" : nil)}= o[0]
+          - else
+            %option{:value => o[1] , :selected => nil}= o[0]
+      %br
+      = f.check_box :automatically_embed_videos_and_images
+      = f.label :automatically_embed_videos_and_images, "Automatically embed videos/images"
+      %br
+      = m.check_box :show_in_footer
+      = m.label :show_in_footer, "Show in Footer Menu"
+      %br
+      - if @cms_config['features']['main_column_management']
+        = f.label :main_column_id, "Main Column", :class => "title"
         %br
-        %select{:name => "menu[parent_id]", :id => "menu_parent_id", :disabled => @no_edit, :style => "width: 250px;"}
-          - for o in @options_for_parent_id
-            - unless @page.menus.first.blank?
-              %option{:value => o[1] , :selected => (@page.menus.first.parent_id and o[1] == @page.menus.first.parent_id ? "selected" : nil)}= o[0]
-            - else
-              %option{:value => o[1] , :selected => nil}= o[0]
+        = collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :style => "width: 250px; margin: 0 0 5px 0;")
         %br
-        = f.check_box :automatically_embed_videos_and_images
-        = f.label :automatically_embed_videos_and_images, "Automatically embed videos/images"
+      = f.label :column_id, "Side Column", :class => "title"
+      %br
+      = collection_select(:page, :column_id, @side_columns, :id, :title, {:include_blank => "Select a Side Column"}, :style => "width: 250px; margin: 0 0 0 0;")
+      - content_for :head do
+        :javascript
+          jQuery(document).ready(function() {
+          jQuery(".advanced-side-column-options").hide();
+          jQuery(".display-advanced-side-column-options").click(function()
+          {
+          jQuery(this).next(".advanced-side-column-options").slideToggle();
+          });
+          });
+      %div.display-advanced-side-column-options=link_to("Advanced Side Column Options", "javascript:null(0)")
+      .advanced-side-column-options
+        %img{:src =>"#{css_icon("Cancel","","16x16","red")}", :title =>"close", :alt=> "close box icon", :class => "close-icon", :onclick => "jQuery('.advanced-side-column-options').slideUp()"}
+        = f.check_box :show_site_search
+        = f.label :show_site_search
         %br
-        = m.check_box :show_in_footer
-        = m.label :show_in_footer, "Show in Footer Menu"
-        %br
-        %h3== #{icon('Gear')} Sidebar options
-        = collection_select(:page, :column_id, @side_columns, :id, :title, {:include_blank => "Select a Side Column"}, :style => "width: 160px; margin: 0 0 0 0;")
-        - content_for :head do
-          :javascript
-            jQuery(document).ready(function() {
-            jQuery(".advanced-side-column-options").hide();
-            jQuery(".display-advanced-side-column-options").click(function()
-            {
-            jQuery(this).next(".advanced-side-column-options").slideToggle();
-            });
-            });
-        %div.display-advanced-side-column-options=link_to("Advanced Options", "javascript:null(0)")
-        .advanced-side-column-options
-          %img{:src =>"#{css_icon("Cancel","","16x16","red")}", :title =>"close", :alt=> "close box icon", :class => "close-icon", :onclick => "jQuery('.advanced-side-column-options').slideUp()"}
-          = f.check_box :show_site_search
-          = f.label :show_site_search
+        = f.check_box :show_side_column_text
+        = f.label :show_side_column_text
+        - if @cms_config['features']['testimonials']
           %br
-          = f.check_box :show_side_column_text
-          = f.label :show_side_column_text
-          - if @cms_config['features']['testimonials']
-            %br
-            = f.check_box :show_featured_testimonial
-            = f.label :show_featured_testimonial, "Show random featured testimonial"
-          - if @cms_config['modules']['newsletters']
-            %br
-            = f.check_box :show_newsletter_signup
-            = f.label :show_newsletter_signup, "Show newsletter signup"
-          - if @cms_config['modules']['blog']
-            %br
-            = f.check_box :show_articles
-            = f.label :show_articles, "Show articles"
-            %br 
-            = collection_select(:page, :author_id, @authors, :id, :name, {:include_blank => "Filter by Author"}, :style => "width: 125px; margin: 0 0 0 20px;")
-            %br
-            = collection_select(:page, :article_category_id, @article_categories, :id, :name, {:include_blank => "Filter by Category"}, :style => "width: 125px; margin: 0 0 0 20px;")
-            %br
-            = f.check_box :show_article_cats
-            = f.label :show_article_cats, "Show article categories"
-          -if @cms_config['modules']['events']
-            %br
-            = f.check_box :show_events
-            = f.label :show_events, "Show events"
+          = f.check_box :show_featured_testimonial
+          = f.label :show_featured_testimonial, "Show random featured testimonial"
+        - if @cms_config['modules']['newsletters']
+          %br
+          = f.check_box :show_newsletter_signup
+          = f.label :show_newsletter_signup, "Show newsletter signup"
+        - if @cms_config['modules']['blog']
+          %br
+          = f.check_box :show_articles
+          = f.label :show_articles, "Show articles"
+          %br 
+          = collection_select(:page, :author_id, @authors, :id, :name, {:include_blank => "Filter by Author"}, :style => "width: 125px; margin: 0 0 0 20px;")
+          %br
+          = collection_select(:page, :article_category_id, @article_categories, :id, :name, {:include_blank => "Filter by Category"}, :style => "width: 125px; margin: 0 0 0 20px;")
+          %br
+          = f.check_box :show_article_cats
+          = f.label :show_article_cats, "Show article categories"
+        -if @cms_config['modules']['events']
+          %br
+          = f.check_box :show_events
+          = f.label :show_events, "Show events"
 
   %h2.form-label= f.label :title, "Menu Title"
   .note
@@ -119,8 +124,8 @@
   
 
   %div{:style => "clear: both; height: 20px; "}
-  .options
-    - unless @page.images.empty?
+  - unless @page.images.empty?
+    .options
       = render :partial => "admin/shared/image_options", :locals => {:images => @page.images}
     - unless @page.testimonials.empty?
       = render :partial => "admin/testimonials/testimonial_options", :locals => {:testimonials => @page.testimonials}
