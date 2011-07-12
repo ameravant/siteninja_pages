@@ -1,7 +1,8 @@
 class AddMainColumnIdToPages < ActiveRecord::Migration
   def self.up
     add_column :pages, :main_column_id, :integer
-    
+    body_column = ColumnSectionType.first(:conditions => {:title => "Body Content", :column_location => "main_column"})
+    feature = ColumnSectionType.create(:title => "Feature Box", :controller_name => "pages", :partial_name => "homepage_feature", :column_location => "main_column", :required => "['features']['feature_box']")
     homepage_column = Column.create(:title => "Homepage", :column_location => "main_column", :can_delete => false)
     ColumnSection.create(:title => "Feature Box", :column_section_type_id => feature.id, :column_id => homepage_column.id, :position => 1)
     ColumnSection.create(:title => "Body Content", :column_section_type_id => body_column.id, :column_id => homepage_column.id, :position => 2)
