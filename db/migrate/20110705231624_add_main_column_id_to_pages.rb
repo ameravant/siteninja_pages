@@ -14,7 +14,9 @@ class AddMainColumnIdToPages < ActiveRecord::Migration
       page.main_column_id = default_column.id
       page.save
     end
-    homepage.update_attributes(:main_column_id => homepage_column.id)
+    unless homepage.empty?
+      homepage.update_attributes(:main_column_id => homepage_column.id)
+    end
   end
 
   def self.down
