@@ -222,6 +222,7 @@ class Admin::PagesController < AdminController
   def get_articles
     @authors = Person.all(:conditions => ["articles_count > ?", 0])
     @article_categories = ArticleCategory.active
+    @templates = Template.all
     @side_columns = Column.all(:conditions => {:column_location => "side_column"})
     @main_columns = Column.all(:conditions => {:column_location => "main_column"})
   end

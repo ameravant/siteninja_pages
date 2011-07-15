@@ -5,6 +5,7 @@ class PagesController < ApplicationController
   def show
     begin
       @menu = @page.menus.first
+      @tmplate = @page.template unless @page.template.blank?
       @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
       @side_column_sections = ColumnSection.all(:conditions => {:column_id => 1, :visible => true}) if @page.column_id.blank?
       @main_column = (@page.main_column_id.blank? ? Column.first(:conditions => {:title => "Default", :column_location => "main_column"}) : Column.find(@page.main_column_id))

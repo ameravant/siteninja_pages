@@ -58,6 +58,11 @@
       %br
       = m.check_box :show_in_footer
       = m.label :show_in_footer, "Show in Footer Menu"
+      - unless @templates.empty?
+        %br
+        = f.label :column_id, "Template", :class => "title"
+        %br
+        = collection_select(:page, :template_id, @templates, :id, :title, {:include_blank => "Select a Template"}, :style => "width: 250px; margin: 0 0 0 0;", :selected => (@page.template_id.blank? ? "" : @page.template_id))
       %br
       - if @cms_config['features']['main_column_management']
         = f.label :main_column_id, "Main Column", :class => "title"
@@ -120,7 +125,7 @@
   = f.text_field :meta_title, :class => "big", :size => 80, :disabled => @no_edit, :style => "width: 550px;"
   %h2.form-label= f.label :meta_description, "Short Description"
   .note Used in the Feature Box and as the Meta Description.
-  = f.text_area :meta_description, :style => "width: 550px; height: 50px;"
+  = f.text_area :meta_description, :style => "width: 550px; height: 80px;"
   
 
   %div{:style => "clear: both; height: 20px; "}
