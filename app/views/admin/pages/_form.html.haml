@@ -46,7 +46,7 @@
         %label{:for => "menu_status_hidden"} Hidden
       = m.label :parent_id, "Menu placement", :class => "title"
       %br
-      %select{:name => "menu[parent_id]", :id => "menu_parent_id", :disabled => @no_edit, :style => "width: 250px;"}
+      %select{:name => "menu[parent_id]", :id => "menu_parent_id", :disabled => @no_edit, :class => "select"}
         - for o in @options_for_parent_id
           - unless @page.menus.first.blank?
             %option{:value => o[1] , :selected => (@page.menus.first.parent_id and o[1] == @page.menus.first.parent_id ? "selected" : nil)}= o[0]
@@ -60,18 +60,21 @@
       = m.label :show_in_footer, "Show in Footer Menu"
       - unless @templates.empty?
         %br
-        = f.label :column_id, "Template", :class => "title"
+        = f.label :template_id, "Template", :class => "title"
+        = icon "Write", admin_templates_path, "Manage Templates", "#{icons_loc}/", "16x16", "gray", "Manage Templates"
         %br
-        = collection_select(:page, :template_id, @templates, :id, :title, {:include_blank => "Select a Template"}, :style => "width: 250px; margin: 0 0 0 0;", :selected => (@page.template_id.blank? ? "" : @page.template_id))
+        = collection_select(:page, :template_id, @templates, :id, :title, {:include_blank => "Select a Template"}, :class => "select", :selected => (@page.template_id.blank? ? "" : @page.template_id))
       %br
       - if @cms_config['features']['main_column_management']
         = f.label :main_column_id, "Main Column", :class => "title"
+        = icon "Write", admin_columns_path(:column_location => "main_column"), "Manage Main Columns", "#{icons_loc}/", "16x16", "gray", "Manage Main Columns"
         %br
-        = collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :style => "width: 250px; margin: 0 0 5px 0;")
+        = collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")
         %br
       = f.label :column_id, "Side Column", :class => "title"
+      = icon "Write", admin_columns_path(:column_location => "side_column"), "Manage Side Columns", "#{icons_loc}/", "16x16", "gray", "Manage Side Columns"
       %br
-      = collection_select(:page, :column_id, @side_columns, :id, :title, {:include_blank => "Select a Side Column"}, :style => "width: 250px; margin: 0 0 0 0;")
+      = collection_select(:page, :column_id, @side_columns, :id, :title, {:include_blank => "Select a Side Column"}, :class => "select")
       - content_for :head do
         :javascript
           jQuery(document).ready(function() {

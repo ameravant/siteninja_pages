@@ -11,6 +11,7 @@ class CreatePages < ActiveRecord::Migration
       t.boolean :show_articles, :show_events, :default => true
       t.boolean :automatically_embed_videos_and_images, :default => true
       t.boolean :can_delete, :can_edit_content, :show_in_menu, :default => true
+      t.integer, :main_column_id
       t.timestamps
     end
   end
