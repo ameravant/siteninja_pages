@@ -4,11 +4,13 @@
   
 %h1= yield :meta_title
 .box
-  = icon "Photo"
-  = link_to "Manage images for this page", admin_page_images_path(@page)
+  %span.hmenu
+    = icon "Photo"
+    = link_to "Manage images for this page", admin_page_images_path(@page)
   - if @cms_config['features']['testimonials']
-    = icon "Bubble 3"
-    = link_to "Manage testimonials for this page", admin_page_testimonials_path(@page)
+    %span.hmenu
+      = icon "Bubble 3"
+      = link_to "Manage testimonials for this page", admin_page_testimonials_path(@page)
 - form_for :page, :url => admin_page_path(@page), :html => { :method => :put, :onsubmit => "form_submitted();" } do |f|
   = render :partial => "form", :locals => { :f => f }
 

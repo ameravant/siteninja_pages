@@ -1,8 +1,9 @@
 - content_for :head do
   %style{:type => "text/css"}
     ==.advanced-side-column-options { padding: 5px; border: 1px solid #ccc; background: #fff; color: #333; position: absolute; -moz-box-shadow: 0 4px 10px rgba(0,0,0,.6); -webkit-box-shadow: 0 4px 10px rgba(0,0,0,.6); box-shadow: 0 4px 10px rgba(0,0,0,.6); }
-    ==#main-details { font-size: .85em; }
+    ==#main-details, #body-details { font-size: .85em; }
     ==#main-details label.title { font-weight: bold; }
+    ==#main-details .icon { width: 12px; height: 12px; vertical-align: baseline; margin-bottom: -2px; }
     ==#page_title { font-size: 1.2em; }
   %script{:type => "text/javascript"}
     jQuery(document).ready(function() {
@@ -17,7 +18,10 @@
     'width': '90%',
     'height': '90%'
     }); 
-    }); 
+    });
+    function addtext(text) {
+    tinyMCE.execInstanceCommand("page_body","mceInsertContent",false,text);
+    }
     function setLink(){
     document.getElementById('post_preview_body').value = tinyMCE.get('page_body').getContent();
     document.getElementById('submit-preview').click();
@@ -53,26 +57,23 @@
           - else
             %option{:value => o[1] , :selected => nil}= o[0]
       %br
-      = f.check_box :automatically_embed_videos_and_images
-      = f.label :automatically_embed_videos_and_images, "Automatically embed videos/images"
-      %br
       = m.check_box :show_in_footer
       = m.label :show_in_footer, "Show in Footer Menu"
       - unless @templates.empty?
         %br
-        = f.label :template_id, "Template", :class => "title"
         = icon "Write", admin_templates_path, "Manage Templates", "#{icons_loc}/", "16x16", "gray", "Manage Templates"
+        = f.label :template_id, "Template", :class => "title"
         %br
         = collection_select(:page, :template_id, @templates, :id, :title, {:include_blank => "Select a Template"}, :class => "select", :selected => (@page.template_id.blank? ? "" : @page.template_id))
       %br
       - if @cms_config['features']['main_column_management']
-        = f.label :main_column_id, "Main Column", :class => "title"
         = icon "Write", admin_columns_path(:column_location => "main_column"), "Manage Main Columns", "#{icons_loc}/", "16x16", "gray", "Manage Main Columns"
+        = f.label :main_column_id, "Main Column", :class => "title"
         %br
         = collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")
         %br
-      = f.label :column_id, "Side Column", :class => "title"
       = icon "Write", admin_columns_path(:column_location => "side_column"), "Manage Side Columns", "#{icons_loc}/", "16x16", "gray", "Manage Side Columns"
+      = f.label :column_id, "Side Column", :class => "title"
       %br
       = collection_select(:page, :column_id, @side_columns, :id, :title, {:include_blank => "Select a Side Column"}, :class => "select")
       - content_for :head do
@@ -116,7 +117,7 @@
           = f.check_box :show_events
           = f.label :show_events, "Show events"
 
-  %h2.form-label= f.label :title, "Menu Title"
+  %h2.title.form-label= f.label :title, "Menu Title"
   .note
     %span.required *Required
     Short title displayed in site menu.
@@ -130,23 +131,28 @@
   .note Used in the Feature Box and as the Meta Description.
   = f.text_area :meta_description, :style => "width: 550px; height: 80px;"
   
-
-  %div{:style => "clear: both; height: 20px; "}
-  - unless @page.images.empty?
-    .options
-      = render :partial => "admin/shared/image_options", :locals => {:images => @page.images}
-    - unless @page.testimonials.empty?
-      = render :partial => "admin/testimonials/testimonial_options", :locals => {:testimonials => @page.testimonials}
-
-  %div{:style => "width: 560px;"}
-    %div{:style => "position: absolute; margin: 17px 0 0 552px;"}
+  .clear
+  #body-wrapper
+    .options#body-details
+      = link_to("#{icon("Search")} Preview Page", "", :id => "preview-link", :class => "icon preview-link", :onclick => "setLink()")
+    
       = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
-    %h2.form-label
-      = f.label :body
-      =link_to("#{icon("Search")} Preview Page", "", :id => "preview-link", :class => "preview-link", :onclick => "setLink()")
+      %br
+      = render :partial => "admin/shared/parser_help"
+      
+      - unless @page.images.empty?
+        = link_to("#{icon('Picture')} Add Attached Image", admin_page_images_path(@page, :fancy => "true"), :class => "fancy-iframe")
+      = render :partial => "admin/shared/asset_options"
+      - unless @page.testimonials.empty?
+        = render :partial => "admin/testimonials/testimonial_options", :locals => {:testimonials => @page.testimonials}
+      %p
+        = f.check_box :automatically_embed_videos_and_images
+        = f.label :automatically_embed_videos_and_images, "Use <strong>Ninja Code</strong> to embed objects."
+    %div{:style => "width: 560px;"}
+      %h2.form-label
+        = f.label :body
 
-  #preview-div
-  = f.text_area :body, :size => "100x40", :class => "mceEditor"
+    = f.text_area :body, :size => "100x40", :class => "mceEditor"
   %div
   - fancy_submit admin_pages_path do
     = submit_tag "Save page"
@@ -155,3 +161,18 @@
     - form_remote_tag :url => post_preview_admin_pages_path, :method => "put", :html => {:name => "post_preview"} do
       = text_area :post_preview, :body
       = submit_tag "submit", :id => "submit-preview"
+%script{:type => "text/javascript"}
+  jQuery(document).ready(function() {
+  jQuery(".fancy-iframe").fancybox({ 
+  'zoomSpeedIn': 300,
+  'zoomSpeedOut': 300,
+  'overlayShow': true,
+  'hideOnContentClick': 'true',
+  'easingOut': 'easeOutQuad',
+  'easingIn': 'easeInQuad',
+  'type': 'iframe',
+  'width': 910,
+  'autoScale': true,
+  'height':"90%"
+  }); 
+  }); 
