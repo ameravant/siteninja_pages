@@ -66,12 +66,11 @@
         %br
         = collection_select(:page, :template_id, @templates, :id, :title, {:include_blank => "Select a Template"}, :class => "select", :selected => (@page.template_id.blank? ? "" : @page.template_id))
       %br
-      - if @cms_config['features']['main_column_management']
-        = icon "Write", admin_columns_path(:column_location => "main_column"), "Manage Main Columns", "#{icons_loc}/", "16x16", "gray", "Manage Main Columns"
-        = f.label :main_column_id, "Main Column", :class => "title"
-        %br
-        = collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")
-        %br
+      = icon "Write", admin_columns_path(:column_location => "main_column"), "Manage Main Columns", "#{icons_loc}/", "16x16", "gray", "Manage Main Columns"
+      = f.label :main_column_id, "Main Column", :class => "title"
+      %br
+      = collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")
+      %br
       = icon "Write", admin_columns_path(:column_location => "side_column"), "Manage Side Columns", "#{icons_loc}/", "16x16", "gray", "Manage Side Columns"
       = f.label :column_id, "Side Column", :class => "title"
       %br
@@ -134,20 +133,21 @@
   .clear
   #body-wrapper
     .options#body-details
-      = link_to("#{icon("Search")} Preview Page", "", :id => "preview-link", :class => "icon preview-link", :onclick => "setLink()")
-    
+      = link_to("#{icon("Search")} Preview Page", "", :id => "preview-link", :class => "icon preview-link", :onclick => "setLink()")      
       = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
-      %br
-      = render :partial => "admin/shared/parser_help"
+      .inserts
+        %strong Insert:
+        %br
+        = render :partial => "admin/shared/parser_help"
       
-      - unless @page.images.empty?
-        = link_to("#{icon('Picture')} Add Attached Image", admin_page_images_path(@page, :fancy => "true"), :class => "fancy-iframe")
-      = render :partial => "admin/shared/asset_options"
-      - unless @page.testimonials.empty?
-        = render :partial => "admin/testimonials/testimonial_options", :locals => {:testimonials => @page.testimonials}
-      %p
-        = f.check_box :automatically_embed_videos_and_images
-        = f.label :automatically_embed_videos_and_images, "Use <strong>Ninja Code</strong> to embed objects."
+        - unless @page.title.blank?
+          = link_to("#{icon('Picture')} Attached Image", admin_page_images_path(@page, :fancy => "true"), :class => "fancy-iframe")
+        = render :partial => "admin/shared/asset_options"
+        - unless @page.testimonials.empty?
+          = render :partial => "admin/testimonials/testimonial_options", :locals => {:testimonials => @page.testimonials}
+        %p
+          = f.check_box :automatically_embed_videos_and_images
+          = f.label :automatically_embed_videos_and_images, "Use <strong>Ninja Code</strong> to embed objects."
     %div{:style => "width: 560px;"}
       %h2.form-label
         = f.label :body

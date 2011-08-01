@@ -1,7 +1,6 @@
 - @features = Menu.first.featurable_sections.first.features
 - if @cms_config['site_settings']['wide_feature_box']
   - content_for :wide_feature_box do
-
     %script{:type => "text/javascript"}
       jQuery(document).ready(function() {
       jQuery('#wide-features').galleryView({
@@ -23,32 +22,41 @@
       == show_panel_nav: #{@settings.show_feature_thumbs? ? "false" : "true"}
       });
       });
-      jQuery(document).ready(function(){
-      jQuery('.gv-panel_wrap').click(function(){
-      jQuery(document).stopTime("transition");
-      paused = true;
-      });
-      jQuery('.content-img').click(function(){
-      jQuery(document).everyTime("transition");
-      paused = false;
-      });
-      jQuery('.gv-nav-prev').click(function(){
-      jQuery(document).everyTime("transition");
-      paused = false;
-      });
-      jQuery('.gv-nav-next').click(function(){
-      jQuery(document).everyTime("transition");
-      paused = false;
-      });
-      jQuery('.gv-panel-nav-next').click(function(){
-      jQuery(document).everyTime("transition");
-      paused = false;
-      });
-      jQuery('.gv-panel-nav-prev').click(function(){
-      jQuery(document).everyTime("transition");
-      paused = false;
-      });
-      });
+      - unless @cms_config['site_settings']['feature_box_autoplay'] == "false"
+        jQuery(document).ready(function(){
+        jQuery('.gv-panel_wrap').click(function(){
+        jQuery(document).stopTime("transition");
+        paused = true;
+        });
+        jQuery('.content-img').click(function(){
+        jQuery(document).everyTime("transition");
+        paused = false;
+        });
+        jQuery('.gv-nav-prev').click(function(){
+        jQuery(document).everyTime("transition");
+        paused = false;
+        });
+        jQuery('.gv-nav-next').click(function(){
+        jQuery(document).everyTime("transition");
+        paused = false;
+        });
+        jQuery('.gv-panel-nav-next').click(function(){
+        jQuery(document).everyTime("transition");
+        paused = false;
+        });
+        jQuery('.gv-panel-nav-prev').click(function(){
+        jQuery(document).everyTime("transition");
+        paused = false;
+        });
+        });
+      - else
+        jQuery(document).ready(function(){
+        pause();
+        });
+    function pause(){
+    jQuery(document).stopTime("transition");
+    paused = true;
+    };
     %style{:type => "text/css"}
       ==#slideshow-frame { width: 870px; height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height']) : "300"}px; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'};  position: absolute; }
       ==#wide-features { top: 3px; left: 3px; }
@@ -146,6 +154,14 @@
 
 - else
   %script{:type => "text/javascript"}
+    function pause(){
+    jQuery(document).stopTime("transition");
+    paused = true;
+    };
+    function unpause(){
+    jQuery(document).everyTime("transition");
+    paused = false;
+    };
     jQuery(document).ready(function() {
     jQuery('#features').galleryView({
     panel_width: 542,
@@ -166,40 +182,32 @@
     == show_panel_nav: #{@settings.show_feature_thumbs? ? "false" : "true"}
     });
     });
-    jQuery(document).ready(function(){
-    jQuery('.panel').click(function(){
-    jQuery(document).stopTime("transition");
-    paused = true;
-    });
-    jQuery('.embeded-video').click(function(){
-    jQuery(document).stopTime("transition");
-    paused = true;
-    });
-    jQuery('.content-img').click(function(){
-    jQuery(document).everyTime("transition");
-    paused = false;
-    });
-    jQuery('.gv-nav-prev').click(function(){
-    jQuery(document).everyTime("transition");
-    paused = false;
-    });
-    jQuery('.gv-nav-next').click(function(){
-    jQuery(document).everyTime("transition");
-    paused = false;
-    });
-    jQuery('.gv-panel-nav-next').click(function(){
-    jQuery(document).everyTime("transition");
-    paused = false;
-    });
-    jQuery('.gv-panel-nav-prev').click(function(){
-    jQuery(document).everyTime("transition");
-    paused = false;
-    });
-    });
-    function pause(){
-    jQuery(document).stopTime("transition");
-    paused = true;
-    };
+    - unless @cms_config['site_settings']['feature_box_autoplay'] == "false"
+      jQuery(document).ready(function(){
+      jQuery('.gv-panel_wrap').click(function(){
+      pause();
+      });
+      jQuery('.content-img').click(function(){
+      unpause();
+      });
+      jQuery('.gv-nav-prev').click(function(){
+      unpause();
+      });
+      jQuery('.gv-nav-next').click(function(){
+      unpause();
+      });
+      jQuery('.gv-panel-nav-next').click(function(){
+      unpause();
+      });
+      jQuery('.gv-panel-nav-prev').click(function(){
+      unpause();
+      });
+      });
+    - else
+      jQuery(document).ready(function(){
+      pause();
+      });
+
   %style{:type => "text/css"}
     ==#features { background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'}; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; }
     = "#features { height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 64) : "364"}px !important; }" if @settings.show_feature_thumbs
