@@ -19,7 +19,7 @@
   - content_for :banner do
     = @settings.homepage_banner
 - content_for :head do
-  = @page.head_script unless @page.head_script.empty?
-  - unless @page.additional_styles.empty?
+  = @page.head_script unless @page.head_script.blank?
+  - unless @page.additional_styles.blank?
     %style{:type => "text/css"}
       = @page.additional_styles
