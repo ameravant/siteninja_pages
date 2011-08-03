@@ -5,6 +5,8 @@
     ==#main-details label.title { font-weight: bold; }
     ==#main-details .icon { width: 12px; height: 12px; vertical-align: baseline; margin-bottom: -2px; }
     ==#page_title { font-size: 1.2em; }
+    ==.inline-window { text-align: left; }
+    ==.inserts { padding: 5px 0; }
   %script{:type => "text/javascript"}
     jQuery(document).ready(function() {
     jQuery("a#preview-link").fancybox({ 
@@ -25,7 +27,7 @@
     function setLink(){
     document.getElementById('post_preview_body').value = tinyMCE.get('page_body').getContent();
     document.getElementById('submit-preview').click();
-    - link = "document.getElementById('preview-link').href = '/admin/pages/preview?reload=true&page_id=#{@page.id}&page_title=' + escape(document.getElementById('page_title').value) + '&menu_show_in_footer=' + document.getElementById('menu_show_in_footer').checked + '&page_column_id=' + document.getElementById('page_column_id').value + '&page_show_site_search=' + document.getElementById('page_show_site_search').checked +  '&page_show_side_column_text=' + document.getElementById('page_show_side_column_text').checked + '&page_meta_description=' + escape(document.getElementById('page_meta_description').value)"
+    - link = "document.getElementById('preview-link').href = '/admin/pages/preview?reload=true&page_id=#{@page.id}&page_title=' + escape(document.getElementById('page_title').value) + '&menu_show_in_footer=' + document.getElementById('menu_show_in_footer').checked + '&page_column_id=' + document.getElementById('page_column_id').value + '&page_show_site_search=' + document.getElementById('page_show_site_search').checked +  '&page_show_side_column_text=' + document.getElementById('page_show_side_column_text').checked + '&page_meta_description=' + escape(document.getElementById('page_meta_description').value) + '&page_head_script=' + escape(document.getElementById('page_head_script').value) + '&page_additional_styles=' + escape(document.getElementById('page_additional_styles').value)" 
     - if @cms_config['features']['testimonials']
       - link += " + '&page_show_featured_testimonial=' + document.getElementById('page_show_featured_testimonial').checked"
     - if @cms_config['modules']['newsletters']
@@ -143,11 +145,29 @@
         - unless @page.title.blank?
           = link_to("#{icon('Picture')} Attached Image", admin_page_images_path(@page, :fancy => "true"), :class => "fancy-iframe")
         = render :partial => "admin/shared/asset_options"
+        = render :partial => "admin/shared/insert_link"
+        = render :partial => "admin/shared/insert_map"
         - unless @page.testimonials.empty?
           = render :partial => "admin/testimonials/testimonial_options", :locals => {:testimonials => @page.testimonials}
-        %p
-          = f.check_box :automatically_embed_videos_and_images
-          = f.label :automatically_embed_videos_and_images, "Use <strong>Ninja Code</strong> to embed objects."
+        = f.check_box :automatically_embed_videos_and_images
+        = f.label :automatically_embed_videos_and_images, "Use <strong>Ninja Code</strong> to embed objects."
+        
+      = link_to("#{icon('Css')} Additional Styles", "#additional-styles", :class => "fancy-inline")
+      %br
+      = link_to("#{icon('Code')} Head Script", "#head-script", :class => "fancy-inline")
+      %div{ :style => "display: none;" }
+        #additional-styles.inline-window
+          %h2= f.label :additional_styles
+          .note Add any CSS styles here that only pertain to this page.
+          = f.text_area :additional_styles
+          %div
+            %input{:type => "button", :onclick => "jQuery.fancybox.close()", :value => "Done"}
+        #head-script.inline-window
+          %h2= f.label :head_script
+          .note Add extra HTML to the head tag of the page.
+          = f.text_area :head_script
+          %div
+            %input{:type => "button", :onclick => "jQuery.fancybox.close()", :value => "Done"}
     %div{:style => "width: 560px;"}
       %h2.form-label
         = f.label :body
@@ -174,5 +194,17 @@
   'width': 910,
   'autoScale': true,
   'height':"90%"
+  }); 
+  }); 
+  jQuery(document).ready(function() {
+  jQuery(".fancy-inline").fancybox({ 
+  'zoomSpeedIn': 300,
+  'zoomSpeedOut': 300,
+  'overlayShow': true,
+  'hideOnContentClick': false,
+  'hideOnOverlayClick': false,
+  'type': 'inline',
+  'showCloseButton' : false,
+  'autoScale': true
   }); 
   }); 

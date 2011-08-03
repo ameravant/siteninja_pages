@@ -21,7 +21,7 @@
   %h1 Loading Preview...
 
 - content_for :head do
-  - link = "'/admin/pages/preview?reload=false&page_id=' + getQueryVariable('page_id') + '&page_title=' + getQueryVariable('page_title') + '&menu_show_in_footer=' + getQueryVariable('menu_show_in_footer') + '&page_column_id=' + getQueryVariable('page_column_id') + '&page_show_site_search=' + getQueryVariable('page_show_site_search') +  '&page_show_side_column_text=' + getQueryVariable('page_show_side_column_text') + '&page_meta_description=' + getQueryVariable('page_meta_description')"
+  - link = "'/admin/pages/preview?reload=false&page_id=' + getQueryVariable('page_id') + '&page_title=' + getQueryVariable('page_title') + '&menu_show_in_footer=' + getQueryVariable('menu_show_in_footer') + '&page_column_id=' + getQueryVariable('page_column_id') + '&page_show_site_search=' + getQueryVariable('page_show_site_search') +  '&page_show_side_column_text=' + getQueryVariable('page_show_side_column_text') + '&page_meta_description=' + getQueryVariable('page_meta_description') + '&page_additional_styles=' + getQueryVariable('page_additional_styles')  + '&page_head_script=' + getQueryVariable('page_head_script') "
   - if @cms_config['features']['testimonials']
     - link += " + '&page_show_featured_testimonial=' + getQueryVariable('page_show_featured_testimonial')"
   - if @cms_config['modules']['newsletters']
@@ -49,3 +49,6 @@
     window.location = #{link};
     }
     };
+  = @page.head_script
+  %style{:type => "text/css"}
+    = @page.additional_styles

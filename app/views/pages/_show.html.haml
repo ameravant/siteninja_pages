@@ -18,3 +18,8 @@
 - if @page.permalink == "home" and !@settings.homepage_banner.blank?
   - content_for :banner do
     = @settings.homepage_banner
+- content_for :head do
+  = @page.head_script unless @page.head_script.empty?
+  - unless @page.additional_styles.empty?
+    %style{:type => "text/css"}
+      = @page.additional_styles

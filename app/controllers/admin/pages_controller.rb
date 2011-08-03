@@ -66,6 +66,8 @@ class Admin::PagesController < AdminController
     @page.show_article_cats = params[:page_show_article_cats]
     @page.show_events = params[:page_show_events]
     @page.meta_description = params[:page_meta_description]
+    @page.head_script = params[:head_script]
+    @page.additional_styles = params[:page_additional_styles]
     @menu.show_in_footer = params[:menu_show_in_footer]
     @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
     @side_column_sections = ColumnSection.all(:conditions => {:column_id => 1, :visible => true}) if @page.column_id.blank?
