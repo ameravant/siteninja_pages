@@ -31,6 +31,7 @@ class Admin::PagesController < AdminController
   
   def create
     @page = Page.new params[:page]
+    add_person_groups
     if @page.save
       @menu = @page.menus.new params[:menu]
       @menu.save
@@ -137,6 +138,7 @@ class Admin::PagesController < AdminController
     @menu = @page.menus.first
     add_breadcrumb @page.name
     # permalink does not get regenerated
+    add_person_groups
     if @page.update_attributes params[:page] and @menu.update_attributes params[:menu]
       flash[:notice] = "#{@page.name} page updated."
       redirect_to admin_pages_path
@@ -239,5 +241,15 @@ class Admin::PagesController < AdminController
       end
     end
   end
-  
+  def add_person_groups
+    if @cms_config['modules']['members']
+      if params[:page][:permission_level] == "except those checked"
+        params[:page][:person_group_ids] = PersonGroup.role.collect(&:id).delete_if{|c| params[:page][:person_group_ids].include?(c.to_s)}
+      elsif params[:page][:permission_level] == "administrators"
+        params[:page][:person_group_ids] = [1]
+      elsif params[:page][:permission_level] == "everyone"
+        params[:page][:person_group_ids] = PersonGroup.role.collect(&:id)
+      end        
+    end
+  end
 end

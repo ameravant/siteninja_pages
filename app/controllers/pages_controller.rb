@@ -1,5 +1,7 @@
 class PagesController < ApplicationController
   before_filter :get_page_or_404
+  before_filter :authenticate, :only => :show
+  
   unloadable # http://dev.rubyonrails.org/ticket/6001
   
   def show
@@ -59,7 +61,12 @@ class PagesController < ApplicationController
   end
 
 private
-
+ def authenticate
+   if @cms_config['modules']['members'] && @page.permission_level != "everyone"
+     session[:redirect] = request.request_uri
+     authorize(@page.person_groups.collect{|p| p.title}, @page.title)
+   end
+ end
  def build_tree(current_menu)
   @menus_tmp << current_menu
   @members = true if current_menu.navigatable.permalink == "members"
