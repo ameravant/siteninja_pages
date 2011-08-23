@@ -1,11 +1,19 @@
 class PagesController < ApplicationController
   before_filter :get_page_or_404
+  after_filter :set_template
   unloadable # http://dev.rubyonrails.org/ticket/6001
   
   def show
     begin
       @menu = @page.menus.first
       @tmplate = @page.template unless @page.template.blank?
+      @tmplate.layout_top = @global_template.layout_top if @tmplate.layout_top.blank?
+      @tmplate.layout_bottom = @global_template.layout_bottom if @tmplate.layout_bottom.blank?
+      @tmplate.article_show = @global_template.article_show if @tmplate.article_show.blank?
+      @tmplate.articles_index = @global_template.articles_index if @tmplate.articles_index.blank?
+      @tmplate.small_article_for_index = @global_template.small_article_for_index if @tmplate.small_article_for_index.blank?
+      @tmplate.medium_article_for_index = @global_template.medium_article_for_index if @tmplate.medium_article_for_index.blank?
+      @tmplate.large_article_for_index = @global_template.large_article_for_index if @tmplate.large_article_for_index.blank?
       @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
       @side_column_sections = ColumnSection.all(:conditions => {:column_id => 1, :visible => true}) if @page.column_id.blank?
       @main_column = (@page.main_column_id.blank? ? Column.first(:conditions => {:title => "Default", :column_location => "main_column"}) : Column.find(@page.main_column_id))
@@ -60,15 +68,20 @@ class PagesController < ApplicationController
 
 private
 
- def build_tree(current_menu)
-  @menus_tmp << current_menu
-  @members = true if current_menu.navigatable.permalink == "members"
-  if current_menu.parent_id
-    parent_menu = Menu.find(current_menu.parent_id)
-    build_tree(parent_menu)
-  end  
-end
+  def build_tree(current_menu)
+    @menus_tmp << current_menu
+    @members = true if current_menu.navigatable.permalink == "members"
+    if current_menu.parent_id
+      parent_menu = Menu.find(current_menu.parent_id)
+      build_tree(parent_menu)
+    end  
+  end
+
   def get_page_or_404
     render_404 unless @page = Page.find_by_permalink(params[:id])
+  end
+  
+  def set_template
+    
   end
 end

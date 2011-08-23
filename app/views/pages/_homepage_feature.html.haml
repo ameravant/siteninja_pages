@@ -2,6 +2,14 @@
 - if @cms_config['site_settings']['wide_feature_box']
   - content_for :wide_feature_box do
     %script{:type => "text/javascript"}
+      function pause(){
+      jQuery(document).stopTime("transition");
+      paused = true;
+      };
+      function unpause(){
+      jQuery(document).everyTime("transition");
+      paused = false;
+      };
       jQuery(document).ready(function() {
       jQuery('#wide-features').galleryView({
       panel_width: 870,
@@ -11,8 +19,7 @@
       overlay_color: '#222',
       overlay_height: 80,
       overlay_text_color: 'white',
-      caption_text_color: '#222',
-      //pause_on_hover: true,    
+      caption_text_color: '#222', 
       == panel_animation: '#{@cms_config['site_settings']['feature_box_animation'] ? @cms_config['site_settings']['feature_box_animation'] : 'crossfade'}',
       show_filmstrip_nav: true,
       filmstrip_position: "bottom",
@@ -25,38 +32,28 @@
       - unless @cms_config['site_settings']['feature_box_autoplay'] == "false"
         jQuery(document).ready(function(){
         jQuery('.gv-panel_wrap').click(function(){
-        jQuery(document).stopTime("transition");
-        paused = true;
+        pause();
         });
         jQuery('.content-img').click(function(){
-        jQuery(document).everyTime("transition");
-        paused = false;
+        unpause();
         });
         jQuery('.gv-nav-prev').click(function(){
-        jQuery(document).everyTime("transition");
-        paused = false;
+        unpause();
         });
         jQuery('.gv-nav-next').click(function(){
-        jQuery(document).everyTime("transition");
-        paused = false;
+        unpause();
         });
         jQuery('.gv-panel-nav-next').click(function(){
-        jQuery(document).everyTime("transition");
-        paused = false;
+        unpause();
         });
         jQuery('.gv-panel-nav-prev').click(function(){
-        jQuery(document).everyTime("transition");
-        paused = false;
+        unpause();
         });
         });
       - else
         jQuery(document).ready(function(){
         pause();
         });
-      function pause(){
-      jQuery(document).stopTime("transition");
-      paused = true;
-      };
     %style{:type => "text/css"}
       ==#slideshow-frame { width: 870px; height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height']) : "300"}px; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'};  position: absolute; }
       ==#wide-features { top: 3px; left: 3px; }
