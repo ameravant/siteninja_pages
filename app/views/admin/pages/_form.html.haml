@@ -173,6 +173,25 @@
         = f.label :body
 
     = f.text_area :body, :size => "100x40", :class => "mceEditor"
+  -if @cms_config['modules']['members']
+    %div
+      %h2.form-label Permissions
+      .note Who will have access to this page
+      =f.label :permission_level, "Everyone"
+      =f.radio_button :permission_level, "everyone"
+      =f.label :permission_level, "Administrators Only"
+      =f.radio_button :permission_level, "administrators"
+      =f.label :permission_level, "All those checked below"
+      =f.radio_button :permission_level, "those checked"
+      =f.label :permission_level, "Except for those checked below"
+      =f.radio_button :permission_level, "except those checked"
+      -for group in PersonGroup.role
+        -if @page.permission_level == "except those checked"
+          = check_box_tag "page[person_group_ids][]", group.id, !@page.person_groups.include?(group), :id => "group_checkbox_#{group.id}"
+        -else 
+          = check_box_tag "page[person_group_ids][]", group.id, @page.person_groups.include?(group), :id => "group_checkbox_#{group.id}"
+        = label_tag "group_checkbox_#{group.id}", group.title
+      
   %div
   - fancy_submit admin_pages_path do
     = submit_tag "Save page"

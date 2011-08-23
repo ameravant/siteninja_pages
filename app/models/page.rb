@@ -15,6 +15,7 @@ class Page < ActiveRecord::Base
   named_scope :visible, :conditions => "status = 'visible'"
   named_scope :hidden, :conditions => "status = 'hidden'"
   accepts_nested_attributes_for :images
+  has_and_belongs_to_many :person_groups
   
   
   def to_param

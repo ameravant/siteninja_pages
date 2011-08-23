@@ -1,8 +1,8 @@
 class PagesController < ApplicationController
   before_filter :get_page_or_404
   after_filter :set_template
-  unloadable # http://dev.rubyonrails.org/ticket/6001
-  
+  before_filter :authenticate, :only => :show
+  unloadable # http://dev.rubyonrails.org/ticket/6001  
   def show
     begin
       @menu = @page.menus.first
@@ -68,6 +68,13 @@ class PagesController < ApplicationController
 
 private
 
+  def authenticate
+    if @cms_config['modules']['members'] && @page.permission_level != "everyone"
+      session[:redirect] = request.request_uri
+      authorize(@page.person_groups.collect{|p| p.title}, @page.title)
+    end
+  end
+
   def build_tree(current_menu)
     @menus_tmp << current_menu
     @members = true if current_menu.navigatable.permalink == "members"
@@ -80,8 +87,9 @@ private
   def get_page_or_404
     render_404 unless @page = Page.find_by_permalink(params[:id])
   end
-  
+
   def set_template
-    
+  
   end
 end
+
