@@ -1,4 +1,4 @@
-- @features = Menu.first.featurable_sections.first.features
+- @features = Menu.first.featurable_sections.first.features if !Menu.first.featurable_sections.empty?
 - if @cms_config['features']['feature_box'] and !@features.empty? and @settings.show_features
   - if @cms_config['site_settings']['wide_feature_box']
     - content_for :wide_feature_box do
