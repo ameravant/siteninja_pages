@@ -1,6 +1,157 @@
 - @features = Menu.first.featurable_sections.first.features
-- if @cms_config['site_settings']['wide_feature_box']
-  - content_for :wide_feature_box do
+- if @cms_config['features']['feature_box'] and !@features.empty? and @settings.show_features
+  - if @cms_config['site_settings']['wide_feature_box']
+    - content_for :wide_feature_box do
+      %script{:type => "text/javascript"}
+        function pause(){
+        jQuery(document).stopTime("transition");
+        paused = true;
+        };
+        function unpause(){
+        jQuery(document).everyTime("transition");
+        paused = false;
+        };
+        jQuery(document).ready(function() {
+        jQuery('#wide-features').galleryView({
+        panel_width: 870,
+        == panel_height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? @cms_config['site_settings']['feature_box_height'] : '300'},
+        frame_width: 85,
+        frame_height: 55,
+        overlay_color: '#222',
+        overlay_height: 80,
+        overlay_text_color: 'white',
+        caption_text_color: '#222', 
+        == panel_animation: '#{@cms_config['site_settings']['feature_box_animation'] ? @cms_config['site_settings']['feature_box_animation'] : 'crossfade'}',
+        show_filmstrip_nav: true,
+        filmstrip_position: "bottom",
+        == transition_speed: #{!@cms_config['site_settings']['feature_box_transition_speed'].blank? ? @cms_config['site_settings']['feature_box_transition_speed'] : '800'},
+        == transition_interval: #{!@cms_config['site_settings']['feature_box_transition_delay'].blank? ? @cms_config['site_settings']['feature_box_transition_delay'] : '4000'},
+        == show_filmstrip: #{@settings.show_feature_thumbs},
+        == show_panel_nav: #{@settings.show_feature_thumbs? ? "false" : "true"}
+        });
+        });
+        - unless @cms_config['site_settings']['feature_box_autoplay'] == "false"
+          jQuery(document).ready(function(){
+          jQuery('.gv-panel_wrap').click(function(){
+          pause();
+          });
+          jQuery('.content-img').click(function(){
+          unpause();
+          });
+          jQuery('.gv-nav-prev').click(function(){
+          unpause();
+          });
+          jQuery('.gv-nav-next').click(function(){
+          unpause();
+          });
+          jQuery('.gv-panel-nav-next').click(function(){
+          unpause();
+          });
+          jQuery('.gv-panel-nav-prev').click(function(){
+          unpause();
+          });
+          });
+        - else
+          jQuery(document).ready(function(){
+          pause();
+          });
+      %style{:type => "text/css"}
+        ==#slideshow-frame { width: 870px; height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height']) : "300"}px; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'};  position: absolute; }
+        ==#wide-features { top: 3px; left: 3px; }
+        = "#wide-features { height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 64) : "364"}px !important; }" if @settings.show_feature_thumbs
+        ==#thumbs-frame { width: 550px; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'}; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; position: absolute; margin-top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 3) : "303"}px; height: 60px; }
+        div.gv-panel-content { overflow: hidden; }
+        ==div.gv-nav-prev { width: 30px; height: 35px; left: 10px !important; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
+        == div.gv-nav-next { width: 30px; height: 30px; left: 504px !important; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
+        ==.gv-strip_wrapper { left: 50px !important; width: 445px !important; }
+        ==.galleryview .auto_video { margin: 0; }
+        ==.galleryview { visibility: hidden; }
+        - if @settings.show_feature_thumbs
+          ==#wide-features { margin-bottom: -50px !important; }
+          ==.film-strip { height: 60px; }
+          ==.gv-pointer { bottom: 59px !important; }
+      #slideshow-frame
+      - if @settings.show_feature_thumbs?
+        #thumbs-frame
+      %ul#wide-features.galleryview
+        - if @cms_config['website']['demo'] && @cms_config['website']['demo_message']
+          %div{:style => "float: left; background: #e6e6e6; color: #333; position: absolute; z-index: 100; padding: 5px; font-size: 1.2em; font-family: Georgia, \"Times New Roman\", Serif; font-weight: bold;"}
+            = @cms_config['website']['demo_message']
+        - @settings.show_feature_thumbs ? limit = 4 : limit = 999
+        - for feature in @features[0..limit]
+          %li
+            - if @settings.show_feature_thumbs
+              - unless feature.featurable_type == "Image"
+                = image_tag(feature.featurable.images.sort_by(&:position).first.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px", :class => "content-img")
+              - else
+                = image_tag(feature.featurable.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px", :class => "content-img")
+
+            .gv-panel-content
+              - if feature.featurable_type == "Image"
+                %div{:class => "panel #{(feature.featurable.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.feature_box_overlay_position)}"}
+                  .panel-overlay-outer
+                    .panel-overlay-inner
+                      %h2
+                        = h feature.featurable.title if feature.featurable.title
+                      %p
+                        = h feature.featurable.caption
+                        = link_to "Read more &raquo;", [feature.featurable.viewable, feature.featurable], :class => "read-more"
+                      = clear
+                  = link_to(image_tag(feature.featurable.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), [feature.featurable.viewable, feature.featurable], :class => "feature-image")
+              - elsif feature.featurable_type == "Page"
+                %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
+                  .panel-overlay-outer
+                    .panel-overlay-inner
+                      %h2
+                        = h feature.featurable.title if feature.featurable.title
+                      %p
+                        = h feature.featurable.description
+                        -if feature.featurable.permalink == "blog" or feature.featurable.permalink == "links" or feature.featurable.permalink == "events"
+                          = link_to "Read more &raquo;", "/#{path_safe(@cms_config['site_settings'][feature.featurable.permalink+'_title'])}", :class => "read-more"
+                        -else
+                          = link_to "Read more &raquo;", "/#{feature.featurable.permalink}", :class => "read-more"
+                      = clear
+                  -if feature.featurable.permalink == "blog" or feature.featurable.permalink == "links" or feature.featurable.permalink == "events"
+                    = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{path_safe(@cms_config['site_settings'][feature.featurable.permalink+'_title'])}", :class => "feature-image")
+                  -else
+                    = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{feature.featurable.permalink}", :class => "feature-image")
+              - elsif feature.featurable_type == "Event" or feature.featurable_type == "Product"
+                %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
+                  .panel-overlay-outer
+                    .panel-overlay-inner
+                      %h2
+                        = h feature.featurable.title if feature.featurable.title
+                      %p
+                        = h feature.featurable.blurb
+                        = link_to "Read more &raquo;", [feature.featurable], :class => "read-more"
+                      = clear
+                  = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable, :class => "feature-image")
+              - elsif feature.featurable_type == "Link"
+                %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
+                  .panel-overlay-outer
+                    .panel-overlay-inner
+                      %h2
+                        = h feature.featurable.title if feature.featurable.title
+                      %p
+                        = h feature.featurable.blurb
+                        = link_to "Read more &raquo;", [LinkCategory.find(feature.featurable.link_category_id), feature.featurable], :class => "read-more"
+                      = clear
+                  = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), [LinkCategory.find(feature.featurable.link_category_id), feature.featurable], :class => "feature-image")
+              - else
+                %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
+                  .panel-overlay-outer
+                    .panel-overlay-inner
+                      %h2
+                        = h feature.featurable.title if feature.featurable.title
+                      %p
+                        = h feature.featurable.description.gsub(/<\/?[^>]*>/, "")
+                        = link_to "Read more &raquo;", [feature.featurable], :class => "read-more"
+                      = clear
+                  = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable, :class => "feature-image")
+    - if @cms_config['site_settings']['wide_feature_box'] and !(@settings.show_features == false or @features.empty?) and @settings.show_feature_thumbs
+      .film-strip  
+
+  - else
     %script{:type => "text/javascript"}
       function pause(){
       jQuery(document).stopTime("transition");
@@ -11,15 +162,16 @@
       paused = false;
       };
       jQuery(document).ready(function() {
-      jQuery('#wide-features').galleryView({
-      panel_width: 870,
+      jQuery('#features').galleryView({
+      == panel_width: #{!@cms_config['site_settings']['feature_box_width'].blank? ? @cms_config['site_settings']['feature_box_width'] : '542'},
       == panel_height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? @cms_config['site_settings']['feature_box_height'] : '300'},
       frame_width: 85,
       frame_height: 55,
       overlay_color: '#222',
       overlay_height: 80,
       overlay_text_color: 'white',
-      caption_text_color: '#222', 
+      caption_text_color: '#222',
+      //pause_on_hover: true,
       == panel_animation: '#{@cms_config['site_settings']['feature_box_animation'] ? @cms_config['site_settings']['feature_box_animation'] : 'crossfade'}',
       show_filmstrip_nav: true,
       filmstrip_position: "bottom",
@@ -54,30 +206,22 @@
         jQuery(document).ready(function(){
         pause();
         });
+
     %style{:type => "text/css"}
-      ==#slideshow-frame { width: 870px; height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height']) : "300"}px; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'};  position: absolute; }
-      ==#wide-features { top: 3px; left: 3px; }
-      = "#wide-features { height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 64) : "364"}px !important; }" if @settings.show_feature_thumbs
-      ==#thumbs-frame { width: 550px; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'}; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; position: absolute; margin-top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 3) : "303"}px; height: 60px; }
+      ==#features { background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'}; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; }
+      = "#features { height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 64) : "364"}px !important; }" if @settings.show_feature_thumbs
+      = "div.gv-pointer { margin-top: -4px; }" if @settings.show_feature_thumbs
       div.gv-panel-content { overflow: hidden; }
-      ==div.gv-nav-prev { width: 30px; height: 35px; left: 10px !important; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
-      == div.gv-nav-next { width: 30px; height: 30px; left: 504px !important; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
-      ==.gv-strip_wrapper { left: 50px !important; width: 445px !important; }
+      ==div.gv-nav-prev { width: 30px; height: 30px; margin-left: -4px; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
+      ==div.gv-nav-next { width: 30px; height: 30px; margin-right: -4px; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
       ==.galleryview .auto_video { margin: 0; }
       ==.galleryview { visibility: hidden; }
-      - if @settings.show_feature_thumbs
-        ==#wide-features { margin-bottom: -50px !important; }
-        ==.film-strip { height: 60px; }
-        ==.gv-pointer { bottom: 59px !important; }
-    #slideshow-frame
-    - if @settings.show_feature_thumbs?
-      #thumbs-frame
-    %ul#wide-features.galleryview
-      - if @cms_config['website']['demo'] && @cms_config['website']['demo_message']
+      ==.video-click { position: absolute; width: 580px; height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? @cms_config['site_settings']['feature_box_height'] : "300"}px; display: block }
+    %ul#features.galleryview
+      - if @cms_config['website']['demo_message']
         %div{:style => "float: left; background: #e6e6e6; color: #333; position: absolute; z-index: 100; padding: 5px; font-size: 1.2em; font-family: Georgia, \"Times New Roman\", Serif; font-weight: bold;"}
           = @cms_config['website']['demo_message']
-      - @settings.show_feature_thumbs ? limit = 4 : limit = 999
-      - for feature in @features[0..limit]
+      - for feature in @features
         %li
           - if @settings.show_feature_thumbs
             - unless feature.featurable_type == "Image"
@@ -86,7 +230,13 @@
               = image_tag(feature.featurable.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px", :class => "content-img")
 
           .gv-panel-content
-            - if feature.featurable_type == "Image"
+          
+            - if feature.featurable_type == "Video"
+              %div{:class => "panel #{(feature.featurable.images.first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.first.feature_box_overlay_position)}", :onmousedown => "pause()"}
+                = ninja_parse(feature.featurable.video_url)
+                = clear
+
+            - elsif feature.featurable_type == "Image"
               %div{:class => "panel #{(feature.featurable.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.feature_box_overlay_position)}"}
                 .panel-overlay-outer
                   .panel-overlay-inner
@@ -96,7 +246,7 @@
                       = h feature.featurable.caption
                       = link_to "Read more &raquo;", [feature.featurable.viewable, feature.featurable], :class => "read-more"
                     = clear
-                = link_to(image_tag(feature.featurable.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), [feature.featurable.viewable, feature.featurable], :class => "feature-image")
+                = link_to(image_tag(feature.featurable.featured, :title => feature.featurable.title, :alt => feature.featurable.title), [feature.featurable.viewable, feature.featurable], :class => "feature-image")
             - elsif feature.featurable_type == "Page"
               %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
                 .panel-overlay-outer
@@ -111,9 +261,9 @@
                         = link_to "Read more &raquo;", "/#{feature.featurable.permalink}", :class => "read-more"
                     = clear
                 -if feature.featurable.permalink == "blog" or feature.featurable.permalink == "links" or feature.featurable.permalink == "events"
-                  = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{path_safe(@cms_config['site_settings'][feature.featurable.permalink+'_title'])}", :class => "feature-image")
+                  = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{path_safe(@cms_config['site_settings'][feature.featurable.permalink+'_title'])}", :class => "feature-image")
                 -else
-                  = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{feature.featurable.permalink}", :class => "feature-image")
+                  = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{feature.featurable.permalink}", :class => "feature-image")
             - elsif feature.featurable_type == "Event" or feature.featurable_type == "Product"
               %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
                 .panel-overlay-outer
@@ -124,7 +274,7 @@
                       = h feature.featurable.blurb
                       = link_to "Read more &raquo;", [feature.featurable], :class => "read-more"
                     = clear
-                = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable, :class => "feature-image")
+                = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable, :class => "feature-image")
             - elsif feature.featurable_type == "Link"
               %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
                 .panel-overlay-outer
@@ -135,7 +285,7 @@
                       = h feature.featurable.blurb
                       = link_to "Read more &raquo;", [LinkCategory.find(feature.featurable.link_category_id), feature.featurable], :class => "read-more"
                     = clear
-                = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), [LinkCategory.find(feature.featurable.link_category_id), feature.featurable], :class => "feature-image")
+                = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), [LinkCategory.find(feature.featurable.link_category_id), feature.featurable], :class => "feature-image")
             - else
               %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
                 .panel-overlay-outer
@@ -146,154 +296,5 @@
                       = h feature.featurable.description.gsub(/<\/?[^>]*>/, "")
                       = link_to "Read more &raquo;", [feature.featurable], :class => "read-more"
                     = clear
-                = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable, :class => "feature-image")
-  - if @cms_config['site_settings']['wide_feature_box'] and !(@settings.show_features == false or @features.empty?) and @settings.show_feature_thumbs
-    .film-strip  
-
-- else
-  %script{:type => "text/javascript"}
-    function pause(){
-    jQuery(document).stopTime("transition");
-    paused = true;
-    };
-    function unpause(){
-    jQuery(document).everyTime("transition");
-    paused = false;
-    };
-    jQuery(document).ready(function() {
-    jQuery('#features').galleryView({
-    == panel_width: #{!@cms_config['site_settings']['feature_box_width'].blank? ? @cms_config['site_settings']['feature_box_width'] : '542'},
-    == panel_height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? @cms_config['site_settings']['feature_box_height'] : '300'},
-    frame_width: 85,
-    frame_height: 55,
-    overlay_color: '#222',
-    overlay_height: 80,
-    overlay_text_color: 'white',
-    caption_text_color: '#222',
-    //pause_on_hover: true,
-    == panel_animation: '#{@cms_config['site_settings']['feature_box_animation'] ? @cms_config['site_settings']['feature_box_animation'] : 'crossfade'}',
-    show_filmstrip_nav: true,
-    filmstrip_position: "bottom",
-    == transition_speed: #{!@cms_config['site_settings']['feature_box_transition_speed'].blank? ? @cms_config['site_settings']['feature_box_transition_speed'] : '800'},
-    == transition_interval: #{!@cms_config['site_settings']['feature_box_transition_delay'].blank? ? @cms_config['site_settings']['feature_box_transition_delay'] : '4000'},
-    == show_filmstrip: #{@settings.show_feature_thumbs},
-    == show_panel_nav: #{@settings.show_feature_thumbs? ? "false" : "true"}
-    });
-    });
-    - unless @cms_config['site_settings']['feature_box_autoplay'] == "false"
-      jQuery(document).ready(function(){
-      jQuery('.gv-panel_wrap').click(function(){
-      pause();
-      });
-      jQuery('.content-img').click(function(){
-      unpause();
-      });
-      jQuery('.gv-nav-prev').click(function(){
-      unpause();
-      });
-      jQuery('.gv-nav-next').click(function(){
-      unpause();
-      });
-      jQuery('.gv-panel-nav-next').click(function(){
-      unpause();
-      });
-      jQuery('.gv-panel-nav-prev').click(function(){
-      unpause();
-      });
-      });
-    - else
-      jQuery(document).ready(function(){
-      pause();
-      });
-
-  %style{:type => "text/css"}
-    ==#features { background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'}; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; }
-    = "#features { height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 64) : "364"}px !important; }" if @settings.show_feature_thumbs
-    = "div.gv-pointer { margin-top: -4px; }" if @settings.show_feature_thumbs
-    div.gv-panel-content { overflow: hidden; }
-    ==div.gv-nav-prev { width: 30px; height: 30px; margin-left: -4px; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
-    ==div.gv-nav-next { width: 30px; height: 30px; margin-right: -4px; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
-    ==.galleryview .auto_video { margin: 0; }
-    ==.galleryview { visibility: hidden; }
-    ==.video-click { position: absolute; width: 580px; height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? @cms_config['site_settings']['feature_box_height'] : "300"}px; display: block }
-  %ul#features.galleryview
-    - if @cms_config['website']['demo_message']
-      %div{:style => "float: left; background: #e6e6e6; color: #333; position: absolute; z-index: 100; padding: 5px; font-size: 1.2em; font-family: Georgia, \"Times New Roman\", Serif; font-weight: bold;"}
-        = @cms_config['website']['demo_message']
-    - for feature in @features
-      %li
-        - if @settings.show_feature_thumbs
-          - unless feature.featurable_type == "Image"
-            = image_tag(feature.featurable.images.sort_by(&:position).first.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px", :class => "content-img")
-          - else
-            = image_tag(feature.featurable.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px", :class => "content-img")
-
-        .gv-panel-content
-          
-          - if feature.featurable_type == "Video"
-            %div{:class => "panel #{(feature.featurable.images.first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.first.feature_box_overlay_position)}", :onmousedown => "pause()"}
-              = ninja_parse(feature.featurable.video_url)
-              = clear
-
-          - elsif feature.featurable_type == "Image"
-            %div{:class => "panel #{(feature.featurable.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.feature_box_overlay_position)}"}
-              .panel-overlay-outer
-                .panel-overlay-inner
-                  %h2
-                    = h feature.featurable.title if feature.featurable.title
-                  %p
-                    = h feature.featurable.caption
-                    = link_to "Read more &raquo;", [feature.featurable.viewable, feature.featurable], :class => "read-more"
-                  = clear
-              = link_to(image_tag(feature.featurable.featured, :title => feature.featurable.title, :alt => feature.featurable.title), [feature.featurable.viewable, feature.featurable], :class => "feature-image")
-          - elsif feature.featurable_type == "Page"
-            %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
-              .panel-overlay-outer
-                .panel-overlay-inner
-                  %h2
-                    = h feature.featurable.title if feature.featurable.title
-                  %p
-                    = h feature.featurable.description
-                    -if feature.featurable.permalink == "blog" or feature.featurable.permalink == "links" or feature.featurable.permalink == "events"
-                      = link_to "Read more &raquo;", "/#{path_safe(@cms_config['site_settings'][feature.featurable.permalink+'_title'])}", :class => "read-more"
-                    -else
-                      = link_to "Read more &raquo;", "/#{feature.featurable.permalink}", :class => "read-more"
-                  = clear
-              -if feature.featurable.permalink == "blog" or feature.featurable.permalink == "links" or feature.featurable.permalink == "events"
-                = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{path_safe(@cms_config['site_settings'][feature.featurable.permalink+'_title'])}", :class => "feature-image")
-              -else
-                = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{feature.featurable.permalink}", :class => "feature-image")
-          - elsif feature.featurable_type == "Event" or feature.featurable_type == "Product"
-            %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
-              .panel-overlay-outer
-                .panel-overlay-inner
-                  %h2
-                    = h feature.featurable.title if feature.featurable.title
-                  %p
-                    = h feature.featurable.blurb
-                    = link_to "Read more &raquo;", [feature.featurable], :class => "read-more"
-                  = clear
-              = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable, :class => "feature-image")
-          - elsif feature.featurable_type == "Link"
-            %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
-              .panel-overlay-outer
-                .panel-overlay-inner
-                  %h2
-                    = h feature.featurable.title if feature.featurable.title
-                  %p
-                    = h feature.featurable.blurb
-                    = link_to "Read more &raquo;", [LinkCategory.find(feature.featurable.link_category_id), feature.featurable], :class => "read-more"
-                  = clear
-              = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), [LinkCategory.find(feature.featurable.link_category_id), feature.featurable], :class => "feature-image")
-          - else
-            %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
-              .panel-overlay-outer
-                .panel-overlay-inner
-                  %h2
-                    = h feature.featurable.title if feature.featurable.title
-                  %p
-                    = h feature.featurable.description.gsub(/<\/?[^>]*>/, "")
-                    = link_to "Read more &raquo;", [feature.featurable], :class => "read-more"
-                  = clear
-              = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable, :class => "feature-image")
-- @slideshow = true
+                = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.featured, :title => feature.featurable.title, :alt => feature.featurable.title), feature.featurable, :class => "feature-image")
+  - @slideshow = true
