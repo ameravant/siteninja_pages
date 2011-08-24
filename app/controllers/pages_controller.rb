@@ -20,16 +20,6 @@ class PagesController < ApplicationController
       @main_column_sections = ColumnSection.all(:conditions => {:column_id => (@page.main_column_id.blank? ? @main_column.id : @page.main_column_id), :visible => true})
       @images = @page.images
       @footer_pages = Page.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
-      @features = []
-      @menu.featurable_sections.each do |fs|
-        @features += fs.features
-      end
-      feature_sections = FeaturableSection.all.reject{|fs| !fs.site_wide}
-      if feature_sections
-        feature_sections.each do |fs|
-          @features += fs.features
-        end
-      end
       @side_column = @page.column_id
       # if @page.permalink == "home"
       #   @features = Feature.find(:all, :order => :position)
