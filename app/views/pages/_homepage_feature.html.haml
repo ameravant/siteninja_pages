@@ -60,7 +60,7 @@
           %style{:type => "text/css"}
             ==#slideshow-frame { width: 870px; height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height']) : "300"}px; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'};  position: absolute; }
             ==#wide-features { top: 3px; left: 3px; }
-            = "#wide-features { height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 64) : "364"}px !important; }" if @settings.show_feature_thumbs
+            = "#wide-features { height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'].to_i + 64) : "364"}px !important; }" if @settings.show_feature_thumbs
             ==#thumbs-frame { width: 550px; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'}; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; position: absolute; margin-top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 3) : "303"}px; height: 60px; }
             div.gv-panel-content { overflow: hidden; }
             ==div.gv-nav-prev { width: 30px; height: 35px; left: 10px !important; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
@@ -211,11 +211,11 @@
       - content_for :head do
         %style{:type => "text/css"}
           ==#features { background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'}; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; }
-          = "#features { height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 64) : "364"}px !important; }" if @settings.show_feature_thumbs
+          = "#features { height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'].to_i + 64) : "364"}px !important; }" if @settings.show_feature_thumbs
           = "div.gv-pointer { margin-top: -4px; }" if @settings.show_feature_thumbs
           div.gv-panel-content { overflow: hidden; }
-          ==div.gv-nav-prev { width: 30px; height: 30px; margin-left: -4px; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
-          ==div.gv-nav-next { width: 30px; height: 30px; margin-right: -4px; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'] + 17) : "317"}px !important; }
+          ==div.gv-nav-prev { width: 30px; height: 30px; margin-left: -4px; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'].to_i + 17) : "317"}px !important; }
+          ==div.gv-nav-next { width: 30px; height: 30px; margin-right: -4px; top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'].to_i + 17) : "317"}px !important; }
           ==.galleryview .auto_video { margin: 0; }
           ==.galleryview { visibility: hidden; }
           ==.video-click { position: absolute; width: 580px; height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? @cms_config['site_settings']['feature_box_height'] : "300"}px; display: block }
