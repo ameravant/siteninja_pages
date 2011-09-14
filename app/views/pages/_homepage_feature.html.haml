@@ -1,6 +1,6 @@
 - if !Menu.first.featurable_sections.empty?
   - @features = Menu.first.featurable_sections.first.features
-  - if @cms_config['features']['feature_box'] and !@features.empty? and @settings.show_features
+  - if @cms_config['features']['feature_box'] and !@features.empty? and @settings.show_features?
     - if @cms_config['site_settings']['wide_feature_box']
       - content_for :wide_feature_box do
         %script{:type => "text/javascript"}
@@ -14,7 +14,7 @@
           };
           jQuery(document).ready(function() {
           jQuery('#wide-features').galleryView({
-          panel_width: 870,
+          == panel_width: #{!@cms_config['site_settings']['feature_box_width'].blank? ? @cms_config['site_settings']['feature_box_width'] : '870'},
           == panel_height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? @cms_config['site_settings']['feature_box_height'] : '300'},
           frame_width: 85,
           frame_height: 55,
@@ -58,7 +58,7 @@
             });
         - content_for :head do
           %style{:type => "text/css"}
-            ==#slideshow-frame { width: 870px; height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height']) : "300"}px; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'};  position: absolute; }
+            ==#slideshow-frame { width: #{!@cms_config['site_settings']['feature_box_width'].blank? ? (@cms_config['site_settings']['feature_box_width']) : "870"}px; height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height']) : "300"}px; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'};  position: absolute; }
             ==#wide-features { top: 3px; left: 3px; }
             = "#wide-features { height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'].to_i + 64) : "364"}px !important; }" if @settings.show_feature_thumbs
             ==#thumbs-frame { width: 550px; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'}; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; position: absolute; margin-top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'].to_i + 3) : "303"}px; height: 60px; }
@@ -68,6 +68,7 @@
             ==.gv-strip_wrapper { left: 50px !important; width: 445px !important; }
             ==.galleryview .auto_video { margin: 0; }
             ==.galleryview { visibility: hidden; }
+            ==.panel.bottom .panel-overlay-outer { width: #{!@cms_config['site_settings']['feature_box_width'].blank? ? (@cms_config['site_settings']['feature_box_width']) : "870"}px; }
             - if @settings.show_feature_thumbs
               ==#wide-features { margin-bottom: -50px !important; }
               ==.film-strip { height: 60px; }
@@ -219,6 +220,7 @@
           ==.galleryview .auto_video { margin: 0; }
           ==.galleryview { visibility: hidden; }
           ==.video-click { position: absolute; width: 580px; height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? @cms_config['site_settings']['feature_box_height'] : "300"}px; display: block }
+          ==.panel.bottom .panel-overlay-outer { width: #{!@cms_config['site_settings']['feature_box_width'].blank? ? (@cms_config['site_settings']['feature_box_width']) : "542"}px; }
       %ul#features.galleryview
         - if @cms_config['website']['demo_message']
           %div{:style => "float: left; background: #e6e6e6; color: #333; position: absolute; z-index: 100; padding: 5px; font-size: 1.2em; font-family: Georgia, \"Times New Roman\", Serif; font-weight: bold;"}
