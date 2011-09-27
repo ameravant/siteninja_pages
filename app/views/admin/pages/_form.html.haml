@@ -161,6 +161,8 @@
       = link_to("#{icon('Css')} Additional Styles", "#additional-styles", :class => "fancy-inline")
       %br
       = link_to("#{icon('Code')} Head Script", "#head-script", :class => "fancy-inline")
+      %br
+      = link_to("#{icon('Code')} Foot Script", "#foot-script", :class => "fancy-inline")
       %div{ :style => "display: none;" }
         #additional-styles.inline-window
           %h2= f.label :additional_styles
@@ -174,7 +176,13 @@
           = f.text_area :head_script
           %div
             %input{:type => "button", :onclick => "jQuery.fancybox.close()", :value => "Done"}
-        -if @cms_config['modules']['members']
+        #foot-script.inline-window
+          %h2= f.label :foot_script
+          .note Add extra HTML to the head tag of the page.
+          = f.text_area :foot_script
+          %div
+            %input{:type => "button", :onclick => "jQuery.fancybox.close()", :value => "Done"}
+        - if @cms_config['modules']['members']
           #permissions-box
             %h2 Permissions
             .note Who can access this page?

@@ -21,6 +21,7 @@ class PagesController < ApplicationController
       @images = @page.images
       @footer_pages = Page.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
       @side_column = @page.column_id
+      @foot_text = @page.foot_text
       # if @page.permalink == "home"
       #   @features = Feature.find(:all, :order => :position)
       # end
