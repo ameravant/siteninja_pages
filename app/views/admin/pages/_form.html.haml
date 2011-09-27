@@ -177,9 +177,9 @@
           %div
             %input{:type => "button", :onclick => "jQuery.fancybox.close()", :value => "Done"}
         #foot-script.inline-window
-          %h2= f.label :foot_script
+          %h2= f.label :foot_text, "Foot Script"
           .note Add extra HTML to the head tag of the page.
-          = f.text_area :foot_script
+          = f.text_area :foot_text
           %div
             %input{:type => "button", :onclick => "jQuery.fancybox.close()", :value => "Done"}
         - if @cms_config['modules']['members']
