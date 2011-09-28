@@ -14,7 +14,7 @@
           };
           jQuery(document).ready(function() {
           jQuery('#wide-features').galleryView({
-          == panel_width: #{!@cms_config['site_settings']['feature_box_width'].blank? ? @cms_config['site_settings']['feature_box_width'] : '870'},
+          == panel_width: #{!@cms_config['site_settings']['wide_feature_box_width'].blank? ? @cms_config['site_settings']['wide_feature_box_width'] : '870'},
           == panel_height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? @cms_config['site_settings']['feature_box_height'] : '300'},
           frame_width: 85,
           frame_height: 55,
@@ -58,7 +58,7 @@
             });
         - content_for :head do
           %style{:type => "text/css"}
-            ==#slideshow-frame { width: #{!@cms_config['site_settings']['feature_box_width'].blank? ? (@cms_config['site_settings']['feature_box_width']) : "870"}px; height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height']) : "300"}px; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'};  position: absolute; }
+            ==#slideshow-frame { width: #{!@cms_config['site_settings']['wide_feature_box_width'].blank? ? (@cms_config['site_settings']['wide_feature_box_width']) : "870"}px; height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height']) : "300"}px; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'};  position: absolute; }
             ==#wide-features { top: 3px; left: 3px; }
             = "#wide-features { height: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'].to_i + 64) : "364"}px !important; }" if @settings.show_feature_thumbs
             ==#thumbs-frame { width: 550px; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'}; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; position: absolute; margin-top: #{!@cms_config['site_settings']['feature_box_height'].blank? ? (@cms_config['site_settings']['feature_box_height'].to_i + 3) : "303"}px; height: 60px; }
@@ -68,7 +68,7 @@
             ==.gv-strip_wrapper { left: 50px !important; width: 445px !important; }
             ==.galleryview .auto_video { margin: 0; }
             ==.galleryview { visibility: hidden; }
-            ==.panel.bottom .panel-overlay-outer { width: #{!@cms_config['site_settings']['feature_box_width'].blank? ? (@cms_config['site_settings']['feature_box_width']) : "870"}px; }
+            ==.panel.bottom .panel-overlay-outer { width: #{!@cms_config['site_settings']['wide_feature_box_width'].blank? ? (@cms_config['site_settings']['wide_feature_box_width']) : "870"}px; }
             - if @settings.show_feature_thumbs
               ==#wide-features { margin-bottom: -50px !important; }
               ==.film-strip { height: 60px; }
