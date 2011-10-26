@@ -122,7 +122,11 @@
           %br
           = f.check_box :show_events
           = f.label :show_events, "Show events"
-    = link_to("#{icon("Lock")} Permissions", "#permissions-box", :class => "fancy-inline", :id => "permissions-link")
+    - if @cms_config["modules"]["members"]
+      = link_to("#{icon("Lock")} Permissions", "#permissions-box", :class => "fancy-inline", :id => "permissions-link") 
+      %br
+    = f.check_box :show_comments
+    = f.label :show_comments, "Show Comments"
 
   %h2.title.form-label= f.label :title, "Menu Title"
   .note
