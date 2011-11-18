@@ -1,6 +1,8 @@
 class Page < ActiveRecord::Base
   #after_create :make_navigatable
+  #establish_connection(ActiveRecord::Base.configurations["production"])
   has_permalink :meta_title
+  has_many :comments, :as => :commentable
   has_many :images, :as => :viewable, :dependent => :destroy
   has_many :features, :as => :featurable, :dependent => :destroy
   has_many :testimonials, :as => :quotable, :dependent => :destroy
