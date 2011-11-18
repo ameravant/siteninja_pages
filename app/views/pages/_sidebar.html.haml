@@ -17,4 +17,4 @@
           .side-column-section
             = ninja_parse(section.body)
   - else
-    = render :partial => "/#{section.column_section_type.controller_name}/#{section.column_section_type.partial_name}"
+    = render :partial => "/#{section.column_section_type.controller_name}/#{section.column_section_type.partial_name}", :locals => { :count => section.count, :title => section.title, :show_author => section.show_author, :show_blurb => section.show_blurb }
