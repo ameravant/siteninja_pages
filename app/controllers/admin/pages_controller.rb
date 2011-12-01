@@ -115,7 +115,7 @@ class Admin::PagesController < AdminController
   
   def post_preview
     @cms_config['site_settings']['preview'] = params[:post_preview][:body]
-    File.open("#{RAILS_ROOT}/config/cms.yml", 'w') { |f| YAML.dump(@cms_config, f) }
+    File.open(@cms_path, 'w') { |f| YAML.dump(@cms_config, f) }
   end
   
   def destroy
