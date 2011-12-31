@@ -62,7 +62,7 @@
             ==#wide-features { top: 3px; left: 3px; }
             = "#wide-features { height: #{!@cms_config['site_settings']['wide_feature_box_height'].blank? ? (@cms_config['site_settings']['wide_feature_box_height'].to_i + 64) : "364"}px !important; }" if @settings.show_feature_thumbs
             ==#thumbs-frame { width: 550px; background: #{@cms_config['site_settings']['feature_box_background_color'] ? @cms_config['site_settings']['feature_box_background_color'] : '#ccc'}; border: #{@cms_config['site_settings']['feature_box_border'] ? @cms_config['site_settings']['feature_box_border'] : '4px solid #e6e6e6'}; position: absolute; margin-top: #{!@cms_config['site_settings']['wide_feature_box_height'].blank? ? (@cms_config['site_settings']['wide_feature_box_height'].to_i + 3) : "303"}px; height: 60px; }
-            div.gv-panel-content { overflow: hidden; }
+            ==div.gv-panel-content { overflow: visible !important; }
             ==div.gv-nav-prev { width: 30px; height: 35px; left: 10px !important; top: #{!@cms_config['site_settings']['wide_feature_box_height'].blank? ? (@cms_config['site_settings']['wide_feature_box_height'].to_i + 17) : "317"}px !important; }
             == div.gv-nav-next { width: 30px; height: 30px; left: 504px !important; top: #{!@cms_config['site_settings']['wide_feature_box_height'].blank? ? (@cms_config['site_settings']['wide_feature_box_height'].to_i + 17) : "317"}px !important; }
             ==.gv-strip_wrapper { left: 50px !important; width: 445px !important; }
@@ -73,6 +73,7 @@
               ==#wide-features { margin-bottom: -50px !important; }
               ==.film-strip { height: 60px; }
               ==.gv-pointer { bottom: 59px !important; }
+            ==.gv-last-panel-content { float: left; margin-left: -#{!@cms_config['site_settings']['wide_feature_box_width'].blank? ? (@cms_config['site_settings']['wide_feature_box_width']) : "870"}px; }
         #slideshow-frame
         - if @settings.show_feature_thumbs?
           #thumbs-frame
@@ -81,6 +82,7 @@
             %div{:style => "float: left; background: #e6e6e6; color: #333; position: absolute; z-index: 100; padding: 5px; font-size: 1.2em; font-family: Georgia, \"Times New Roman\", Serif; font-weight: bold;"}
               = @cms_config['website']['demo_message']
           - @settings.show_feature_thumbs ? limit = 4 : limit = 999
+          - prev_feature = @features[0..limit].last
           - for feature in @features[0..limit]
             %li
               - if @settings.show_feature_thumbs
@@ -88,8 +90,21 @@
                   = image_tag(feature.featurable.images.sort_by(&:position).first.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px", :class => "content-img")
                 - else
                   = image_tag(feature.featurable.small_thumbnail, :title => feature.featurable.title, :alt => feature.featurable.title, :style => "width: 85px; height: 55px", :class => "content-img")
-
+              
               .gv-panel-content
+                - #%div{:style => "background: #ffff00; width: 200px; height: 100px; float: left; margin-left: -100px; position: absolute; z-index: 1000000; overflow: visible;"}
+                .gv-last-panel-content
+                  = image_tag(prev_feature.featurable.images.sort_by(&:position).first.wide_featured, :title => prev_feature.featurable.title, :alt => prev_feature.featurable.title)
+                  %div{:class => "panel #{(prev_feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : prev_feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
+                    .panel-overlay-outer
+                      .panel-overlay-inner
+                        %h2
+                          = h prev_feature.featurable.title if prev_feature.featurable.title
+                        %p
+                          = h prev_feature.featurable.description
+                          = link_to "Read more &raquo;", "/#{feature.featurable.permalink}", :class => "read-more"
+                        = clear
+                - prev_feature = feature
                 - if feature.featurable_type == "Image"
                   %div{:class => "panel #{(feature.featurable.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.feature_box_overlay_position)}"}
                     .panel-overlay-outer
@@ -114,10 +129,14 @@
                           -else
                             = link_to "Read more &raquo;", "/#{feature.featurable.permalink}", :class => "read-more"
                         = clear
+                    
+
                     -if feature.featurable.permalink == "blog" or feature.featurable.permalink == "links" or feature.featurable.permalink == "events"
                       = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{path_safe(@cms_config['site_settings'][feature.featurable.permalink+'_title'])}", :class => "feature-image")
                     -else
                       = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), "/#{feature.featurable.permalink}", :class => "feature-image")
+                    
+                    
                 - elsif feature.featurable_type == "Event" or feature.featurable_type == "Product"
                   %div{:class => "panel #{(feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.sort_by(&:position).first.feature_box_overlay_position)}"}
                     .panel-overlay-outer
