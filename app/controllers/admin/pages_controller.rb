@@ -27,6 +27,7 @@ class Admin::PagesController < AdminController
   
   def new
     @page = Page.new
+    @menu = Menu.new
   end
   
   def create
