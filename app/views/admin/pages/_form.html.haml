@@ -1,6 +1,8 @@
 - content_for :head do
   %style{:type => "text/css"}
-    ==.advanced-side-column-options { padding: 5px; border: 1px solid #ccc; background: #fff; color: #333; position: absolute; -moz-box-shadow: 0 4px 10px rgba(0,0,0,.6); -webkit-box-shadow: 0 4px 10px rgba(0,0,0,.6); box-shadow: 0 4px 10px rgba(0,0,0,.6); }
+    ==.display-advanced-side-column-options { position: absolute; text-align: right; width: 250px; }
+    ==#advanced-side-column-options { text-align: left; }
+    ==#advanced-side-column-options label { font-size: .85em; }
     ==#main-details, #body-details { font-size: .85em; }
     ==#main-details label.title { font-weight: bold; }
     ==#main-details .icon { width: 12px; height: 12px; vertical-align: baseline; margin-bottom: -2px; }
@@ -49,12 +51,18 @@
     
     #options
       %h3 Page Details
-      =m.label :status_visible, "Show in Menu", :class => "title"
-      .radio-buttons
-        = m.radio_button :status, "visible", :disabled => @no_edit
-        %label{:for => "menu_status_visible"} Visible
-        = m.radio_button :status, "hidden", :disabled => @no_edit
-        %label{:for => "menu_status_hidden"} Hidden
+      = m.label :status_visible, "Show in Menu", :class => "title"
+      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "<strong>Main Menu</strong> &mdash; Navigation at the top of the site.<br /><br /><strong>Side Column Menu</strong> &mdash; Navigation within the side column. The \"Menu Navigation\" Side Column Section must be enabled for the selected Side Column.<br /><br /><strong>Footer Menu</strong> &mdash; Simple Navigation displayed at the bottom of the site."}
+      .menus
+        = m.check_box :show_in_main_menu, :disabled => @no_edit
+        = m.label :show_in_main_menu, "Main Menu"
+        %br
+        = m.check_box :show_in_side_column, :disabled => @no_edit
+        = m.label :show_in_side_column, "Side Column Menu"
+        %br 
+        = m.check_box :show_in_footer, :disabled => @no_edit
+        = m.label :show_in_footer, "Footer Menu"
+
       = m.label :parent_id, "Menu placement", :class => "title"
       %br
       %select{:name => "menu[parent_id]", :id => "menu_parent_id", :disabled => @no_edit, :class => "select"}
@@ -63,9 +71,6 @@
             %option{:value => o[1] , :selected => (@page.menus.first.parent_id and o[1] == @page.menus.first.parent_id ? "selected" : nil)}= o[0]
           - else
             %option{:value => o[1] , :selected => nil}= o[0]
-      %br
-      = m.check_box :show_in_footer
-      = m.label :show_in_footer, "Show in Footer Menu"
       - unless @templates.empty?
         %br
         = icon "Write", admin_templates_path, "Manage Templates", "#{icons_loc}/", "16x16", "gray", "Manage Templates"
@@ -78,50 +83,12 @@
       %br
       = collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")
       %br
+      %div.display-advanced-side-column-options=link_to("Advanced", "#advanced-side-column-options", :class => "fancy-inline")
       = icon "Write", admin_columns_path(:column_location => "side_column"), "Manage Side Columns", "#{icons_loc}/", "16x16", "gray", "Manage Side Columns"
       = f.label :column_id, "Side Column", :class => "title"
       %br
       = collection_select(:page, :column_id, @side_columns, :id, :title, {:include_blank => "Select a Side Column"}, :class => "select")
-      - content_for :head do
-        :javascript
-          jQuery(document).ready(function() {
-          jQuery(".advanced-side-column-options").hide();
-          jQuery(".display-advanced-side-column-options").click(function()
-          {
-          jQuery(this).next(".advanced-side-column-options").slideToggle();
-          });
-          });
-      %div.display-advanced-side-column-options=link_to("Advanced Side Column Options", "javascript:null(0)")
-      .advanced-side-column-options
-        %img{:src =>"#{css_icon("Cancel","","16x16","red")}", :title =>"close", :alt=> "close box icon", :class => "close-icon", :onclick => "jQuery('.advanced-side-column-options').slideUp()"}
-        = f.check_box :show_site_search
-        = f.label :show_site_search
-        %br
-        = f.check_box :show_side_column_text
-        = f.label :show_side_column_text
-        - if @cms_config['features']['testimonials']
-          %br
-          = f.check_box :show_featured_testimonial
-          = f.label :show_featured_testimonial, "Show random featured testimonial"
-        - if @cms_config['modules']['newsletters']
-          %br
-          = f.check_box :show_newsletter_signup
-          = f.label :show_newsletter_signup, "Show newsletter signup"
-        - if @cms_config['modules']['blog']
-          %br
-          = f.check_box :show_articles
-          = f.label :show_articles, "Show articles"
-          %br 
-          = collection_select(:page, :author_id, @authors, :id, :name, {:include_blank => "Filter by Author"}, :style => "width: 125px; margin: 0 0 0 20px;")
-          %br
-          = collection_select(:page, :article_category_id, @article_categories, :id, :name, {:include_blank => "Filter by Category"}, :style => "width: 125px; margin: 0 0 0 20px;")
-          %br
-          = f.check_box :show_article_cats
-          = f.label :show_article_cats, "Show article categories"
-        -if @cms_config['modules']['events']
-          %br
-          = f.check_box :show_events
-          = f.label :show_events, "Show events"
+
     - if @cms_config["modules"]["members"]
       = link_to("#{icon("Lock")} Permissions", "#permissions-box", :class => "fancy-inline", :id => "permissions-link") 
       %br
@@ -168,6 +135,37 @@
       %br
       = link_to("#{icon('Code')} Foot Script", "#foot-script", :class => "fancy-inline")
       %div{ :style => "display: none;" }
+        #advanced-side-column-options
+          %img{:src =>"#{css_icon("Cancel","","16x16","red")}", :title =>"close", :alt=> "close box icon", :class => "close-icon", :onclick => "jQuery.fancybox.close()"}
+          %h2 Advanced Side Column Options
+          = f.check_box :show_site_search
+          = f.label :show_site_search
+          %br
+          = f.check_box :show_side_column_text
+          = f.label :show_side_column_text
+          - if @cms_config['features']['testimonials']
+            %br
+            = f.check_box :show_featured_testimonial
+            = f.label :show_featured_testimonial, "Show random featured testimonial"
+          - if @cms_config['modules']['newsletters']
+            %br
+            = f.check_box :show_newsletter_signup
+            = f.label :show_newsletter_signup, "Show newsletter signup"
+          - if @cms_config['modules']['blog']
+            %br
+            = f.check_box :show_articles
+            = f.label :show_articles, "Show articles"
+            %br 
+            = collection_select(:page, :author_id, @authors, :id, :name, {:include_blank => "Filter by Author"}, :style => "width: 125px; margin: 0 0 0 20px;")
+            %br
+            = collection_select(:page, :article_category_id, @article_categories, :id, :name, {:include_blank => "Filter by Category"}, :style => "width: 125px; margin: 0 0 0 20px;")
+            %br
+            = f.check_box :show_article_cats
+            = f.label :show_article_cats, "Show article categories"
+          -if @cms_config['modules']['events']
+            %br
+            = f.check_box :show_events
+            = f.label :show_events, "Show events"
         #additional-styles.inline-window
           %h2= f.label :additional_styles
           .note Add any CSS styles here that only pertain to this page.
@@ -188,6 +186,7 @@
             %input{:type => "button", :onclick => "jQuery.fancybox.close()", :value => "Done"}
         - if @cms_config['modules']['members']
           #permissions-box
+            %img{:src =>"#{css_icon("Cancel","","16x16","red")}", :title =>"close", :alt=> "close box icon", :class => "close-icon", :onclick => "jQuery.fancybox.close()"}
             %h2 Permissions
             .note Who can access this page?
             %ul
