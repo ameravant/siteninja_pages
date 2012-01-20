@@ -136,7 +136,7 @@
                         %h2
                           = h feature.featurable.title if feature.featurable.title
                         %p
-                          = h feature.featurable.blurb
+                          = h feature.featurable.description
                           = link_to "Read more &raquo;", [LinkCategory.find(feature.featurable.link_category_id), feature.featurable], :class => "read-more"
                         = clear
                     = link_to(image_tag(feature.featurable.images.sort_by(&:position).first.wide_featured, :title => feature.featurable.title, :alt => feature.featurable.title), [LinkCategory.find(feature.featurable.link_category_id), feature.featurable], :class => "feature-image")

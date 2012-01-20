@@ -205,7 +205,7 @@
             #permissions-groups
               Select Groups
               %ul
-                -for group in PersonGroup.role
+                -for group in PersonGroup.is_role
                   %li
                     -if @page.permission_level == "except those checked"
                       = check_box_tag "page[person_group_ids][]", group.id, !@page.person_groups.include?(group), :id => "group_checkbox_#{group.id}"
@@ -227,30 +227,3 @@
     - form_remote_tag :url => post_preview_admin_pages_path, :method => "put", :html => {:name => "post_preview"} do
       = text_area :post_preview, :body
       = submit_tag "submit", :id => "submit-preview"
-%script{:type => "text/javascript"}
-  jQuery(document).ready(function() {
-  jQuery(".fancy-iframe").fancybox({ 
-  'zoomSpeedIn': 300,
-  'zoomSpeedOut': 300,
-  'overlayShow': true,
-  'hideOnContentClick': 'true',
-  'easingOut': 'easeOutQuad',
-  'easingIn': 'easeInQuad',
-  'type': 'iframe',
-  'width': 910,
-  'autoScale': true,
-  'height':"90%"
-  }); 
-  }); 
-  jQuery(document).ready(function() {
-  jQuery(".fancy-inline").fancybox({ 
-  'zoomSpeedIn': 300,
-  'zoomSpeedOut': 300,
-  'overlayShow': true,
-  'hideOnContentClick': false,
-  'hideOnOverlayClick': false,
-  'type': 'inline',
-  'showCloseButton' : false,
-  'autoScale': true
-  }); 
-  }); 
