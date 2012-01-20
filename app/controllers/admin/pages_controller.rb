@@ -245,11 +245,11 @@ class Admin::PagesController < AdminController
   def add_person_groups
     if @cms_config['modules']['members']
       if params[:page][:permission_level] == "except those checked"
-        params[:page][:person_group_ids] = PersonGroup.role.collect(&:id).delete_if{|c| params[:page][:person_group_ids].include?(c.to_s)}
+        params[:page][:person_group_ids] = PersonGroup.is_role.collect(&:id).delete_if{|c| params[:page][:person_group_ids].include?(c.to_s)}
       elsif params[:page][:permission_level] == "administrators"
         params[:page][:person_group_ids] = [1]
       elsif params[:page][:permission_level] == "everyone"
-        params[:page][:person_group_ids] = PersonGroup.role.collect(&:id)
+        params[:page][:person_group_ids] = PersonGroup.is_role.collect(&:id)
       end        
     end
   end
