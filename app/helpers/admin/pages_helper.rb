@@ -8,32 +8,19 @@ module Admin::PagesHelper
       # Output the list elements for these children, and recursively
       # call build_menu for their children.
       for child in children
-        unless child.navigatable.blank?
           concat "<li id=\"#{dom_id(child)}\" style=\"border-top: #ccc 1px solid; \">" + '<div class="page-title">'
           concat image_tag("#{move_loc}", :class => "icon handle") + ' '
-          concat link_to(h(child.navigatable.title), [:edit, :admin, child.navigatable], :class => child.hidden? ? 'gray' : nil)
+          concat link_to(h(child.menu_title), [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], :class => child.hidden? ? 'gray' : nil)
           concat ' ' + content_tag('span', '&mdash; hidden from menus', :class => ' small gray') if child.status == 'hidden'
-          concat ' &mdash; ' + link_to("Manage Homepage Features", admin_features_path) if (child.navigatable.permalink == "home")
-          concat '</div><div class="page-options">' 
-          concat feature_icon_select(child.navigatable, child.navigatable.name) unless feature_icon_select(child.navigatable, child.navigatable.name).blank?
-            # Old feature code
-            # if child.navigatable.images_count > 0
-            #   if child.navigatable.features_count > 0
-            #     concat defeature_icon(child.navigatable, "/admin/#{child.navigatable_type.downcase.pluralize}/#{child.navigatable.to_param}/features/1", child.navigatable.title, "inline")
-            #     concat feature_icon(child.navigatable, [:admin, child.navigatable, :features], child.navigatable.title, "none")
-            #   else
-            #     concat feature_icon(child.navigatable, [:admin, child.navigatable, :features], child.navigatable.title, "inline")
-            #     concat defeature_icon(child.navigatable, "/admin/#{child.navigatable_type.downcase.pluralize}/#{child.navigatable.to_param}/features/1", child.navigatable.title, "none")
-            #   end
-            # else
-            #   concat disabled_feature_icon(child.navigatable, [:new, :admin, child.navigatable, :feature], child.navigatable.title)
-            # end
-          concat ' ' + icon("Write", [:edit, :admin, child.navigatable]) + ' '
+          concat ' &mdash; ' + link_to("Manage Homepage Features", admin_features_path) if (child.url == "/home")
+          concat '</div><div class="page-options">'
+          concat feature_icon_select(child.navigatable, child.navigatable.name) unless child.navigatable.blank? or feature_icon_select(child.navigatable, child.navigatable.name).blank?
+          concat ' ' + icon("Write", [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)]) + ' '
           #Check page is allowed to be deleted and provide icon to allow it
           if child.can_delete
-            if child.navigatable_type == "Page"
+            if !child.navigatable.blank? and child.navigatable_type == "Page"
               concat(link_to_remote(
-                image_tag("#{icons_loc}/gray/16x16/Trash.png", :class => "icon", :alt => "Delete #{child.navigatable.title}", :id => "#{dom_id(child)}_trash_icon"),
+                image_tag("#{icons_loc}/gray/16x16/Trash.png", :class => "icon", :alt => "Delete #{child.menu_title}", :id => "#{dom_id(child)}_trash_icon"),
                 {
                   :url => [:admin, child],
                   :method => :delete,
@@ -45,14 +32,14 @@ module Admin::PagesHelper
                 }, :class => "icon"))
             else
               concat(link_to_remote(
-                image_tag("#{icons_loc}/green/16x16/Link.png", :class => "icon", :alt => "Remove #{child.navigatable.title} from navigation", :title => "Remove #{child.navigatable.title} from navigation", :id => "#{dom_id(child)}_trash_icon"),
+                image_tag("#{icons_loc}/green/16x16/Link.png", :class => "icon", :alt => "Remove #{child.menu_title} from navigation", :title => "Remove #{child.menu_title} from navigation", :id => "#{dom_id(child)}_trash_icon"),
                 {
                   :url => [:admin, child],
                   :method => :delete,
                   :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'",
                   :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'",
                   :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'",
-                  :confirm => "Really remove #{child.navigatable.title} from navigation?",
+                  :confirm => "Really remove #{child.menu_title} from navigation?",
                   :delay => 1
                 }, :class => "icon"))
             end
@@ -68,11 +55,12 @@ module Admin::PagesHelper
             end
           end
           concat '</div><div class="page-images">'
-          concat icon("Picture", [:admin, child.navigatable, :images]) + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images])
+          concat icon("Picture", [:admin, child.navigatable, :images]) + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images]) unless child.navigatable.blank?
+          concat '&nbsp;' if child.navigatable.blank?
           concat '</div><div class="page-type">'
-          concat (child.navigatable.class.to_s)
+          concat (child.navigatable.blank? ? "External Link" : child.navigatable.class.to_s)
           concat "</div>" + clear
-          concat "<div class=\"droppable\" id=\"droppable_#{dom_id(child)}\"><span>Drop menu into \"#{child.navigatable.title}.\"</span></div>"
+          concat "<div class=\"droppable\" id=\"droppable_#{dom_id(child)}\"><span>Drop menu into \"#{child.menu_title}.\"</span></div>"
           build_menu(child.id)
           concat "</li>\n"
           concat draggable_element(dom_id(child))
@@ -86,7 +74,7 @@ module Admin::PagesHelper
             :failure => "$('ajax_spinner').src='#{exclamation_loc}'",
             :update => "page-index")
           #, :onDrop => "function(draggable, droppable, overlap){confirm('dropped draggable.id on droppable.id')}"
-        end
+
       end
       concat "</ul>\n"
 

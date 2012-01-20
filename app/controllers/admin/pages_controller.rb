@@ -31,7 +31,8 @@ class Admin::PagesController < AdminController
   end
   
   def create
-    @page = Page.new params[:page]
+    @page = Page.new(params[:page])
+    @menu = Menu.new(params[:menu])
     add_person_groups
     if @page.save
       @menu = @page.menus.new params[:menu]
@@ -204,9 +205,9 @@ class Admin::PagesController < AdminController
       for child in children
         nbsp_string = '&nbsp;' * (@options_for_parent_id_level * @options_for_parent_id_level) unless @options_for_parent_id_level == 1 
         if params[:id]
-          @options_for_parent_id << ["#{nbsp_string}#{child.navigatable.title}", child.id] unless child.navigatable_id == Page.find_by_permalink(params[:id]).id
+          @options_for_parent_id << ["#{nbsp_string}#{child.menu_title}", child.id] unless child.navigatable_id == Page.find_by_permalink(params[:id]).id
         else
-          @options_for_parent_id << ["#{nbsp_string}#{child.navigatable.title}", child.id] 
+          @options_for_parent_id << ["#{nbsp_string}#{child.menu_title}", child.id] 
         end
         build_options(child.id)
       end

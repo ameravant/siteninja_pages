@@ -126,6 +126,7 @@
         = render :partial => "admin/shared/insert_map"
         - unless @page.testimonials.empty?
           = render :partial => "admin/testimonials/testimonial_options", :locals => {:testimonials => @page.testimonials}
+        %br
         = f.check_box :automatically_embed_videos_and_images
         = f.label :automatically_embed_videos_and_images, "Use <strong>Ninja Code</strong> to embed objects."
         
