@@ -1,4 +1,7 @@
 - content_for :meta_title do
   = @page.meta_title
 
+- content_for :head do
+  %meta{:name => "robots", :content => "noindex, follow"}
+
 = @page.body
