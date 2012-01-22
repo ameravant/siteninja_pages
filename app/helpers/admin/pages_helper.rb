@@ -100,7 +100,7 @@ module Admin::PagesHelper
       for menu in @footer_menus
         concat "<li id=\"#{dom_id menu}\">"
         concat image_tag("#{move_loc}", :class => "icon handle")
-        concat link_to(h(menu.navigatable.title), [:edit, :admin, menu.navigatable])
+        concat link_to(h(menu.menu_title), [:edit, :admin, (menu.navigatable.blank? ? menu : menu.navigatable)])
         concat "</li>\n"
       end
     concat "</ul>\n"

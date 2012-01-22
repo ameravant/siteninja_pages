@@ -57,6 +57,10 @@ class PagesController < ApplicationController
       authorize("Member", "Members") if @members
   end
 
+  def error
+    
+  end
+  
 private
 
   def authenticate
