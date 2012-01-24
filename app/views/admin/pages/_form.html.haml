@@ -219,7 +219,7 @@
       %h2.form-label
         = f.label :body
 
-    = f.text_area :body, :size => "100x40", :class => "mceEditor"
+    = f.text_area :body, :size => "80x40", :style => "width: 550px;", :class => "mceEditor"
   %div
   - fancy_submit admin_pages_path do
     = submit_tag "Save page"
