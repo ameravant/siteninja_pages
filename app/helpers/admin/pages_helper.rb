@@ -12,7 +12,7 @@ module Admin::PagesHelper
           concat image_tag("#{move_loc}", :class => "icon handle") + ' '
           concat link_to(h(child.menu_title), [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], :class => child.hidden? ? 'gray' : nil)
           concat ' ' + content_tag('span', '&mdash; hidden from menus', :class => ' small gray') if child.status == 'hidden'
-          concat ' &mdash; ' + link_to("Manage Homepage Features", admin_features_path) if (child.url == "/home")
+          concat ' &mdash; ' + link_to("Manage Homepage Features", admin_features_path) if (child.url == "/")
           concat '</div><div class="page-options">'
           concat feature_icon_select(child.navigatable, child.navigatable.name) unless child.navigatable.blank? or feature_icon_select(child.navigatable, child.navigatable.name).blank?
           concat ' ' + icon("Write", [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)]) + ' '
