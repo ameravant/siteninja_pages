@@ -32,17 +32,21 @@
     tinyMCE.execInstanceCommand("page_body","mceInsertContent",false,text);
     }
     function setLink(){
-    document.getElementById('post_preview_body').value = tinyMCE.get('page_body').getContent();
+    document.getElementById('preview_page_body').value = tinyMCE.get('page_body').getContent();
+    document.getElementById('preview_page_title').value = document.getElementById('page_title').value
+    document.getElementById('preview_page_meta_title').value = document.getElementById('page_meta_title').value
+    document.getElementById('preview_menu_show_in_footer').checked = document.getElementById('menu_show_in_footer').checked
+    document.getElementById('preview_menu_show_in_main_menu').checked = document.getElementById('menu_show_in_main_menu').checked
+    document.getElementById('preview_menu_show_in_side_column').checked = document.getElementById('menu_show_in_side_column').checked
+    document.getElementById('preview_menu_parent_id').value = document.getElementById('menu_parent_id').value
+    document.getElementById('preview_page_meta_description').value = document.getElementById('page_meta_description').value
+    document.getElementById('preview_page_head_script').value = document.getElementById('page_head_script').value
+    document.getElementById('preview_page_foot_text').value = document.getElementById('page_foot_text').value
+    document.getElementById('preview_page_additional_styles').value = document.getElementById('page_additional_styles').value
+    document.getElementById('preview_page_template_id').value = document.getElementById('page_template_id').value
+    document.getElementById('preview_page_column_id').value = document.getElementById('page_column_id').value
+    document.getElementById('preview_page_main_column_id').value = document.getElementById('page_main_column_id').value
     document.getElementById('submit-preview').click();
-    - link = "document.getElementById('preview-link').href = '/admin/pages/preview?reload=true&page_id=#{@page.id}&page_title=' + escape(document.getElementById('page_title').value) + '&menu_show_in_footer=' + document.getElementById('menu_show_in_footer').checked + '&page_column_id=' + document.getElementById('page_column_id').value + '&page_show_site_search=' + document.getElementById('page_show_site_search').checked +  '&page_show_side_column_text=' + document.getElementById('page_show_side_column_text').checked + '&page_meta_description=' + escape(document.getElementById('page_meta_description').value) + '&page_head_script=' + escape(document.getElementById('page_head_script').value) + '&page_additional_styles=' + escape(document.getElementById('page_additional_styles').value)" 
-    - if @cms_config['features']['testimonials']
-      - link += " + '&page_show_featured_testimonial=' + document.getElementById('page_show_featured_testimonial').checked"
-    - if @cms_config['modules']['newsletters']
-      - link += " + '&page_show_newsletter_signup=' + (document.getElementById('page_show_newsletter_signup').checked)"
-    - link += " + '&page_show_articles=' + (document.getElementById('page_show_articles').value) + '&page_show_article_cats=' + (document.getElementById('page_show_article_cats').checked)"
-    - if @cms_config['modules']['events']
-      - link += " + '&page_show_events=' + (document.getElementById('page_show_events').checked)"
-    = link
     }
 
 = f.error_messages :message => "Please fix these things and try again:", :header_message => "We couldn't save your page"
@@ -112,7 +116,7 @@
   .clear
   #body-wrapper
     .options#body-details
-      = link_to("#{icon("Search")} Preview Page", "", :id => "preview-link", :class => "icon preview-link", :onclick => "setLink()")      
+      = link_to("#{icon("Search")} Preview Page", "/admin/pages/preview?reload=true", :id => "preview-link", :class => "icon preview-link", :onclick => "setLink()")      
       = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
       .inserts
         %strong Insert:
@@ -224,7 +228,22 @@
   - fancy_submit admin_pages_path do
     = submit_tag "Save page"
 - content_for :pre_footer do
-  %div{:style => "width: 1px; height: 1px; overflow: hidden;"}
+  %div{:style => ""}
     - form_remote_tag :url => post_preview_admin_pages_path, :method => "put", :html => {:name => "post_preview"} do
-      = text_area :post_preview, :body
+      = text_field :preview_page, :body
+      = text_field :preview_page, :title
+      = text_field :preview_page, :meta_title
+      = check_box :preview_menu, :show_in_footer
+      = check_box :preview_menu, :show_in_main_menu
+      = check_box :preview_menu, :show_in_side_column
+      = check_box :preview_menu, :parent_id
+      = text_field :preview_page, :meta_description
+      = text_field :preview_page, :head_script
+      = text_field :preview_page, :foot_text
+      = text_field :preview_page, :additional_styles
+      = text_field :preview_page, :template_id
+      = text_field :preview_page, :column_id
+      = text_field :preview_page, :main_column_id
       = submit_tag "submit", :id => "submit-preview"
+
+

@@ -45,46 +45,28 @@ class Admin::PagesController < AdminController
   end
   
   def preview
-    params[:page_id].blank? ? @page = Page.new : @page = Page.find(params[:page_id])
-    @menu = @page.menus.first
-    @menu = Menu.first if @menu.blank?
+    @page = Page.new(JSON.parse(@cms_config['site_settings']['preview']))
+    @menu = Menu.new()
     @admin = false
-    @menus = Menu.all
-    @settings = Setting.first
-    @footer_menus = Menu.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
     @hide_admin_menu = true
-    @images = @page.images
-    @owner = @page
-    @page.column_id = params[:page_column_id]
-    #@page.body = params[:page_body]
-    @page.title = params[:page_title]
-    @page.parent_id = params[:page_parent_id]
-    @page.meta_description = params[:page_meta_description]
-    @page.show_in_footer = params[:page_show_in_footer]
-    @page.show_site_search = params[:page_show_site_search]
-    @page.show_side_column_text = params[:page_show_side_column_text]
-    @page.show_featured_testimonial = params[:page_show_featured_testimonial]
-    @page.show_newsletter_signup = params[:page_show_newsletter_signup]
-    @page.show_articles = params[:page_show_articles]
-    @page.show_article_cats = params[:page_show_article_cats]
-    @page.show_events = params[:page_show_events]
-    @page.meta_description = params[:page_meta_description]
-    @page.head_script = params[:head_script]
-    @page.additional_styles = params[:page_additional_styles]
-    @menu.show_in_footer = params[:menu_show_in_footer]
+    @page.menus << @menu
+    @page.permalink = ""
+    @tmplate = @page.template unless @page.template.blank?
+    @tmplate.layout_top = @global_template.layout_top if @tmplate.layout_top.blank?
+    @tmplate.layout_bottom = @global_template.layout_bottom if @tmplate.layout_bottom.blank?
+    @tmplate.article_show = @global_template.article_show if @tmplate.article_show.blank?
+    @tmplate.articles_index = @global_template.articles_index if @tmplate.articles_index.blank?
+    @tmplate.small_article_for_index = @global_template.small_article_for_index if @tmplate.small_article_for_index.blank?
+    @tmplate.medium_article_for_index = @global_template.medium_article_for_index if @tmplate.medium_article_for_index.blank?
+    @tmplate.large_article_for_index = @global_template.large_article_for_index if @tmplate.large_article_for_index.blank?
     @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
     @side_column_sections = ColumnSection.all(:conditions => {:column_id => 1, :visible => true}) if @page.column_id.blank?
-    @features = []
-    # @menu.featurable_sections.each do |fs|
-    #   @features += fs.features
-    # end
-    # feature_sections = FeaturableSection.all.reject{|fs| !fs.site_wide}
-    # if feature_sections
-    #   feature_sections.each do |fs|
-    #     @features += fs.features
-    #   end
-    # end
+    @main_column = (@page.main_column_id.blank? ? Column.first(:conditions => {:title => "Default", :column_location => "main_column"}) : Column.find(@page.main_column_id))
+    @main_column_sections = ColumnSection.all(:conditions => {:column_id => (@page.main_column_id.blank? ? @main_column.id : @page.main_column_id), :visible => true})
+    @images = @page.images
+    @footer_pages = Page.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
     @side_column = @page.column_id
+    @foot_text = @page.foot_text
     ops = "person_id = #{@page.author_id}" if @page.author_id
     articles = @page.article_category_id.nil? ? Article.published.find(:all, :conditions => ops) : @page.article_category.articles.published.find(:all, :conditions => ops)
     @testimonial = Testimonial.featured.sort_by(&:rand).first
@@ -108,15 +90,14 @@ class Admin::PagesController < AdminController
           add_breadcrumb menu.navigatable.title, menu.navigatable
         end
       else  
-        add_breadcrumb @menu.navigatable.title unless @page.permalink == "home" 
+        add_breadcrumb @page.title unless @page.permalink == "home" 
       end
     end
-    session[:redirect] = request.request_uri if @members
-    authorize("Member", "Members") if @members
+    render 'pages/show'
   end
   
   def post_preview
-    @cms_config['site_settings']['preview'] = params[:post_preview][:body]
+    @cms_config['site_settings']['preview'] = ActiveSupport::JSON.encode(params[:preview_page])
     File.open(@cms_path, 'w') { |f| YAML.dump(@cms_config, f) }
   end
   
@@ -218,7 +199,6 @@ class Admin::PagesController < AdminController
   
   def build_tree(current_menu)
     @menus_tmp << current_menu
-    @members = true if current_menu.navigatable.permalink == "members"
     if current_menu.parent_id
       parent_menu = Menu.find(current_menu.parent_id)
       build_tree(parent_menu)
