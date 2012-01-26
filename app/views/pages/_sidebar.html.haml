@@ -13,9 +13,8 @@
       = render :partial => "/testimonials/testimonial_for_sidebar", :locals => { :count => section.count, :section => section, :testimonial => @testimonial } if @page.show_featured_testimonial?  and @cms_config['features']['testimonials'] and @testimonial
     - elsif section.column_section_type.controller_name == "content"
       - if !section.body.blank?
-        - content_for :side_column do
-          - if @page.show_side_column_text
-            .side-column-section
-              = ninja_parse(section.body)
+        - if @page.show_side_column_text
+          .side-column-section
+            = ninja_parse(section.body)
     - else
       = render :partial => "/#{section.column_section_type.controller_name}/#{section.column_section_type.partial_name}", :locals => {  :section => section, :count => section.count, :title => section.title, :show_author => section.show_author, :show_blurb => section.show_blurb }
