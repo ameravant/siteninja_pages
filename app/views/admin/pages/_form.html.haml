@@ -228,22 +228,22 @@
   - fancy_submit admin_pages_path do
     = submit_tag "Save page"
 - content_for :pre_footer do
-  %div{:style => ""}
+  %div{:style => "display: none;"}
     - form_remote_tag :url => post_preview_admin_pages_path, :method => "put", :html => {:name => "post_preview"} do
-      = text_field :preview_page, :body
-      = text_field :preview_page, :title
-      = text_field :preview_page, :meta_title
+      = text_area :preview_page, :body
+      = text_area :preview_page, :title
+      = text_area :preview_page, :meta_title
       = check_box :preview_menu, :show_in_footer
       = check_box :preview_menu, :show_in_main_menu
       = check_box :preview_menu, :show_in_side_column
       = check_box :preview_menu, :parent_id
-      = text_field :preview_page, :meta_description
-      = text_field :preview_page, :head_script
-      = text_field :preview_page, :foot_text
-      = text_field :preview_page, :additional_styles
-      = text_field :preview_page, :template_id
-      = text_field :preview_page, :column_id
-      = text_field :preview_page, :main_column_id
+      = text_area :preview_page, :meta_description
+      = text_area :preview_page, :head_script
+      = text_area :preview_page, :foot_text
+      = text_area :preview_page, :additional_styles
+      = text_area :preview_page, :template_id
+      = text_area :preview_page, :column_id
+      = text_area :preview_page, :main_column_id
       = submit_tag "submit", :id => "submit-preview"
 
 
