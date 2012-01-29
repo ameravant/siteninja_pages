@@ -1,3 +1,4 @@
+
 - content_for :meta_title do
   = @page.meta_title
 - content_for :meta_description do
@@ -19,3 +20,7 @@
   - unless @page.additional_styles.blank?
     %style{:type => "text/css"}
       = @page.additional_styles
+      
+/- content_for :admin_options do
+/   %li= link_to "#{icon("Clipboard Copy")} Manage Pages", admin_pages_path
+/   %li= link_to "#{icon("Write")} Edit Page", edit_admin_page_path(@page)

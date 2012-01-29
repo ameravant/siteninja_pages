@@ -18,7 +18,7 @@ class Admin::PagesController < AdminController
   
   def edit
     add_breadcrumb @page.name
-    @no_edit = true if @page.permalink == 'page-not-found'
+    @no_edit = true if @page.permalink == 'page-not-found' or @page.permalink == 'application-error'
   end
   
   def show
