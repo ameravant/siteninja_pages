@@ -1,5 +1,5 @@
 - @show_site_search = @page.show_site_search
-- unless @side_column_sections.empty?
+- unless !@side_column_sections or @side_column_sections.empty?
   - for section in @side_column_sections
     - content_for :side_column do
       - if section.column_section_type.partial_name == "signup_for_side_column"
