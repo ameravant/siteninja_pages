@@ -8,10 +8,12 @@ module Admin::PagesHelper
       # Output the list elements for these children, and recursively
       # call build_menu for their children.
       for child in children
-          concat "<li id=\"#{dom_id(child)}\" style=\"border-top: #ccc 1px solid; \">" + '<div class="page-title">'
-          concat image_tag("#{move_loc}", :class => "icon handle") + ' '
+          status = (child.show_in_main_menu == false and child.show_in_side_column == false and child.show_in_footer == false) ? 'hidden' : 'visible'
+          concat "<li id=\"#{dom_id(child)}\" class=\"menu-item\">"
+          concat "<div class=\"menu-item-inner #{status}\">"
+          concat '<div class="page-handle">' + image_tag("#{move_loc}", :class => "icon handle") + '</div>'
+          concat '<div class="page-title">'
           concat link_to(h(child.menu_title), [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], :class => child.hidden? ? 'gray' : nil)
-          concat ' ' + content_tag('span', '&mdash; hidden from menus', :class => ' small gray') if child.status == 'hidden'
           concat ' &mdash; ' + link_to("Manage Homepage Features", admin_features_path) if (child.url == "/")
           concat '</div><div class="page-options">'
           concat feature_icon_select(child.navigatable, child.navigatable.name) unless child.navigatable.blank? or feature_icon_select(child.navigatable, child.navigatable.name).blank?
@@ -58,8 +60,10 @@ module Admin::PagesHelper
           concat icon("Picture", [:admin, child.navigatable, :images]) + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images]) unless child.navigatable.blank?
           concat '&nbsp;' if child.navigatable.blank?
           concat '</div><div class="page-type">'
-          concat (child.navigatable.blank? ? "External Link" : child.navigatable.class.to_s)
-          concat "</div>" + clear
+          concat (child.navigatable.blank? ? "Link" : child.navigatable.class.to_s)
+          concat "</div>" 
+          concat '<div class="page-menu">' + content_tag('span', status.capitalize, :class => "#{status}") + "</div>" 
+          concat clear + "</div>"
           concat "<div class=\"droppable\" id=\"droppable_#{dom_id(child)}\"><span>Drop menu into \"#{child.menu_title}.\"</span></div>"
           build_menu(child.id)
           concat "</li>\n"
