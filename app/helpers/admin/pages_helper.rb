@@ -120,6 +120,7 @@ module Admin::PagesHelper
   
   def menu_form(menu)
     @menu = menu
-    concat "<div class=\"page-menu\"><a href=\"#{edit_admin_menu_path(menu.id, :fancy => true)}\" title=\"Manage '#{menu.menu_title}' Placement\" alt=\"Manage Menu Placement\" class=\"fancy-mini-iframe #{menu.status}\">#{menu.status.capitalize}</a></div>"
+    status = (menu.show_in_main_menu == false and menu.show_in_side_column == false and menu.show_in_footer == false) ? 'hidden' : 'visible'
+    concat "<div class=\"page-menu\"><a href=\"#{edit_admin_menu_path(menu.id, :fancy => true)}\" title=\"Manage '#{menu.menu_title}' Placement\" alt=\"Manage Menu Placement\" class=\"fancy-mini-iframe #{status}\">#{status.capitalize}</a></div>"
   end
 end
