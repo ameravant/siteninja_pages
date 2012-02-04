@@ -62,7 +62,7 @@ module Admin::PagesHelper
           concat '</div><div class="page-type">'
           concat (child.navigatable.blank? ? "Link" : child.navigatable.class.to_s)
           concat "</div>" 
-          concat '<div class="page-menu">' + content_tag('span', status.capitalize, :class => "#{status}") + "</div>" 
+          menu_form(child)
           concat clear + "</div>"
           concat "<div class=\"droppable\" id=\"droppable_#{dom_id(child)}\"><span>Drop menu into \"#{child.menu_title}.\"</span></div>"
           build_menu(child.id)
@@ -116,5 +116,10 @@ module Admin::PagesHelper
           :failure => "$('ajax_spinner').src='#{exclamation_loc}'",
           :complete => visual_effect(:fade, "reorder_status", :delay => 1)
         )
+  end
+  
+  def menu_form(menu)
+    @menu = menu
+    concat "<div class=\"page-menu\"><a href=\"#{edit_admin_menu_path(menu.id, :fancy => true)}\" title=\"Manage '#{menu.menu_title}' Placement\" alt=\"Manage Menu Placement\" class=\"fancy-mini-iframe #{menu.status}\">#{menu.status.capitalize}</a></div>"
   end
 end
