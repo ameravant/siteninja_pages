@@ -11,7 +11,7 @@
       - elsif section.column_section_type.partial_name == "article_categories_for_side_column"
         = render :partial => "/article_categories/article_categories_for_side_column", :locals => { :title => section.title, :section => section, :count => section.count } if @page.show_article_cats? and @cms_config['modules']['blog']
       - elsif section.column_section_type.partial_name == "testimonial_for_sidebar"
-        = render :partial => "/testimonials/testimonial_for_sidebar", :locals => { :count => section.count, :section => section, :testimonial => @testimonial } if @page.show_featured_testimonial?
+        = render :partial => "/testimonials/testimonial_for_sidebar", :locals => { :count => section.count, :section => section, :testimonial => @testimonial } if @page.show_featured_testimonial?  and @cms_config['features']['testimonials']
       - elsif section.column_section_type.controller_name == "content"
         - if !section.body.blank?
           - if @page.show_side_column_text
