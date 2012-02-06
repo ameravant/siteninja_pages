@@ -5,7 +5,7 @@
 - content_for :meta_keywords do
   = @page.meta_keywords
 - for section in @main_column_sections
-  - if section.column_section_type.title == "Body Content"
+  - if section.column_section_type.title == "Body Content" and !@page.body.blank?
     = @page.automatically_embed_videos_and_images? ? ninja_parse(@page.body) : @page.body
   - elsif section.column_section_type.title == "HTML Section"
     = section.body
