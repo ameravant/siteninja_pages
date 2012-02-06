@@ -11,7 +11,7 @@ class Page < ActiveRecord::Base
   belongs_to :author, :class_name => 'Person'
   belongs_to :article_category
   belongs_to :column
-  validates_presence_of :title, :meta_title, :body
+  validates_presence_of :title, :meta_title
   validates_uniqueness_of :title
   default_scope :order => "parent_id, position"
   named_scope :visible, :conditions => "status = 'visible'"
