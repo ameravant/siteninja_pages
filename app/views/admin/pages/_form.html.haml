@@ -103,15 +103,15 @@
   .note
     %span.required *Required
     Short title displayed in site menu.
-  = f.text_field :title, :class => "big", :size => 80, :style => "width: 550px;"
+  = f.text_field :title, :class => "big-input"
   %h2.form-label= f.label :meta_title, "Page Title"
   .note
     %span.required *Required
     Long title displayed as browser title and used to generate the page permalink.
-  = f.text_field :meta_title, :class => "big", :size => 80, :disabled => @no_edit, :style => "width: 550px;"
+  = f.text_field :meta_title, :class => "big-input", :disabled => @no_edit
   %h2.form-label= f.label :meta_description, "Short Description"
   .note Used in the Feature Box and as the Meta Description.
-  = f.text_area :meta_description, :style => "width: 550px; height: 80px;"
+  = f.text_area :meta_description, :class => "big-area"
   
   .clear
   #body-wrapper
