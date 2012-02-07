@@ -175,7 +175,7 @@ class Admin::PagesController < AdminController
   def find_page
     begin
       @page = Page.find_by_permalink!(params[:id])
-      if @page.main_column_id.blank or Column.find(@page.main_column_id).blank?
+      if @page.main_column_id.blank? or Column.find(@page.main_column_id).blank?
         @page.main_column_id = Column.find_by_title("Default").id
       end
       @menu = @page.menus.first
