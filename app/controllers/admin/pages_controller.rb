@@ -28,6 +28,7 @@ class Admin::PagesController < AdminController
   def new
     @page = Page.new
     @page.column_id = nil
+    @page.main_column_id = Column.find_by_title("Default").id
     @menu = Menu.new
   end
   
@@ -174,6 +175,9 @@ class Admin::PagesController < AdminController
   def find_page
     begin
       @page = Page.find_by_permalink!(params[:id])
+      if @page.column_id.blank or Column.find(@page.main_column_id).blank?
+        @page.main_column_id = Column.find_by_title("Default").id
+      end
       @menu = @page.menus.first
     rescue ActiveRecord::RecordNotFound
       redirect_to admin_pages_path
