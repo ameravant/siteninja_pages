@@ -106,7 +106,7 @@
       = link_to(f.label(:column_id, "#{icon("Dots")} Side Column", :class => "title"), admin_columns_path(:column_location => "side_column", :fancy => true), :title => "Manage Side Columns", :class => "fancy-iframe")
       %br
       = f.hidden_field :column_id
-      #side-column-div= link_to((@page.column_id.blank? ? "Select a Side Column" : @page.column.title), admin_columns_path(:column_location => "side_column", :fancy => true), :id => "side-column-title", :class => "fancy-iframe")
+      #side-column-div= link_to((@page.column_id.blank? ? "Select a Side Column" : Column.find(@page.column_id).title), admin_columns_path(:column_location => "side_column", :fancy => true), :id => "side-column-title", :class => "fancy-iframe")
 
     - if @cms_config["modules"]["members"]
       = link_to("#{icon("Lock")} Permissions", "#permissions-box", :class => "fancy-inline", :id => "permissions-link") 
