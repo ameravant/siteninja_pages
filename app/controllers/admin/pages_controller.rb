@@ -29,6 +29,7 @@ class Admin::PagesController < AdminController
     @page = Page.new
     @page.column_id = nil
     @page.main_column_id = Column.find_by_title("Default").id
+    @page.automatically_embed_videos_and_images = false if @cms_config['site_settings']['set_automatically_embed_to_false']
     @menu = Menu.new
   end
   
