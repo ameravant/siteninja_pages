@@ -27,6 +27,7 @@ class Admin::PagesController < AdminController
   
   def new
     @page = Page.new
+    @page.column_id = nil
     @menu = Menu.new
   end
   
