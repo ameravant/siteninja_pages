@@ -1,6 +1,6 @@
 - content_for :head do
   %style{:type => "text/css"}
-    ==.display-advanced-side-column-options { position: absolute; text-align: right; width: 250px; }
+    ==.display-advanced-side-column-options { float:right; width: 100px; text-align: right; }
     ==#advanced-side-column-options { text-align: left; }
     ==#advanced-side-column-options label { font-size: .85em; }
     ==#main-details, #body-details { font-size: .85em; }
@@ -14,6 +14,8 @@
     ==#permissions-groups { padding: 4px 10px; border: 1px solid #ccc; background: #eee; margin: 5px; font-size: .8em; }
     ==#permissions-groups ul { padding-left: 10px; }
     ==#permissions-link { font-weight: bold; }
+    ==#main-column-div, #side-column-div { font-weight: bold; margin: -4px 0 5px 15px; }
+    ==.menus { margin-left: 14px; }
   %script{:type => "text/javascript"}
     jQuery(document).ready(function() {
     jQuery("a#preview-link").fancybox({ 
@@ -30,6 +32,18 @@
     });
     function addtext(text) {
     tinyMCE.execInstanceCommand("page_body","mceInsertContent",false,text);
+    }
+    function set_column(column_location, column_id, column_name) {
+    if(column_location == "main_column"){
+    jQuery('#page_main_column_id').val(column_id);
+    jQuery('#main-column-title').html(column_name);
+    jQuery('#main-column-div').effect("highlight", {}, 4000);
+    }
+    else{
+    jQuery('#page_column_id').val(column_id);
+    jQuery('#side-column-title').text(column_name);
+    jQuery('#side-column-div').effect("highlight", {}, 4000);
+    }
     }
     function setLink(){
     document.getElementById('preview_page_body').value = tinyMCE.get('page_body').getContent();
@@ -66,8 +80,7 @@
         %br 
         = m.check_box :show_in_footer, :disabled => @no_edit
         = m.label :show_in_footer, "Footer Menu"
-
-      = m.label :parent_id, "Menu placement", :class => "title"
+      = m.label :parent_id, "#{icon("Sitemap")} Menu placement", :class => "title"
       %br
       %select{:name => "menu[parent_id]", :id => "menu_parent_id", :disabled => @no_edit, :class => "select"}
         - for o in @options_for_parent_id
@@ -77,21 +90,23 @@
             %option{:value => o[1] , :selected => nil}= o[0]
       - unless @templates.empty?
         %br
-        = icon "Write", admin_templates_path, "Manage Templates", "#{icons_loc}/", "16x16", "gray", "Manage Templates"
+        = link_to(icon("Picture"), admin_templates_path(:fancy => true), :title => "Manage Templates", :class => "fancy-iframe")
         = f.label :template_id, "Template", :class => "title"
         %br
         = collection_select(:page, :template_id, @templates, :id, :title, {:include_blank => "Select a Template"}, :class => "select", :selected => (@page.template_id.blank? ? "" : @page.template_id))
       %br
-      = icon "Write", admin_columns_path(:column_location => "main_column"), "Manage Main Columns", "#{icons_loc}/", "16x16", "gray", "Manage Main Columns"
-      = f.label :main_column_id, "Main Column", :class => "title"
+      = link_to(f.label(:main_column_id, "#{icon("Dots")} Main Column", :class => "title"), admin_columns_path(:column_location => "main_column", :fancy => true), :title => "Manage Main Columns", :class => "fancy-iframe")
+      
       %br
-      = collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")
-      %br
+      = f.hidden_field :main_column_id
+      #main-column-div= link_to((@page.main_column_id.blank? ? "Select a Main Column" : Column.find(@page.main_column_id).title), admin_columns_path(:column_location => "main_column", :fancy => true), :id => "main-column-title", :class => "fancy-iframe")
+      = #collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")
+      
       %div.display-advanced-side-column-options=link_to("Advanced", "#advanced-side-column-options", :class => "fancy-inline")
-      = icon "Write", admin_columns_path(:column_location => "side_column"), "Manage Side Columns", "#{icons_loc}/", "16x16", "gray", "Manage Side Columns"
-      = f.label :column_id, "Side Column", :class => "title"
+      = link_to(f.label(:column_id, "#{icon("Dots")} Side Column", :class => "title"), admin_columns_path(:column_location => "side_column", :fancy => true), :title => "Manage Side Columns", :class => "fancy-iframe")
       %br
-      = collection_select(:page, :column_id, @side_columns, :id, :title, {:include_blank => "Select a Side Column"}, :class => "select")
+      = f.hidden_field :column_id
+      #side-column-div= link_to((@page.column_id.blank? ? "Select a Side Column" : @page.column.title), admin_columns_path(:column_location => "side_column", :fancy => true), :id => "side-column-title", :class => "fancy-iframe")
 
     - if @cms_config["modules"]["members"]
       = link_to("#{icon("Lock")} Permissions", "#permissions-box", :class => "fancy-inline", :id => "permissions-link") 
