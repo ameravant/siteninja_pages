@@ -237,7 +237,7 @@
           
               - if feature.featurable_type == "Video"
                 %div{:class => "panel #{(feature.featurable.images.first.feature_box_overlay_position.blank? ? @cms_config['site_settings']['feature_box_overlay_position'] : feature.featurable.images.first.feature_box_overlay_position)}", :onmousedown => "pause()"}
-                  = ninja_parse(feature.featurable.video_url)
+                  = ninja_parse("<div>" + feature.featurable.video_url + "</div>")
                   = clear
 
               - elsif feature.featurable_type == "Image"
