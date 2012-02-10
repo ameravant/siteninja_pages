@@ -6,7 +6,11 @@ class PagesController < ApplicationController
   def show
     get_page_defaults(@page)
   end
-
+  
+  def index
+    get_page_defaults(@page)    
+    render 'pages/show'
+  end
   def error
     @page = Page.find_by_permalink("application-error") if @page.blank?
   end
@@ -20,9 +24,12 @@ private
     end
   end
 
-
   def get_page_or_404
-    render_404 unless @page = Page.find_by_permalink(params[:id])
+    if request.request_uri.include?("/pages/")
+      redirect_to(request.request_uri.gsub("/pages/", "/"), :status => 301)
+    else
+      render_404 unless @page = Page.find_by_permalink(params[:id])
+    end
   end
 
   def set_template

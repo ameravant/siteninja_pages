@@ -37,11 +37,13 @@
     if(column_location == "main_column"){
     jQuery('#page_main_column_id').val(column_id);
     jQuery('#main-column-title').html(column_name);
+    jQuery('#main-column-title').attr("href", "/admin/columns/" + column_id + "/column_sections?fancy=true&column_location=main_column");
     jQuery('#main-column-div').effect("highlight", {}, 4000);
     }
     else{
     jQuery('#page_column_id').val(column_id);
     jQuery('#side-column-title').text(column_name);
+    jQuery('#side-column-title').attr("href", "/admin/columns/" + column_id + "/column_sections?fancy=true&column_location=side_column");
     jQuery('#side-column-div').effect("highlight", {}, 4000);
     }
     }
@@ -99,14 +101,14 @@
       
       %br
       = f.hidden_field :main_column_id
-      #main-column-div= link_to((@page.main_column_id.blank? ? "Select a Main Column" : Column.find(@page.main_column_id).title), admin_columns_path(:column_location => "main_column", :fancy => true), :id => "main-column-title", :class => "fancy-iframe")
+      #main-column-div= link_to((@page.main_column_id.blank? ? "Select a Main Column" : Column.find(@page.main_column_id).title), (@page.main_column_id.blank? ? admin_columns_path(:column_location => "main_column", :fancy => true) : admin_column_column_sections_path(@page.main_column_id, :column_location => "main_column", :fancy => true)), :id => "main-column-title", :class => "fancy-iframe")
       = #collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")
       
       %div.display-advanced-side-column-options=link_to("Advanced", "#advanced-side-column-options", :class => "fancy-inline")
       = link_to(f.label(:column_id, "#{icon("Dots")} Side Column", :class => "title"), admin_columns_path(:column_location => "side_column", :fancy => true), :title => "Manage Side Columns", :class => "fancy-iframe")
       %br
       = f.hidden_field :column_id
-      #side-column-div= link_to((@page.column_id.blank? ? "Select a Side Column" : Column.find(@page.column_id).title), admin_columns_path(:column_location => "side_column", :fancy => true), :id => "side-column-title", :class => "fancy-iframe")
+      #side-column-div= link_to((@page.column_id.blank? ? "Select a Side Column" : Column.find(@page.column_id).title), (@page.column_id.blank? ? admin_columns_path(:column_location => "side_column", :fancy => true) : admin_column_column_sections_path(@page.column_id, :column_location => "side_column", :fancy => true)), :id => "side-column-title", :class => "fancy-iframe")
 
     - if @cms_config["modules"]["members"]
       = link_to("#{icon("Lock")} Permissions", "#permissions-box", :class => "fancy-inline", :id => "permissions-link") 
