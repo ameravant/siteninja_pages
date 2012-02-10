@@ -53,8 +53,6 @@ class Admin::PagesController < AdminController
     @admin = false
     @hide_admin_menu = true
     @page.menus << @menu
-    @page.permalink = ""
-    @images = @page.images
     @tmplate = @page.template unless @page.template.blank?
     @tmplate.layout_top = @global_template.layout_top if @tmplate.layout_top.blank?
     @tmplate.layout_bottom = @global_template.layout_bottom if @tmplate.layout_bottom.blank?
@@ -67,7 +65,7 @@ class Admin::PagesController < AdminController
     @side_column_sections = ColumnSection.all(:conditions => {:column_id => 1, :visible => true}) if @page.column_id.blank?
     @main_column = (@page.main_column_id.blank? ? Column.first(:conditions => {:title => "Default", :column_location => "main_column"}) : Column.find(@page.main_column_id))
     @main_column_sections = ColumnSection.all(:conditions => {:column_id => (@page.main_column_id.blank? ? @main_column.id : @page.main_column_id), :visible => true})
-    @images = @page.images
+    @images = @page.permalink.empty? ? [] : Page.find_by_permalink(@page.permalink).images
     @footer_pages = Page.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
     @side_column = @page.column_id
     @foot_text = @page.foot_text

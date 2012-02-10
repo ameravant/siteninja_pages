@@ -62,6 +62,7 @@
     document.getElementById('preview_page_template_id').value = document.getElementById('page_template_id').value
     document.getElementById('preview_page_column_id').value = document.getElementById('page_column_id').value
     document.getElementById('preview_page_main_column_id').value = document.getElementById('page_main_column_id').value
+    document.getElementById('preview_page_permalink').value = document.getElementById('page_permalink').value
     document.getElementById('submit-preview').click();
     }
 
@@ -242,6 +243,7 @@
 
     = f.text_area :body, :size => "80x40", :style => "width: 550px;", :class => "mceEditor"
   %div
+  = hidden_field :page, :permalink
   - fancy_submit admin_pages_path do
     = submit_tag "Save page"
 - content_for :pre_footer do
@@ -261,6 +263,7 @@
       = text_area :preview_page, :template_id
       = text_area :preview_page, :column_id
       = text_area :preview_page, :main_column_id
+      = text_area :preview_page, :permalink
       = submit_tag "submit", :id => "submit-preview"
 
 
