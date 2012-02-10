@@ -54,6 +54,7 @@ class Admin::PagesController < AdminController
     @hide_admin_menu = true
     @page.menus << @menu
     @page.permalink = ""
+    @images = @page.images
     @tmplate = @page.template unless @page.template.blank?
     @tmplate.layout_top = @global_template.layout_top if @tmplate.layout_top.blank?
     @tmplate.layout_bottom = @global_template.layout_bottom if @tmplate.layout_bottom.blank?
