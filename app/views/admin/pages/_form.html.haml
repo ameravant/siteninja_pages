@@ -132,10 +132,11 @@
   = f.text_area :meta_description, :class => "big-area"
   
   .clear
-  #body-wrapper
+  #body-wrapper 
     .options#body-details
-      = link_to("#{icon("Search")} Preview Page", "/admin/pages/preview?reload=true", :id => "preview-link", :class => "icon preview-link", :onclick => "setLink()")      
-      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
+      = link_to("#{image_tag(css_icon("Search", "", "", "blue"), :class => "icon")} Preview Page", "/admin/pages/preview?reload=true", :id => "preview-link", :class => "link-button float-left", :onclick => "setLink()")      
+      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button gives a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
+      = clear
       .inserts
         %strong Insert:
         %br
@@ -146,6 +147,7 @@
         = render :partial => "admin/shared/asset_options"
         = render :partial => "admin/shared/insert_link"
         = render :partial => "admin/shared/insert_map"
+        = render :partial => "admin/shared/insert_youtube"
         - unless @page.testimonials.empty?
           = render :partial => "admin/testimonials/testimonial_options", :locals => {:testimonials => @page.testimonials}
         %br

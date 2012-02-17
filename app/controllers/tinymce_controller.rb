@@ -1,5 +1,6 @@
 class TinymceController < ApplicationController
   unloadable # http://dev.rubyonrails.org/ticket/6001
+  @admin = true
   layout nil
 
   def generate_images_list
