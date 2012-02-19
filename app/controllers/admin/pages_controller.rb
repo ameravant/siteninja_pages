@@ -26,6 +26,7 @@ class Admin::PagesController < AdminController
   end
   
   def new
+    @main_column = Column.find_by_title("Default")
     @page = Page.new
     @page.column_id = nil
     @page.main_column_id = Column.find_by_title("Default").id
@@ -35,6 +36,7 @@ class Admin::PagesController < AdminController
   
   def create
     @page = Page.new(params[:page])
+    @main_column = Column.find_by_id(@page.main_column_id)
     @menu = Menu.new(params[:menu])
     add_person_groups
     if @page.save
