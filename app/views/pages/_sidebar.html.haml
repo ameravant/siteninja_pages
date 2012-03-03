@@ -1,6 +1,6 @@
 - @show_site_search = @page.show_site_search
 - unless !@side_column_sections or @side_column_sections.empty?
-  - for section in @side_column_sections
+  - for section in @side_column_sections.uniq
     - content_for :side_column do
       - if section.column_section_type.partial_name == "signup_for_side_column"
         = render :partial => "/newsletters/signup_for_side_column" if @page.show_newsletter_signup?  and @cms_config['modules']['newsletters']
