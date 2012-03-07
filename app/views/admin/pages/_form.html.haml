@@ -1,3 +1,4 @@
+- @responsive = true
 - content_for :head do
   %style{:type => "text/css"}
     ==.display-advanced-side-column-options { float:right; width: 100px; text-align: right; }
@@ -16,6 +17,8 @@
     ==#permissions-link { font-weight: bold; }
     ==#main-column-div, #side-column-div { font-weight: bold; margin: -4px 0 5px 15px; }
     ==.menus { margin-left: 14px; }
+    ==.body-wrapper-inner { width: 560px; }
+
   %script{:type => "text/javascript"}
     jQuery(document).ready(function() {
     jQuery("a#preview-link").fancybox({ 
@@ -29,6 +32,9 @@
     'width': '90%',
     'height': '90%'
     }); 
+    jQuery('.advanced-options').click(function(){
+    jQuery('#main-details').toggle();
+    });
     });
     function addtext(text) {
     tinyMCE.execInstanceCommand("page_body","mceInsertContent",false,text);
@@ -65,11 +71,12 @@
     document.getElementById('preview_page_permalink').value = document.getElementById('page_permalink').value
     document.getElementById('submit-preview').click();
     }
-
 = f.error_messages :message => "Please fix these things and try again:", :header_message => "We couldn't save your page"
 - fields_for @menu do |m|
-  #main-details.options
-    
+  
+  =link_to("Show Page Details", "javascript:void(0)", :class => "advanced-options mobile-only")
+  
+  #main-details.option  
     #options
       %h3 Page Details
       = m.label :status_visible, "Show in Menu", :class => "title"
@@ -116,20 +123,14 @@
       %br
     = f.check_box :show_comments
     = f.label :show_comments, "Show Comments"
-
   %h2.title.form-label= f.label :title, "Menu Title"
-  .note
-    %span.required *Required
-    Short title displayed in site menu.
-  = f.text_field :title, :class => "big-input"
+  = f.text_field :title, :class => "big-input", :placeholder => "Short title displayed in site menu."
+  .note.required *Required
   %h2.form-label= f.label :meta_title, "Page Title"
-  .note
-    %span.required *Required
-    Long title displayed as browser title and used to generate the page permalink.
-  = f.text_field :meta_title, :class => "big-input", :disabled => @no_edit
+  = f.text_field :meta_title, :class => "big-input", :disabled => @no_edit, :placeholder => "Generates the permalink."
+  .note.required *Required
   %h2.form-label= f.label :meta_description, "Short Description"
-  .note Used in the Feature Box and as the Meta Description.
-  = f.text_area :meta_description, :class => "big-area"
+  = f.text_area :meta_description, :class => "big-area", :placeholder => "For features and meta description."
   
   .clear
   #body-wrapper 
@@ -239,11 +240,13 @@
                     = label_tag "group_checkbox_#{group.id}", group.title
             %div
               %input{:type => "button", :onclick => "jQuery.fancybox.close()", :value => "Done"}
-    %div{:style => "width: 560px;"}
+    
+    .body-wrapper-inner
+      .mobile-only
+        = render :partial => "admin/shared/parser_help_mobile"
       %h2.form-label
         = f.label :body
-
-    = f.text_area :body, :size => "80x40", :style => "width: 550px;", :class => "mceEditor"
+    = f.text_area :body, :class => "mceEditor"
   %div
   = hidden_field :page, :permalink
   - fancy_submit admin_pages_path do
