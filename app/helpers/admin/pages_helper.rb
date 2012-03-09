@@ -14,15 +14,15 @@ module Admin::PagesHelper
           concat '<div class="page-handle">' + image_tag("#{move_loc}", :class => "icon handle") + '</div>'
           concat '<div class="page-title">'
           concat link_to(h(child.menu_title), [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], :class => child.hidden? ? 'gray' : nil)
-          concat ' &mdash; ' + link_to("Manage Homepage Features", admin_features_path) if (child.url == "/")
+          concat '<span class="desktop-only"> &mdash; ' + link_to("Manage Homepage Features", admin_features_path) + '</span>' if (child.url == "/")
           concat '</div><div class="page-options">'
           concat feature_icon_select(child.navigatable, child.navigatable.name) unless child.navigatable.blank? or feature_icon_select(child.navigatable, child.navigatable.name).blank?
-          concat ' ' + icon("Write", [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)]) + ' '
+          concat ' ' + icon("Write", [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], "Edit", "", "48x48", "blue") + ' '
           #Check page is allowed to be deleted and provide icon to allow it
           if child.can_delete
             if !child.navigatable.blank? and child.navigatable_type == "Page"
               concat(link_to_remote(
-                image_tag("#{icons_loc}/gray/16x16/Trash.png", :class => "icon", :alt => "Delete #{child.menu_title}", :id => "#{dom_id(child)}_trash_icon"),
+                image_tag("#{icons_loc}/blue/48x48/Trash.png", :class => "icon", :alt => "Delete #{child.menu_title}", :id => "#{dom_id(child)}_trash_icon"),
                 {
                   :url => [:admin, child],
                   :method => :delete,
@@ -34,7 +34,7 @@ module Admin::PagesHelper
                 }, :class => "icon"))
             else
               concat(link_to_remote(
-                image_tag("#{icons_loc}/green/16x16/Link.png", :class => "icon", :alt => "Remove #{child.menu_title} from navigation", :title => "Remove #{child.menu_title} from navigation", :id => "#{dom_id(child)}_trash_icon"),
+                image_tag("#{icons_loc}/green/48x48/Link.png", :class => "icon", :alt => "Remove #{child.menu_title} from navigation", :title => "Remove #{child.menu_title} from navigation", :id => "#{dom_id(child)}_trash_icon"),
                 {
                   :url => [:admin, child],
                   :method => :delete,
@@ -51,13 +51,13 @@ module Admin::PagesHelper
           if @cms_config['features']['testimonials']
             concat '</div><div class="page-testimonials">'
             if child.navigatable_type == "Page"
-              concat icon("Bubble 1", [:admin, child.navigatable, :testimonials]) + ' ' + link_to(child.navigatable.testimonials_count, [:admin, child.navigatable, :testimonials])
+              concat icon("Bubble 1", [:admin, child.navigatable, :testimonials], "Testimonials", "", "48x48", "blue") + ' ' + link_to(child.navigatable.testimonials_count, [:admin, child.navigatable, :testimonials])
             else
               concat "&nbsp;"
             end
           end
           concat '</div><div class="page-images">'
-          concat icon("Picture", [:admin, child.navigatable, :images]) + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images]) unless child.navigatable.blank?
+          concat icon("Picture", [:admin, child.navigatable, :images], "Images", "", "48x48", "blue") + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images]) unless child.navigatable.blank?
           concat '&nbsp;' if child.navigatable.blank?
           concat '</div><div class="page-type">'
           concat (child.navigatable.blank? ? "Link" : child.navigatable.class.to_s)
@@ -120,7 +120,8 @@ module Admin::PagesHelper
   
   def menu_form(menu)
     @menu = menu
-    status = (menu.show_in_main_menu == false and menu.show_in_side_column == false and menu.show_in_footer == false) ? 'hidden' : 'visible'
-    concat "<div class=\"page-menu\"><a href=\"#{edit_admin_menu_path(menu.id, :fancy => true)}\" title=\"Manage '#{menu.menu_title}' Placement\" alt=\"Manage Menu Placement\" class=\"fancy-mini-iframe #{status}\">#{status.capitalize}</a></div>"
+    status = (menu.show_in_main_menu == false and menu.show_in_side_column == false and menu.show_in_footer == false) ? 'hidden<span class="mobile-only"> from menu</span>' : 'visible<span class="mobile-only"> in menu</span>'
+    status_class = (menu.show_in_main_menu == false and menu.show_in_side_column == false and menu.show_in_footer == false) ? 'hidden' : 'visible'
+    concat "<div class=\"page-menu\"><a href=\"#{edit_admin_menu_path(menu.id, :fancy => true)}\" title=\"Manage '#{menu.menu_title}' Placement\" alt=\"Manage Menu Placement\" class=\"fancy-mini-iframe #{status_class}\">#{status.capitalize}</a></div>"
   end
 end
