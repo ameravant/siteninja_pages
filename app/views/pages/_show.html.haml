@@ -6,7 +6,8 @@
   = @page.meta_keywords
 - for section in @main_column_sections
   - if section.column_section_type.title == "Body Content"
-    = @page.automatically_embed_videos_and_images? ? ninja_parse(@page.body) : @page.body if !@page.body.blank?
+    .body-content
+      = @page.automatically_embed_videos_and_images? ? ninja_parse(@page.body) : @page.body if !@page.body.blank?
   - elsif section.column_section_type.title == "HTML Section"
     = section.body
   - elsif section.column_section_type.title == "Feature Box"

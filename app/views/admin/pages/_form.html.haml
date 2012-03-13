@@ -1,7 +1,8 @@
 - @responsive = true
+- @body_class = "responsive-form-body"
 - content_for :head do
   %style{:type => "text/css"}
-    ==.display-advanced-side-column-options { float:right; width: 100px; text-align: right; }
+    ==.display-advanced-side-column-options { float:right; width: 100px; text-align: right; margin-right: 10px; }
     ==#advanced-side-column-options { text-align: left; }
     ==#advanced-side-column-options label { font-size: .85em; }
     ==#main-details, #body-details { font-size: .85em; }
@@ -17,7 +18,6 @@
     ==#permissions-link { font-weight: bold; }
     ==#main-column-div, #side-column-div { font-weight: bold; margin: -4px 0 5px 15px; }
     ==.menus { margin-left: 14px; }
-    ==.body-wrapper-inner { width: 560px; }
 
   %script{:type => "text/javascript"}
     jQuery(document).ready(function() {
@@ -54,7 +54,13 @@
     }
     }
     function setLink(){
+    try {
     document.getElementById('preview_page_body').value = tinyMCE.get('page_body').getContent();
+    }
+    catch(err) {
+    document.getElementById('preview_page_body').value = document.getElementById('page_body').value;
+    }
+    
     document.getElementById('preview_page_title').value = document.getElementById('page_title').value
     document.getElementById('preview_page_meta_title').value = document.getElementById('page_meta_title').value
     document.getElementById('preview_menu_show_in_footer').checked = document.getElementById('menu_show_in_footer').checked
@@ -74,69 +80,71 @@
 = f.error_messages :message => "Please fix these things and try again:", :header_message => "We couldn't save your page"
 - fields_for @menu do |m|
   
-  =link_to("Show Page Details", "javascript:void(0)", :class => "advanced-options mobile-only")
-  
-  #main-details.option  
-    #options
-      %h3 Page Details
-      = m.label :status_visible, "Show in Menu", :class => "title"
-      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "<strong>Main Menu</strong> &mdash; Navigation at the top of the site.<br /><br /><strong>Side Column Menu</strong> &mdash; Navigation within the side column. The \"Menu Navigation\" Side Column Section must be enabled for the selected Side Column.<br /><br /><strong>Footer Menu</strong> &mdash; Simple Navigation displayed at the bottom of the site."}
-      .menus
-        = m.check_box :show_in_main_menu, :disabled => @no_edit
-        = m.label :show_in_main_menu, "Main Menu"
+  .responsive-form
+    .main-fields
+      %h2.title.form-label= f.label :title, "Menu Title"
+      = f.text_field :title, :class => "big-input", :placeholder => "Short title displayed in site menu."
+      .note.required *Required
+      %h2.form-label= f.label :meta_title, "Page Title"
+      = f.text_field :meta_title, :class => "big-input", :disabled => @no_edit, :placeholder => "Generates the permalink."
+      .note.required *Required
+      %h2.form-label= f.label :meta_description, "Short Description"
+      = f.text_area :meta_description, :class => "big-area", :placeholder => "For features and meta description."
+    =link_to("Show Page Details", "javascript:void(0)", :class => "advanced-options mobile-only")
+    #main-details.details.options 
+      #options
+        %h3 Page Details
+        = m.label :status_visible, "Show in Menu", :class => "title"
+        = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "<strong>Main Menu</strong> &mdash; Navigation at the top of the site.<br /><br /><strong>Side Column Menu</strong> &mdash; Navigation within the side column. The \"Menu Navigation\" Side Column Section must be enabled for the selected Side Column.<br /><br /><strong>Footer Menu</strong> &mdash; Simple Navigation displayed at the bottom of the site."}
+        .menus
+          = m.check_box :show_in_main_menu, :disabled => @no_edit
+          = m.label :show_in_main_menu, "Main Menu"
+          %br
+          = m.check_box :show_in_side_column, :disabled => @no_edit
+          = m.label :show_in_side_column, "Side Column Menu"
+          %br 
+          = m.check_box :show_in_footer, :disabled => @no_edit
+          = m.label :show_in_footer, "Footer Menu"
+        = m.label :parent_id, "#{icon("Sitemap")} Menu placement", :class => "title"
         %br
-        = m.check_box :show_in_side_column, :disabled => @no_edit
-        = m.label :show_in_side_column, "Side Column Menu"
-        %br 
-        = m.check_box :show_in_footer, :disabled => @no_edit
-        = m.label :show_in_footer, "Footer Menu"
-      = m.label :parent_id, "#{icon("Sitemap")} Menu placement", :class => "title"
-      %br
-      %select{:name => "menu[parent_id]", :id => "menu_parent_id", :disabled => @no_edit, :class => "select"}
-        - for o in @options_for_parent_id
-          - unless @page.menus.first.blank?
-            %option{:value => o[1] , :selected => (@page.menus.first.parent_id and o[1] == @page.menus.first.parent_id ? "selected" : nil)}= o[0]
-          - else
-            %option{:value => o[1] , :selected => nil}= o[0]
-      - unless @templates.empty?
+        %select{:name => "menu[parent_id]", :id => "menu_parent_id", :disabled => @no_edit, :class => "select"}
+          - for o in @options_for_parent_id
+            - unless @page.menus.first.blank?
+              %option{:value => o[1] , :selected => (@page.menus.first.parent_id and o[1] == @page.menus.first.parent_id ? "selected" : nil)}= o[0]
+            - else
+              %option{:value => o[1] , :selected => nil}= o[0]
+        - unless @templates.empty?
+          %br
+          = link_to(icon("Picture"), admin_templates_path(:fancy => true), :title => "Manage Templates", :class => "fancy-iframe")
+          = f.label :template_id, "Template", :class => "title"
+          %br
+          = collection_select(:page, :template_id, @templates, :id, :title, {:include_blank => "Select a Template"}, :class => "select", :selected => (@page.template_id.blank? ? "" : @page.template_id))
         %br
-        = link_to(icon("Picture"), admin_templates_path(:fancy => true), :title => "Manage Templates", :class => "fancy-iframe")
-        = f.label :template_id, "Template", :class => "title"
-        %br
-        = collection_select(:page, :template_id, @templates, :id, :title, {:include_blank => "Select a Template"}, :class => "select", :selected => (@page.template_id.blank? ? "" : @page.template_id))
-      %br
-      = link_to(f.label(:main_column_id, "#{icon("Dots")} Main Column", :class => "title"), admin_columns_path(:column_location => "main_column", :fancy => true), :title => "Manage Main Columns", :class => "fancy-iframe")
+        = link_to(f.label(:main_column_id, "#{icon("Dots")} Main Column", :class => "title"), admin_columns_path(:column_location => "main_column", :fancy => true), :title => "Manage Main Columns", :class => "fancy-iframe")
       
-      %br
-      = f.hidden_field :main_column_id
-      #main-column-div= link_to(@main_column.title, admin_column_column_sections_path(@main_column.id, :column_location => "main_column", :fancy => true), :id => "main-column-title", :class => "fancy-iframe")
-      = #collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")
+        %br
+        = f.hidden_field :main_column_id
+        #main-column-div= link_to(@main_column.title, admin_column_column_sections_path(@main_column.id, :column_location => "main_column", :fancy => true), :id => "main-column-title", :class => "fancy-iframe")
+        = #collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")
       
-      %div.display-advanced-side-column-options=link_to("Advanced", "#advanced-side-column-options", :class => "fancy-inline")
-      = link_to(f.label(:column_id, "#{icon("Dots")} Side Column", :class => "title"), admin_columns_path(:column_location => "side_column", :fancy => true), :title => "Manage Side Columns", :class => "fancy-iframe")
-      %br
-      = f.hidden_field :column_id
-      #side-column-div= link_to((@page.column.blank? ? "Select a Side Column" : @page.column.title), (@page.column.blank? ? admin_columns_path(:column_location => "side_column", :fancy => true) : admin_column_column_sections_path(@page.column.id, :column_location => "side_column", :fancy => true)), :id => "side-column-title", :class => "fancy-iframe")
+        %div.display-advanced-side-column-options=link_to("Advanced", "#advanced-side-column-options", :class => "fancy-inline")
+        = link_to(f.label(:column_id, "#{icon("Dots")} Side Column", :class => "title"), admin_columns_path(:column_location => "side_column", :fancy => true), :title => "Manage Side Columns", :class => "fancy-iframe")
+        %br
+        = f.hidden_field :column_id
+        #side-column-div= link_to((@page.column.blank? ? "Select a Side Column" : @page.column.title), (@page.column.blank? ? admin_columns_path(:column_location => "side_column", :fancy => true) : admin_column_column_sections_path(@page.column.id, :column_location => "side_column", :fancy => true)), :id => "side-column-title", :class => "fancy-iframe")
 
-    - if @cms_config["modules"]["members"]
-      = link_to("#{icon("Lock")} Permissions", "#permissions-box", :class => "fancy-inline", :id => "permissions-link") 
-      %br
-    = f.check_box :show_comments
-    = f.label :show_comments, "Show Comments"
-  %h2.title.form-label= f.label :title, "Menu Title"
-  = f.text_field :title, :class => "big-input", :placeholder => "Short title displayed in site menu."
-  .note.required *Required
-  %h2.form-label= f.label :meta_title, "Page Title"
-  = f.text_field :meta_title, :class => "big-input", :disabled => @no_edit, :placeholder => "Generates the permalink."
-  .note.required *Required
-  %h2.form-label= f.label :meta_description, "Short Description"
-  = f.text_area :meta_description, :class => "big-area", :placeholder => "For features and meta description."
+      - if @cms_config["modules"]["members"]
+        = link_to("#{icon("Lock")} Permissions", "#permissions-box", :class => "fancy-inline", :id => "permissions-link") 
+        %br
+      = f.check_box :show_comments
+      = f.label :show_comments, "Show Comments"
   
   .clear
   #body-wrapper 
     .options#body-details
-      = link_to("#{image_tag(css_icon("Search", "", "", "blue"), :class => "icon")} Preview Page", "/admin/pages/preview?reload=true", :id => "preview-link", :class => "link-button float-left", :onclick => "setLink()")      
-      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button gives a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
+      .preview-link-wrapper
+        = link_to("#{image_tag(css_icon("Search", "", "", "blue"), :class => "icon")} Preview Page", "/admin/pages/preview?reload=true", :id => "preview-link", :class => "link-button float-left", :onclick => "setLink()")      
+        = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button gives a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
       = clear
       .inserts
         %strong Insert:
@@ -155,11 +163,11 @@
         = f.check_box :automatically_embed_videos_and_images
         = f.label :automatically_embed_videos_and_images, "Use <strong>Ninja Code</strong> to embed objects."
         
-      = link_to("#{icon('Css')} Additional Styles", "#additional-styles", :class => "fancy-inline")
+      = link_to("#{image_tag(css_icon("Css", "", "16x16", "gray"), :alt => "Additional Styles", :title => "Additional Styles")} Additional Styles", "#additional-styles", :class => "fancy-inline")
       %br
-      = link_to("#{icon('Code')} Head Script", "#head-script", :class => "fancy-inline")
+      = link_to("#{image_tag(css_icon("Code", "", "16x16", "gray"), :alt => "Head Script", :title => "Additional Styles")} Head Script", "#head-script", :class => "fancy-inline")
       %br
-      = link_to("#{icon('Code')} Foot Script", "#foot-script", :class => "fancy-inline")
+      = link_to("#{image_tag(css_icon("Code", "", "16x16", "gray"), :alt => "Foot Script", :title => "Additional Styles")} Foot Script", "#foot-script", :class => "fancy-inline")
       %div{ :style => "display: none;" }
         #advanced-side-column-options
           %img{:src =>"#{css_icon("Cancel","","16x16","red")}", :title =>"close", :alt=> "close box icon", :class => "close-icon", :onclick => "jQuery.fancybox.close()"}
@@ -251,9 +259,10 @@
   = hidden_field :page, :permalink
   - fancy_submit admin_pages_path do
     = submit_tag "Save page"
+= render :partial => 'admin/shared/responsive_preview', :locals => {:controller => "pages", :ajax => true, :extended => false}
 - content_for :pre_footer do
   %div{:style => "display: none;"}
-    - form_remote_tag :url => post_preview_admin_pages_path, :method => "put", :html => {:name => "post_preview"} do
+    - form_remote_for :preview_page, :url => post_preview_admin_pages_path, :method => "put", :loading => "jQuery('#refresh-preview').text('...');",:success => "setPreviewContent();jQuery('#refresh-preview').text('Quick Refresh');", :html => {:name => "post_preview"} do
       = text_area :preview_page, :body
       = text_area :preview_page, :title
       = text_area :preview_page, :meta_title
