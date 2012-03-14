@@ -262,7 +262,7 @@
 = render :partial => 'admin/shared/responsive_preview', :locals => {:controller => "pages", :ajax => true, :extended => false}
 - content_for :pre_footer do
   %div{:style => "display: none;"}
-    - form_remote_for :preview_page, :url => post_preview_admin_pages_path, :method => "put", :loading => "jQuery('#refresh-preview').text('...');",:success => "setPreviewContent();jQuery('#refresh-preview').text('Quick Refresh');", :html => {:name => "post_preview"} do
+    - form_remote_for :preview_page, :url => post_preview_admin_pages_path, :method => "put", :success => "setPreviewContent();", :html => {:name => "post_preview"} do
       = text_area :preview_page, :body
       = text_area :preview_page, :title
       = text_area :preview_page, :meta_title
