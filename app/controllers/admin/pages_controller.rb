@@ -51,7 +51,7 @@ class Admin::PagesController < AdminController
   
   def preview
     if !params[:reload]
-      @page = Page.new(JSON.parse(@cms_config['site_settings']['preview']))
+      @page = Page.new(JSON.parse(@cms_config['site_settings']['preview_page']))
       @menu = Menu.new()
       if !@page.permalink.blank?
         @menu = Page.find_by_permalink(@page.permalink).menus.first
@@ -69,7 +69,7 @@ class Admin::PagesController < AdminController
   end
 
   def ajax_preview
-    @page = Page.new(JSON.parse(@cms_config['site_settings']['preview']))
+    @page = Page.new(JSON.parse(@cms_config['site_settings']['preview_page']))
     @menu = Menu.new()
     @admin = false
     @hide_admin_menu = true
@@ -85,7 +85,7 @@ class Admin::PagesController < AdminController
   end
   
   def post_preview
-    @cms_config['site_settings']['preview'] = ActiveSupport::JSON.encode(params[:preview_page])
+    @cms_config['site_settings']['preview_page'] = ActiveSupport::JSON.encode(params[:preview_page])
     File.open(@cms_path, 'w') { |f| YAML.dump(@cms_config, f) }
   end
   
