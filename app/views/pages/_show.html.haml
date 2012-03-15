@@ -18,7 +18,7 @@
 
   - else
     = render :partial => "/#{section.column_section_type.controller_name}/#{section.column_section_type.partial_name}", :locals => {:section => section}
-- if @page.permalink == "home" and !@settings.homepage_banner.blank?
+- if @page.permalink == "home" and !@settings.homepage_banner.blank? and !params[:page]
   - content_for :banner do
     = @settings.homepage_banner
 - content_for :head do
