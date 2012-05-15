@@ -5,7 +5,7 @@
       - if section.column_section_type.partial_name == "signup_for_side_column"
         = render :partial => "/newsletters/signup_for_side_column" if @page.show_newsletter_signup?  and @cms_config['modules']['newsletters']
       - elsif section.column_section_type.partial_name == "events_for_side_column"
-        = render :partial => "/events/events_for_side_column", :locals => {  :section => section, :count => section.count, :show_blurb => section.show_blurb } if @page.show_events? and @cms_config['modules']['events']
+        = render :partial => "/events/events_for_side_column", :locals => { :title => section.title, :count => section.count, :show_blurb => section.show_blurb, :section => section } if @cms_config['modules']['events']
       - elsif section.column_section_type.partial_name == "articles_for_side_column"
         = render :partial => "/articles/articles_for_side_column", :locals => { :section => section, :count => section.count, :show_blurb => section.show_blurb, :show_author => section.show_author, :title => section.title } if @page.show_articles? and @cms_config['modules']['blog']
       - elsif section.column_section_type.partial_name == "article_categories_for_side_column"
