@@ -4,20 +4,7 @@
   = @page.meta_description
 - content_for :meta_keywords do
   = @page.meta_keywords
-- for section in @main_column_sections
-  - if section.column_section_type.title == "Body Content"
-    .body-content
-      = @page.automatically_embed_videos_and_images? ? ninja_parse(@page.body) : @page.body if !@page.body.blank?
-  - elsif section.column_section_type.title == "HTML Section"
-    = section.body
-  - elsif section.column_section_type.title == "Feature Box"
-    -if @cms_config['site_settings']['feature_box_slideshow'] != "galleryview"
-      = render :partial => "/shared/feature_box", :locals => {  :section => section, :count => section.count, :title => section.title, :show_author => section.show_author, :show_blurb => section.show_blurb }
-    -else
-      = render :partial => "homepage_feature", :locals => {  :section => section, :count => section.count, :title => section.title, :show_author => section.show_author, :show_blurb => section.show_blurb }
-
-  - else
-    = render :partial => "/#{section.column_section_type.controller_name}/#{section.column_section_type.partial_name}", :locals => {:section => section}
+= render :partial => "shared/slice", :locals => {:column_section_id => nil}, :collection => @main_column_sections
 - if @page.permalink == "home" and !@settings.homepage_banner.blank? and !params[:page]
   - content_for :banner do
     = @settings.homepage_banner
@@ -27,6 +14,6 @@
     %style{:type => "text/css"}
       = @page.additional_styles
 
-/- content_for :admin_options do
-/   %li= link_to "#{icon("Clipboard Copy")} Manage Pages", admin_pages_path
-/   %li= link_to "#{icon("Write")} Edit Page", edit_admin_page_path(@page)
+  /- content_for :admin_options do
+  /   %li= link_to "#{icon("Clipboard Copy")} Manage Pages", admin_pages_path
+  /   %li= link_to "#{icon("Write")} Edit Page", edit_admin_page_path(@page)
