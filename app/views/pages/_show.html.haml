@@ -4,7 +4,7 @@
   = @page.meta_description
 - content_for :meta_keywords do
   = @page.meta_keywords
-= render :partial => "shared/slice", :locals => {:column_section_id => nil}, :collection => @main_column_sections
+= render :partial => "shared/slice", :locals => {:column_section_id => nil, :controller => "pages", :action => "index"}, :collection => @main_column_sections
 - if @page.permalink == "home" and !@settings.homepage_banner.blank? and !params[:page]
   - content_for :banner do
     = @settings.homepage_banner
