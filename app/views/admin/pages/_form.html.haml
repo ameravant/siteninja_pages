@@ -120,18 +120,19 @@
           %br
           = collection_select(:page, :template_id, @templates, :id, :title, {:include_blank => "Select a Template"}, :class => "select", :selected => (@page.template_id.blank? ? "" : @page.template_id))
         %br
-        = link_to(f.label(:main_column_id, "#{icon("Dots")} Main Column", :class => "title"), admin_columns_path(:column_location => "main_column", :fancy => true), :title => "Manage Main Columns", :class => "fancy-iframe")
+        = link_to(f.label(:main_column_id, "#{@cms_config['site_settings']['enable_responsive_layouts'] ? "#{icon("Layout")} Layout" : "#{icon("Dots")} Main Column"}", :class => "title"), admin_columns_path(:column_location => "main_column", :fancy => true), :title => "Manage Main Columns", :class => "fancy-iframe")
       
         %br
         = f.hidden_field :main_column_id
         #main-column-div= link_to(@main_column.title, admin_column_column_sections_path(@main_column.id, :column_location => "main_column", :fancy => true), :id => "main-column-title", :class => "fancy-iframe")
         = #collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")
-      
-        %div.display-advanced-side-column-options=link_to("Advanced", "#advanced-side-column-options", :class => "fancy-inline")
-        = link_to(f.label(:column_id, "#{icon("Dots")} Side Column", :class => "title"), admin_columns_path(:column_location => "side_column", :fancy => true), :title => "Manage Side Columns", :class => "fancy-iframe")
-        %br
+        - if !@cms_config['site_settings']['enable_responsive_layouts']
+          %div.display-advanced-side-column-options=link_to("Advanced", "#advanced-side-column-options", :class => "fancy-inline")
+          = link_to(f.label(:column_id, "#{icon("Dots")} Side Column", :class => "title"), admin_columns_path(:column_location => "side_column", :fancy => true), :title => "Manage Side Columns", :class => "fancy-iframe")
+          %br
+          #side-column-div= link_to((@page.column.blank? ? "Select a Side Column" : @page.column.title), (@page.column.blank? ? admin_columns_path(:column_location => "side_column", :fancy => true) : admin_column_column_sections_path(@page.column.id, :column_location => "side_column", :fancy => true)), :id => "side-column-title", :class => "fancy-iframe")
+
         = f.hidden_field :column_id
-        #side-column-div= link_to((@page.column.blank? ? "Select a Side Column" : @page.column.title), (@page.column.blank? ? admin_columns_path(:column_location => "side_column", :fancy => true) : admin_column_column_sections_path(@page.column.id, :column_location => "side_column", :fancy => true)), :id => "side-column-title", :class => "fancy-iframe")
 
       - if @cms_config["modules"]["members"]
         = link_to("#{icon("Lock")} Permissions", "#permissions-box", :class => "fancy-inline", :id => "permissions-link") 
