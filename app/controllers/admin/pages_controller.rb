@@ -27,6 +27,9 @@ class Admin::PagesController < AdminController
   
   def new
     @main_column = Column.find_by_title("Default")
+    if @main_column.blank?
+      @main_column = Column.find_by_title("Default Page Layout")
+    end
     @page = Page.new
     @page.column_id = nil
     @page.main_column_id = Column.find_by_title("Default").id
@@ -163,6 +166,9 @@ class Admin::PagesController < AdminController
       @page = Page.find_by_permalink!(params[:id])
       if @page.main_column_id.blank? or Column.find_by_id(@page.main_column_id).blank?
         @main_column = Column.find_by_title("Default")
+        if @main_column.blank?
+          @main_column = Column.find_by_title("Default Page Layout")
+        end
         @page.main_column_id = @main_column.id
       else
         @main_column = Column.find(@page.main_column_id)
