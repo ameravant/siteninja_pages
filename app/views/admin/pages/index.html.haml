@@ -4,11 +4,17 @@
 
 - content_for :head do
   %style{:type => "text/css", :media => "screen"}
+  
+    ==#batch-options { padding: 10px; }
+    ==#batch-options.box h2 { margin: 0; padding: 0; font-size: 1.2em; }
+    ==#batch-template { padding: 8px 0; }
+    ==#batch-options label { width: 100px; float: left; display: block; padding: 5px 0; }
+    ==#batch-options .submit { padding: 0; margin: 10px 0 0; }
     ul.sortable { list-style: none; margin: 0 0 0 -40px; }
     ul.sortable ul { margin: 0 0 0 -20px; list-style: none; }
     ul.sortable li { line-height: 2em; }
     div.page-title-header { float: left; width: 60px; font-weight: bold; color: #666; margin: 0 0 0 10px; }
-    div.page-options-header { float: right; width: 60px; text-align: left; font-weight: bold; color: #666; }
+    div.page-options-header { float: right; width: 82px; text-align: left; font-weight: bold; color: #666; }
     div.page-images-header { float: right; width: 50px; text-align: left; font-weight: bold; margin-right: 20px; color: #666; }
     div.page-testimonials-header { float: right; width: 100px; text-align: left; font-weight: bold; margin-right: 20px; color: #666; }
     
@@ -20,8 +26,12 @@
     ul ul ul ul div.page-title { width: 340px; }
     ul ul ul ul ul div.page-title { width: 320px; }
     ul ul ul ul ul ul div.page-title { width: 300px; }
+    
+    ==input[type='checkbox'] { margin-left: 10px; }
+    ==input[type='checkbox'].select-all { margin-left: 0; float: right; }
+    ==.trash-spacer { width: 0; display: inline; margin-left: 16px; }
     div.page-title a {  }
-    div.page-options { text-align: right; float: right; width: 60px; }
+    div.page-options { text-align: left; float: right; width: 82px; }
     div.page-images { float: right; margin-right: 20px; width: 50px; text-align: left; }
     div.page-type { float: right; margin-right: 20px; width: 75px; text-align: left; font-size: .8em; }
     div.page-testimonials { float: right; margin-right: 20px; width: 100px; text-align: left; }
@@ -48,43 +58,56 @@
     ==ul.sortable a .icon { margin: 0 1px; }
     }
 #page-index
-  %h1= large_icon('Clipboard Copy') + ' ' + yield(:meta_title).strip
+  %form{:action => batch_admin_pages_path, :method => "get"}
+    %h1= large_icon('Clipboard Copy') + ' ' + yield(:meta_title).strip
 
-  .box
-    #reorder_status.gray.float-right{:style => "display: none"}
-      = spinner
-      Reordering pages...
-    %ul
-      %li
-        %span.hmenu
-          = icon "Plus", new_admin_page_path
-          = link_to "Make a New Page", new_admin_page_path
-      %li
-        %span.hmenu
-          = icon "Plus", new_admin_menu_path
-          = link_to "Add Menu", new_admin_menu_path
-      %li.desktop-only
-        %span.hmenu
-          = icon "Plus", footer_admin_pages_path
-          = link_to "Organize Footer Menus", footer_admin_pages_path
-  %br
-  %div.page-title-header
-    Title
-  %div.page-options-header
-    Options
-  - if @cms_config['features']['testimonials']
-    %div.page-testimonials-header
-      Testimonials
-  %div.page-images-header
-    Images
-  %div.page-type-header
-    Type
-  = clear
-  .draggable#droppable_top
-    %span Drop to top level navigation.
-  = drop_receiving_element("droppable_top", :hoverclass => "draghover", :url => receive_drop_admin_pages_path + "?parent_id=", :method => :get, :loading => "$('ajax_spinner').src='#{spinner_loc}'; $('reorder_status').show();", :success => "$('ajax_spinner').src='#{ok_loc}'", :failure => "$('ajax_spinner').src='#{exclamation_loc}'", :update => "page-index" )
-  - build_menu
-
+    .box
+      #reorder_status.gray.float-right{:style => "display: none"}
+        = spinner
+        Reordering pages...
+      %ul
+        %li
+          %span.hmenu
+            = icon "Plus", new_admin_page_path
+            = link_to "Make a New Page", new_admin_page_path
+        %li
+          %span.hmenu
+            = icon "Plus", new_admin_menu_path
+            = link_to "Add Menu", new_admin_menu_path
+        %li.desktop-only
+          %span.hmenu
+            = icon "Plus", footer_admin_pages_path
+            = link_to "Organize Footer Menus", footer_admin_pages_path
+    %br
+    %div.page-title-header
+      Title
+    %div.page-options-header
+      Options
+      = check_box_tag('all', false, false, :class => "select-all")
+    - if @cms_config['features']['testimonials']
+      %div.page-testimonials-header
+        Testimonials
+    %div.page-images-header
+      Images
+    %div.page-type-header
+      Type
+    = clear
+    .draggable#droppable_top
+      %span Drop to top level navigation.
+    = drop_receiving_element("droppable_top", :hoverclass => "draghover", :url => receive_drop_admin_pages_path + "?parent_id=", :method => :get, :loading => "$('ajax_spinner').src='#{spinner_loc}'; $('reorder_status').show();", :success => "$('ajax_spinner').src='#{ok_loc}'", :failure => "$('ajax_spinner').src='#{exclamation_loc}'", :update => "page-index" )
+    - build_menu
+    %br
+    #batch-options.box
+      %h2 Batch Options:
+      #batch-template
+        = label_tag 'template_id', "Template"
+        = select_tag 'template_id', options_for_select(@templates.collect{|c| [c.title, c.id]}.insert(0,""))
+      
+      #batch-layout
+        = label_tag 'main_column_id', "Layout"
+        = select_tag 'main_column_id', options_for_select(@layouts.collect{|c| [c.title, c.id]}.insert(0,""))
+      .submit
+        = submit_tag "Update Selected Pages"
 %script{:type => "text/javascript"}
   jQuery(document).ready(function() {
   jQuery(".fancy-mini-iframe").fancybox({ 
@@ -98,4 +121,8 @@
   'width': 300,
   'autoScale': true
   }); 
+  
+  jQuery(".select-all").click(function(){
+  jQuery(':checkbox').prop('checked', this.checked);
+  });
   }); 

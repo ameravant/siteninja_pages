@@ -46,7 +46,11 @@ module Admin::PagesHelper
                 }, :class => "icon"))
             end
           else
-            concat ' ' + "<div style='width: 16px; height: 16px; float: right; margin-left: 4px;'></div>"
+            concat ' ' + "<div class='trash-spacer'></div>"
+          end
+          if child.navigatable_type == "Page"
+            concat check_box_tag "page_ids[]", child.id, false, :id => "page_checkbox_#{child.id}"
+            #concat check_box_tag("page_#{child.id}", "", false, :name => "page[#{child.id}]")
           end
           if @cms_config['features']['testimonials']
             concat '</div><div class="page-testimonials">'
