@@ -135,6 +135,8 @@ class Admin::PagesController < AdminController
   end
   
   def reorder
+    @templates = Template.all
+    @layouts = Column.all(:conditions => {:column_location => "main_column"})
     params["menu_list_#{params[:menu_id]}"].each_with_index do |id, position|
       Menu.update(id, :position => position + 1)
     end
@@ -142,6 +144,8 @@ class Admin::PagesController < AdminController
   end
   
   def receive_drop
+    @templates = Template.all
+    @layouts = Column.all(:conditions => {:column_location => "main_column"})
     menu_id = params[:id].to_s.gsub("menu_", "").to_i
     menu = Menu.find(menu_id)
     children = Menu.find(:all, :conditions => {:parent_id => params[:parent_id]})
@@ -170,6 +174,8 @@ class Admin::PagesController < AdminController
   def get_pages
     @pages = Page.all
     @menus = Menu.all
+    @templates = Template.all
+    @layouts = Column.all(:conditions => {:column_location => "main_column"})
     @options_for_parent_id = [['Main menu item','']]
     @options_for_parent_id_level = 0
   end
