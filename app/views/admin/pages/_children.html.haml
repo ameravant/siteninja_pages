@@ -18,9 +18,9 @@
         -#Check page is allowed to be deleted and provide icon to allow it
         - if child.can_delete
           - if !child.navigatable.blank? and child.navigatable_type == "Page"
-            = #(link_to_remote(image_tag("#{icons_loc}/blue/48x48/Trash.png", :class => "icon", :alt => "Delete -#{child.menu_title}", :id => "#{dom_id(child)}_trash_icon"),{:url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really delete -#{child.navigatable.title}? There is no undo!", :delay => 1 }, :class => "icon"))
+            = (link_to_remote(image_tag("#{icons_loc}/blue/48x48/Trash.png", :class => "icon", :alt => "Delete -#{child.menu_title}", :id => "#{dom_id(child)}_trash_icon"),{:url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really delete -#{child.navigatable.title}? There is no undo!", :delay => 1 }, :class => "icon"))
           - else
-            = #(link_to_remote(image_tag("#{icons_loc}/green/48x48/Link.png", :class => "icon", :alt => "Remove -#{child.menu_title} from navigation", :title => "Remove -#{child.menu_title} from navigation", :id => "#{dom_id(child)}_trash_icon"), { :url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really remove -#{child.menu_title} from navigation?", :delay => 1 }, :class => "icon"))
+            = (link_to_remote(image_tag("#{icons_loc}/green/48x48/Link.png", :class => "icon", :alt => "Remove -#{child.menu_title} from navigation", :title => "Remove -#{child.menu_title} from navigation", :id => "#{dom_id(child)}_trash_icon"), { :url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really remove -#{child.menu_title} from navigation?", :delay => 1 }, :class => "icon"))
         - else
           = ' ' + "<div class='trash-spacer'></div>"
         - if child.navigatable_type == "Page"
@@ -38,7 +38,7 @@
         = '</div><div class="page-type">'
         = (child.navigatable.blank? ? "Link" : child.navigatable.class.to_s)
         = "</div>" 
-        - #menu_form(child)
+        - menu_form(child)
         = clear + "</div>"
         = "<div class=\"droppable\" id=\"droppable_#{dom_id(child)}\"><span>Drop menu into \"#{child.menu_title}.\"</span></div>"
         = render :partial => "children", :locals => {:parent_id => child.id}
