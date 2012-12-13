@@ -45,5 +45,5 @@
         - #build_menu(child.id)
       = #draggable_element(dom_id(child))
       = #drop_receiving_element("droppable_#{dom_id(child)}", :hoverclass => "draghover", :url => receive_drop_admin_pages_path + "?parent_id=#{child.id}", :method => :get, :loading => "$('ajax_spinner').src='#{spinner_loc}'; $('reorder_status').show();", :success => "$('ajax_spinner').src='#{ok_loc}'", :failure => "$('ajax_spinner').src='#{exclamation_loc}'", :update => "page-index")
-  = #sortable_element(ul_id, :url => reorder_admin_pages_path + "?menu_id=#{(parent_id || 0)}", :method => :put, :loading => "$('ajax_spinner').src='#{spinner_loc}'; $('reorder_status').show();", :success => "$('ajax_spinner').src='#{ok_loc}'", :failure => "$('ajax_spinner').src='#{exclamation_loc}'", :complete => visual_effect(:fade, "reorder_status", :delay => 1))
+  = sortable_element(ul_id, :url => reorder_admin_pages_path + "?menu_id=#{(parent_id || 0)}", :method => :put, :loading => "$('ajax_spinner').src='#{spinner_loc}'; $('reorder_status').show();", :success => "$('ajax_spinner').src='#{ok_loc}'", :failure => "$('ajax_spinner').src='#{exclamation_loc}'", :complete => visual_effect(:fade, "reorder_status", :delay => 1))
     
