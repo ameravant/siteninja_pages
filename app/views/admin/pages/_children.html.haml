@@ -13,7 +13,7 @@
         = link_to(h(child.menu_title), [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], :class => child.hidden? ? 'gray' : nil)
         = '<span class="desktop-only"> &mdash; ' + link_to("Manage Homepage Features", admin_features_path) + '</span>' if (child.url == "/")
         = '</div><div class="page-options">'
-        = #feature_icon_select(child.navigatable, child.navigatable.name) unless child.navigatable.blank? or feature_icon_select(child.navigatable, child.navigatable.name).blank?
+        = feature_icon_select(child.navigatable, child.navigatable.name) unless child.navigatable.blank? or feature_icon_select(child.navigatable, child.navigatable.name).blank?
         = ' ' + icon("Write", [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], "Edit", "", "48x48", "blue") + ' '
         -#Check page is allowed to be deleted and provide icon to allow it
         - if child.can_delete
