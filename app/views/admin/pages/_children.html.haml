@@ -18,9 +18,9 @@
         -#Check page is allowed to be deleted and provide icon to allow it
         - if child.can_delete
           - if !child.navigatable.blank? and child.navigatable_type == "Page"
-            = (link_to_remote(image_tag("#{icons_loc}/blue/48x48/Trash.png", :class => "icon", :alt => "Delete -#{child.menu_title}", :id => "#{dom_id(child)}_trash_icon"),{:url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really delete -#{child.navigatable.title}? There is no undo!", :delay => 1 }, :class => "icon"))
+            = #(link_to_remote(image_tag("#{icons_loc}/blue/48x48/Trash.png", :class => "icon", :alt => "Delete -#{child.menu_title}", :id => "#{dom_id(child)}_trash_icon"),{:url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really delete -#{child.navigatable.title}? There is no undo!", :delay => 1 }, :class => "icon"))
           - else
-            =(link_to_remote(image_tag("#{icons_loc}/green/48x48/Link.png", :class => "icon", :alt => "Remove -#{child.menu_title} from navigation", :title => "Remove -#{child.menu_title} from navigation", :id => "#{dom_id(child)}_trash_icon"), { :url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really remove -#{child.menu_title} from navigation?", :delay => 1 }, :class => "icon"))
+            = #(link_to_remote(image_tag("#{icons_loc}/green/48x48/Link.png", :class => "icon", :alt => "Remove -#{child.menu_title} from navigation", :title => "Remove -#{child.menu_title} from navigation", :id => "#{dom_id(child)}_trash_icon"), { :url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really remove -#{child.menu_title} from navigation?", :delay => 1 }, :class => "icon"))
         - else
           = ' ' + "<div class='trash-spacer'></div>"
         - if child.navigatable_type == "Page"
@@ -33,17 +33,17 @@
           - else
             = "&nbsp;"
         = '</div><div class="page-images">'
-        = icon("Picture", [:admin, child.navigatable, :images], "Images", "", "48x48", "blue") + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images]) unless child.navigatable.blank?
+        = #icon("Picture", [:admin, child.navigatable, :images], "Images", "", "48x48", "blue") + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images]) unless child.navigatable.blank?
         = '&nbsp;' if child.navigatable.blank?
         = '</div><div class="page-type">'
         = (child.navigatable.blank? ? "Link" : child.navigatable.class.to_s)
         = "</div>" 
-        - menu_form(child)
+        - #menu_form(child)
         = clear + "</div>"
         = "<div class=\"droppable\" id=\"droppable_#{dom_id(child)}\"><span>Drop menu into \"#{child.menu_title}.\"</span></div>"
         = render :partial => "children", :locals => {:parent_id => child.id}
         - #build_menu(child.id)
-      = draggable_element(dom_id(child))
-      = drop_receiving_element("droppable_#{dom_id(child)}", :hoverclass => "draghover", :url => receive_drop_admin_pages_path + "?parent_id=#{child.id}", :method => :get, :loading => "$('ajax_spinner').src='#{spinner_loc}'; $('reorder_status').show();", :success => "$('ajax_spinner').src='#{ok_loc}'", :failure => "$('ajax_spinner').src='#{exclamation_loc}'", :update => "page-index")
-  = sortable_element(ul_id, :url => reorder_admin_pages_path + "?menu_id=#{(parent_id || 0)}", :method => :put, :loading => "$('ajax_spinner').src='#{spinner_loc}'; $('reorder_status').show();", :success => "$('ajax_spinner').src='#{ok_loc}'", :failure => "$('ajax_spinner').src='#{exclamation_loc}'", :complete => visual_effect(:fade, "reorder_status", :delay => 1))
+      = #draggable_element(dom_id(child))
+      = #drop_receiving_element("droppable_#{dom_id(child)}", :hoverclass => "draghover", :url => receive_drop_admin_pages_path + "?parent_id=#{child.id}", :method => :get, :loading => "$('ajax_spinner').src='#{spinner_loc}'; $('reorder_status').show();", :success => "$('ajax_spinner').src='#{ok_loc}'", :failure => "$('ajax_spinner').src='#{exclamation_loc}'", :update => "page-index")
+  = #sortable_element(ul_id, :url => reorder_admin_pages_path + "?menu_id=#{(parent_id || 0)}", :method => :put, :loading => "$('ajax_spinner').src='#{spinner_loc}'; $('reorder_status').show();", :success => "$('ajax_spinner').src='#{ok_loc}'", :failure => "$('ajax_spinner').src='#{exclamation_loc}'", :complete => visual_effect(:fade, "reorder_status", :delay => 1))
     
