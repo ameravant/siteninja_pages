@@ -33,13 +33,16 @@
           - else
             = "&nbsp;"
         = '</div><div class="page-images">'
-        = #icon("Picture", [:admin, child.navigatable, :images], "Images", "", "48x48", "blue") + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images]) unless child.navigatable.blank?
+        = icon("Picture", [:admin, child.navigatable, :images], "Images", "", "48x48", "blue") + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images]) unless child.navigatable.blank?
         = '&nbsp;' if child.navigatable.blank?
         = '</div><div class="page-type">'
         = (child.navigatable.blank? ? "Link" : child.navigatable.class.to_s)
         = "</div>" 
-        - menu_form(child)
-        = clear + "</div>"
+        - status = (child.show_in_main_menu == false and child.show_in_side_column == false and child.show_in_footer == false) ? 'hidden<span class="mobile-only"> from menu</span>' : 'visible<span class="mobile-only"> in menu</span>'
+        - status_class = (child.show_in_main_menu == false and child.show_in_side_column == false and child.show_in_footer == false) ? 'hidden' : 'visible'
+        .page-menu
+          = link_to(status.capitalize, edit_admin_menu_path(child.id, :fancy => true), :title => child.menu_title, :alt => "Manage Menu Placement", :class => "fancy-mini-iframe #{status_class}")
+        = clear
         = "<div class=\"droppable\" id=\"droppable_#{dom_id(child)}\"><span>Drop menu into \"#{child.menu_title}.\"</span></div>"
         = render :partial => "children", :locals => {:parent_id => child.id}
         - #build_menu(child.id)
