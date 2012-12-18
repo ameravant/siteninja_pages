@@ -2,7 +2,7 @@ class Admin::PagesController < AdminController
   unloadable # http://dev.rubyonrails.org/ticket/6001
   # cache_sweeper :page_sweeper
   before_filter :authenticate
-  before_filter :get_pages, :only => [ :index, :edit, :new, :create, :update ]
+  before_filter :get_pages, :only => [ :edit, :new, :create, :update ]
   before_filter :build_options, :only => [ :edit, :new, :create, :update ]
   before_filter :get_articles, :only => [ :edit, :new, :create, :update ]
   before_filter :find_page, :only => [ :edit, :update, :show ]
