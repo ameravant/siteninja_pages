@@ -105,6 +105,7 @@ class Admin::PagesController < AdminController
     File.open(@cms_path, 'w') { |f| YAML.dump(@cms_config, f) }
   end
   
+  
   def destroy
     # begin
     #       @page = Page.find_by_permalink_and_can_delete! params[:id], true
