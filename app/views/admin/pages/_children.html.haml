@@ -27,8 +27,8 @@
             - if child.navigatable_type == "Page"
               = check_box_tag "page_ids[]", child.id, false, :id => "page_checkbox_#{child.id}"
               -#= check_box_tag("page_#{child.id}", "", false, :name => "page[#{child.id}]")
-            - if @cms_config['features']['testimonials']
-              = '</div><div class="page-testimonials">'
+          - if @cms_config['features']['testimonials']
+            .page-testimonials
               - if child.navigatable_type == "Page"
                 = icon("Bubble 1", [:admin, child.navigatable, :testimonials], "Testimonials", "", "48x48", "blue") + ' ' + link_to(child.navigatable.testimonials_count, [:admin, child.navigatable, :testimonials])
               - else
