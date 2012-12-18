@@ -6,7 +6,6 @@ class Admin::PagesController < AdminController
   before_filter :build_options, :only => [ :edit, :new, :create, :update ]
   before_filter :get_articles, :only => [ :edit, :new, :create, :update ]
   before_filter :find_page, :only => [ :edit, :update, :show ]
-
   
   # Configure breadcrumbs
   add_breadcrumb "Pages", "admin_pages_path", :only => [ :new, :create, :edit, :update ]
@@ -14,9 +13,16 @@ class Admin::PagesController < AdminController
   
   def index
     add_breadcrumb "Pages"
+  end                
+  
+  def ajax_index
+    
     @templates = Template.all
     @layouts = Column.all(:conditions => {:column_location => "main_column"})
-  end                
+    @admin = false
+    @hide_admin_menu = true
+    render :layout => false
+  end
   
   def edit
     add_breadcrumb @page.name
