@@ -1,9 +1,8 @@
-- children = Menu.all.select { |menu| menu.parent_id == parent_id }
+- children = Menu.all(:conditions => {:parent_id => parent_id})
 - ul_id = "menu_list_#{parent_id || '0'}"
 - unless children.empty?
   %ul.sortable{:id => "#{ul_id}"}
     -# Output the list elements for these children, and recursively
-    -# call build_menu for their children.
     - for child in children
       - status = (child.show_in_main_menu == false and child.show_in_side_column == false and child.show_in_footer == false) ? 'hidden' : 'visible'
       %li.menu-item{:id => "#{dom_id(child)}"}
