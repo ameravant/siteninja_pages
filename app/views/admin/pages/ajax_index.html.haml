@@ -1,0 +1,38 @@
+%div.page-title-header
+  Title
+%div.page-options-header
+  Options
+  = check_box_tag('all', false, false, :class => "select-all")
+- if @cms_config['features']['testimonials']
+  %div.page-testimonials-header
+    Testimonials
+%div.page-images-header
+  Images
+%div.page-type-header
+  Type
+= clear
+.draggable#droppable_top
+  %span Drop to top level navigation.
+= drop_receiving_element("droppable_top", :hoverclass => "draghover", :url => receive_drop_admin_pages_path + "?parent_id=", :method => :get, :loading => "$('ajax_spinner').src='#{spinner_loc}'; $('reorder_status').show();", :success => "$('ajax_spinner').src='#{ok_loc}'", :failure => "$('ajax_spinner').src='#{exclamation_loc}'", :update => "page-index" )
+- #build_menu
+= render :partial => "children", :locals => {:parent_id => nil}
+
+%script{:type => "text/javascript"}
+  jQuery(function() {
+  jQuery('#ajax-loading').hide();
+  });
+  
+  
+
+%br
+#batch-options.box
+  %h2 Batch Options:
+  #batch-template
+    = label_tag 'template_id', "Template"
+    = select_tag 'template_id', options_for_select(@templates.collect{|c| [c.title, c.id]}.insert(0,""))
+  
+  #batch-layout
+    = label_tag 'main_column_id', "Layout"
+    = select_tag 'main_column_id', options_for_select(@layouts.collect{|c| [c.title, c.id]}.insert(0,""))
+  .submit
+    = submit_tag "Update Selected Pages"
