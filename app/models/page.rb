@@ -11,6 +11,7 @@ class Page < ActiveRecord::Base
   belongs_to :author, :class_name => 'Person'
   belongs_to :article_category
   belongs_to :column
+  belongs_to :page_layout, :class_name => "Column", :foreign_key => :main_column_id
   validates_presence_of :title, :meta_title
   validates_uniqueness_of :title
   default_scope :order => "parent_id, position"
