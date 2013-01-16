@@ -19,7 +19,8 @@ class Admin::PagesController < AdminController
       if params[:page_ids]
         for p in params[:page_ids]
           page = Page.find_by_id(p.to_i)
-          logger.info(page.id)
+          logger.info("params page id = #{p}")
+          logger.info("page id = #{page.id}")
           page.template_id = template_id
           page.main_column_id = main_column_id
           page.save      
