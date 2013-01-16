@@ -34,8 +34,8 @@
               - else
                 = "&nbsp;"
           .page-images
-            = #icon("Picture", [:admin, child.navigatable, :images], "Images", "", "48x48", "blue") + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images]) unless child.navigatable.blank?
-            = #'&nbsp;' if child.navigatable.blank?
+            = icon("Picture", [:admin, child.navigatable, :images], "Images", "", "48x48", "blue") + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images]) unless child.navigatable.blank?
+            = '&nbsp;' if child.navigatable.blank?
           .page-type
             = (child.navigatable.blank? ? "Link" : child.navigatable.class.to_s)
             - status = (child.show_in_main_menu == false and child.show_in_side_column == false and child.show_in_footer == false) ? 'hidden<span class="mobile-only"> from menu</span>' : 'visible<span class="mobile-only"> in menu</span>'
