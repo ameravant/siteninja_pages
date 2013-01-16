@@ -57,31 +57,33 @@
     ==ul.sortable a .icon { margin: 0 1px; }
     }
 #page-index
-  %form{:action => batch_admin_pages_path, :method => "get"}
-    %h1= large_icon('Clipboard Copy') + ' ' + yield(:meta_title).strip
-    .box
-      #reorder_status.gray.float-right{:style => "display: none"}
-        = spinner
-        Reordering pages...
-      %ul
-        %li
-          %span.hmenu
-            = icon "Plus", new_admin_page_path
-            = link_to "Make a New Page", new_admin_page_path
-        %li
-          %span.hmenu
-            = icon "Plus", new_admin_menu_path
-            = link_to "Add Menu", new_admin_menu_path
-        %li.desktop-only
-          %span.hmenu
-            = icon "Plus", footer_admin_pages_path
-            = link_to "Organize Footer Menus", footer_admin_pages_path
-    %br
-    #ajax-loading
-      == #{image_tag(spinner_loc, :alt => "loading")} Loading Pages...
-    = #render :partial => "children", :locals => {:parent_id => nil}
-    #ajax-index
-    %script{:type => "text/javascript"}
-      jQuery(function() {
-      jQuery('#ajax-index').load('/admin/pages/ajax_index');
-      });
+  = form_tag(batch_admin_pages_path, :method => :put)
+  -#%form{:action => batch_admin_pages_path, :method => "post"}
+  %h1= large_icon('Clipboard Copy') + ' ' + yield(:meta_title).strip
+  .box
+    #reorder_status.gray.float-right{:style => "display: none"}
+      = spinner
+      Reordering pages...
+    %ul
+      %li
+        %span.hmenu
+          = icon "Plus", new_admin_page_path
+          = link_to "Make a New Page", new_admin_page_path
+      %li
+        %span.hmenu
+          = icon "Plus", new_admin_menu_path
+          = link_to "Add Menu", new_admin_menu_path
+      %li.desktop-only
+        %span.hmenu
+          = icon "Plus", footer_admin_pages_path
+          = link_to "Organize Footer Menus", footer_admin_pages_path
+  %br
+  #ajax-loading
+    == #{image_tag(spinner_loc, :alt => "loading")} Loading Pages...
+  = #render :partial => "children", :locals => {:parent_id => nil}
+  #ajax-index
+  %script{:type => "text/javascript"}
+    jQuery(function() {
+    jQuery('#ajax-index').load('/admin/pages/ajax_index');
+    });
+  </form>
