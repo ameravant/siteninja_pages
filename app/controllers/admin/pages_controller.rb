@@ -45,7 +45,7 @@ class Admin::PagesController < AdminController
       page.main_column_id = params[:main_column_id] if params[:main_column_id]
       page.save      
     end
-    redirect_to(admin_pages_path)
+    #redirect_to(admin_pages_path)
     flash[:notice] = "Batch update completed."
   end
   
