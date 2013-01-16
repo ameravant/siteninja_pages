@@ -18,7 +18,7 @@ class Admin::PagesController < AdminController
       main_column_id = params[:main_column_id] ? params[:main_column_id].to_i : nil
       if params[:page_ids]
         for p in params[:page_ids]
-          page = Page.find_by_id(p.to_i)
+          page = Page.first(:conditions => {:id => p.to_i))
           logger.info("params page id = #{p}")
           logger.info("page id = #{page.id}")
           page.template_id = template_id
