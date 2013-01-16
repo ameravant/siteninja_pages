@@ -57,7 +57,8 @@
     ==ul.sortable a .icon { margin: 0 1px; }
     }
 #page-index
-  = form_tag(batch_admin_pages_path, :method => :put)
+  = form_tag('/admin/pages', :method => :get)
+  = hidden_field_tag("batch", "true")
   -#%form{:action => batch_admin_pages_path, :method => "post"}
   %h1= large_icon('Clipboard Copy') + ' ' + yield(:meta_title).strip
   .box
