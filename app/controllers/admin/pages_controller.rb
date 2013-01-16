@@ -14,13 +14,14 @@ class Admin::PagesController < AdminController
   def index
     add_breadcrumb "Pages"
     if params[:batch]
-      template_id = params[:template_id] ? params[:template_id] : nil
-      main_column_id = params[:main_column_id] ? params[:main_column_id] : nil
+      template_id = params[:template_id] ? params[:template_id].to_i : nil
+      main_column_id = params[:main_column_id] ? params[:main_column_id].to_i : nil
       if params[:page_ids]
         for p in params[:page_ids]
           page = Page.find_by_id(p.to_i)
-          page.template_id = template_id.to_i
-          page.main_column_id = main_column_id.to_i
+          logger.info(page.id)
+          page.template_id = template_id
+          page.main_column_id = main_column_id
           page.save      
         end
         #redirect_to(admin_pages_path)
