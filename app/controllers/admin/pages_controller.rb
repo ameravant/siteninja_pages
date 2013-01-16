@@ -39,14 +39,16 @@ class Admin::PagesController < AdminController
   end
   
   def batch
-    for p in params[:page_ids]
-      page = Page.find(p)
-      page.template_id = params[:template_id] if params[:template_id]
-      page.main_column_id = params[:main_column_id] if params[:main_column_id]
-      page.save      
+    if params[:page_ids]
+      for p in params[:page_ids]
+        page = Page.find(p)
+        page.template_id = params[:template_id] if params[:template_id]
+        page.main_column_id = params[:main_column_id] if params[:main_column_id]
+        page.save      
+      end
+      #redirect_to(admin_pages_path)
+      flash[:notice] = "Batch update completed."
     end
-    #redirect_to(admin_pages_path)
-    flash[:notice] = "Batch update completed."
   end
   
   def new
