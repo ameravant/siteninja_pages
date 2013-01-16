@@ -57,7 +57,7 @@ class Admin::PagesController < AdminController
   def batch
     if params[:page_ids]
       for p in params[:page_ids]
-        page = Page.find_by_id(p)
+        page = Page.find(p)
         logger.info("params page id = #{p}")
         logger.info("page id = #{page.id}")
         page.template_id = params[:template_id] if params[:template_id]
