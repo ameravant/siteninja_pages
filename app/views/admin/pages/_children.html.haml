@@ -25,7 +25,7 @@
             - else
               .trash-spacer
             - if child.navigatable_type == "Page"
-              = check_box_tag "page_ids[]", child.id, false, :id => "page_checkbox_#{child.navigatable.id}"
+              = check_box_tag "page_ids[]", child.navigatable.id, false, :id => "page_checkbox_#{child.navigatable.id}"
               -#= check_box_tag("page_#{child.id}", "", false, :name => "page[#{child.id}]")
           - if @cms_config['features']['testimonials']
             .page-testimonials
