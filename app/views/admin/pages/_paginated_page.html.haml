@@ -1,0 +1,41 @@
+
+- child = paginated_page.menus.first
+- status = (child.show_in_main_menu == false and child.show_in_side_column == false and child.show_in_footer == false) ? 'hidden' : 'visible'
+%li.menu-item{:id => "#{dom_id(child)}", :class => cycle("odd","even")}
+  %div{:class => "menu-item-inner #{status}"}
+    .page-handle
+    .page-title
+      = '<span class="desktop-only">' + link_to("Manage Homepage Features", admin_features_path) + '</span>' if (child.url == "/")
+      = link_to(h(child.menu_title), [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], :class => child.hidden? ? 'gray' : nil)
+    .page-options
+      = feature_icon_select(child.navigatable, child.navigatable.name) unless child.navigatable.blank? or feature_icon_select(child.navigatable, child.navigatable.name).blank?
+      - if child.navigatable.blank?
+        .trash-spacer
+      = ' ' + icon("Write", [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], "Edit", "", "48x48", "blue") + ' '
+      -#Check page is allowed to be deleted and provide icon to allow it
+      - if child.can_delete
+        - if !child.navigatable.blank? and child.navigatable_type == "Page"
+          = (link_to_remote(image_tag("#{icons_loc}/blue/48x48/Trash.png", :class => "icon", :alt => "Delete -#{child.menu_title}", :id => "#{dom_id(child)}_trash_icon"),{:url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really delete -#{child.navigatable.title}? There is no undo!", :delay => 1 }, :class => "icon"))
+        - else
+          = (link_to_remote(image_tag("#{icons_loc}/green/48x48/Link.png", :class => "icon", :alt => "Remove -#{child.menu_title} from navigation", :title => "Remove -#{child.menu_title} from navigation", :id => "#{dom_id(child)}_trash_icon"), { :url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really remove -#{child.menu_title} from navigation?", :delay => 1 }, :class => "icon"))
+      - else
+        .trash-spacer
+      - if child.navigatable_type == "Page"
+        = check_box_tag "page_ids[]", child.navigatable.id, false, :id => "page_checkbox_#{child.navigatable.id}"
+        -#= check_box_tag("page_#{child.id}", "", false, :name => "page[#{child.id}]")
+    - if @cms_config['features']['testimonials']
+      .page-testimonials
+        - if child.navigatable_type == "Page"
+          = icon("Bubble 1", [:admin, child.navigatable, :testimonials], "Testimonials", "", "48x48", "blue") + ' ' + link_to(child.navigatable.testimonials_count, [:admin, child.navigatable, :testimonials])
+        - else
+          = "&nbsp;"
+    .page-images
+      = icon("Picture", [:admin, child.navigatable, :images], "Images", "", "48x48", "blue") + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images]) unless child.navigatable.blank?
+      = '&nbsp;' if child.navigatable.blank?
+    .page-type
+      = (child.navigatable.blank? ? "Link" : child.navigatable.class.to_s)
+      - status = (child.show_in_main_menu == false and child.show_in_side_column == false and child.show_in_footer == false) ? 'hidden<span class="mobile-only"> from menu</span>' : 'visible<span class="mobile-only"> in menu</span>'
+      - status_class = (child.show_in_main_menu == false and child.show_in_side_column == false and child.show_in_footer == false) ? 'hidden' : 'visible'
+    .page-menu
+      = link_to(status.capitalize, edit_admin_menu_path(child.id, :fancy => true), :title => child.menu_title, :alt => "Manage Menu Placement", :class => "fancy-mini-iframe #{status_class}")
+    = clear

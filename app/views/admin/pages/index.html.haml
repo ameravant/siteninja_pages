@@ -13,6 +13,7 @@
     ul.sortable ul { margin: 0 0 0 -20px; list-style: none; }
     ul.sortable li { line-height: 2em; }
     div.page-title-header { float: left; width: 60px; font-weight: bold; color: #666; margin: 0 0 0 10px; }
+    
     div.page-options-header { float: right; width: 86px; text-align: left; font-weight: bold; color: #666; }
     div.page-images-header { float: right; width: 50px; text-align: left; font-weight: bold; margin-right: 20px; color: #666; }
     div.page-testimonials-header { float: right; width: 100px; text-align: left; font-weight: bold; margin-right: 20px; color: #666; }
@@ -20,6 +21,8 @@
     div.page-type-header { float: right; width: 75px; text-align: left; font-weight: bold; margin-right: 20px; color: #666; }
     div.page-testimonials-header { float: right; width: 100px; text-align: left; font-weight: bold; margin-right: 20px; color: #666; }
     div.page-title { float: left; margin: 5px 20px; width: 397px; line-height: 18px; }
+    ul.paginated div.page-title { margin: 5px 5px 5px 10px; }
+    li.odd, li.even { padding: 2px 0 !important; }
     ul ul div.page-title { width: 377px; }
     ul ul ul div.page-title { width: 357px; }
     ul ul ul ul div.page-title { width: 337px; }
@@ -48,43 +51,78 @@
     img.handle { float: left; position: absolute !important; margin: 3px 0 0; }
     ==.menu-item { border-top: #ccc 1px solid; }
     ==.menu-item-inner.hidden { background: #efefef; }
+    ==ul.top-options { margin: 0; padding: 0; list-style: none; }
+    ==.pagination { margin: 5px 10px; }
     @media screen and (max-width: 549px) {
     ==.page-title-header, .page-options-header, .page-testimonials-header, .page-images-header, .page-type-header { display: none; }
     ==div.page-title { margin: 5px 0; font-size: 1.4em; padding: 0 5px; }
     ==ul ul div.page-title {clear: right; width: 100%; max-width: 100%; overflow: hidden; white-space: nowrap; }
     ==div.page-options, div.page-testimonials, div.page-images, div.page-menu, div.page-type { float: right !important; margin: 0 0 0 10px; width: inherit; }
     ==div.droppable { display: none; }
-    ==ul.sortable a .icon { margin: 0 1px; }
+    ==ul.sortable a .icon { margin: 0 1px; }  
     }
 #page-index
   = form_tag('/admin/pages', :method => :get)
   = hidden_field_tag("batch","true")
   -#%form{:action => batch_admin_pages_path, :method => "post"}
-  %h1= large_icon('Clipboard Copy') + ' ' + yield(:meta_title).strip
-  .box
-    #reorder_status.gray.float-right{:style => "display: none"}
-      = spinner
-      Reordering pages...
-    %ul
-      %li
-        %span.hmenu
-          = icon "Plus", new_admin_page_path
-          = link_to "Make a New Page", new_admin_page_path
-      %li
-        %span.hmenu
-          = icon "Plus", new_admin_menu_path
-          = link_to "Add Menu", new_admin_menu_path
-      %li.desktop-only
-        %span.hmenu
-          = icon "Plus", footer_admin_pages_path
-          = link_to "Organize Footer Menus", footer_admin_pages_path
-  %br
-  #ajax-loading
-    == #{image_tag(spinner_loc, :alt => "loading")} Loading Pages...
-  = #render :partial => "children", :locals => {:parent_id => nil}
-  #ajax-index
-  %script{:type => "text/javascript"}
-    jQuery(function() {
-    jQuery('#ajax-index').load('/admin/pages/ajax_index');
-    });
-  </form>
+  
+  - if @paginate_page_index    
+    .float-right
+      %ul.top-options
+        %li= link_to("Show Navigation View", "/admin/pages?paginate_page_index=false", :title => "Display sortable tree-navigation view of all Menus.")
+        - if !@cms_config['site_settings']['paginate_page_index']
+          %li= link_to("Save as default view", "/admin/pages?default_view=paginate")
+    %h1= large_icon('Clipboard Copy') + ' ' + yield(:meta_title).strip
+    = clear
+    .box
+      .float-right= render :partial => "/shared/search"
+      %ul
+        %li
+          %span.hmenu
+            = icon "Plus", new_admin_page_path
+            = link_to "Make a New Page", new_admin_page_path
+        %li
+          %span.hmenu
+            = icon "Plus", new_admin_menu_path
+            = link_to "Add Menu", new_admin_menu_path
+        %li.desktop-only
+          %span.hmenu
+            = icon "Plus", footer_admin_pages_path
+            = link_to "Organize Footer Menus", footer_admin_pages_path
+    %br
+    = render :partial => "paginated_index"
+
+  - else
+    .float-right
+      %ul.top-options
+        %li= link_to("Show Alphabetical View", "/admin/pages?paginate_page_index=true", :title => "Display searchable alphabetical view of Pages.")
+        - if @cms_config['site_settings']['paginate_page_index']
+          %li= link_to("Save as default view", "/admin/pages?default_view=tree")
+    %h1= large_icon('Clipboard Copy') + ' ' + yield(:meta_title).strip
+    = clear
+    .box
+      #reorder_status.gray.float-right{:style => "display: none"}
+        = spinner
+        Reordering pages...
+      %ul
+        %li
+          %span.hmenu
+            = icon "Plus", new_admin_page_path
+            = link_to "Make a New Page", new_admin_page_path
+        %li
+          %span.hmenu
+            = icon "Plus", new_admin_menu_path
+            = link_to "Add Menu", new_admin_menu_path
+        %li.desktop-only
+          %span.hmenu
+            = icon "Plus", footer_admin_pages_path
+            = link_to "Organize Footer Menus", footer_admin_pages_path
+    %br
+    #ajax-loading
+      == #{image_tag(spinner_loc, :alt => "loading")} Loading Pages...
+    #ajax-index
+    %script{:type => "text/javascript"}
+      jQuery(function() {
+      jQuery('#ajax-index').load('/admin/pages/ajax_index');
+      });
+    </form>

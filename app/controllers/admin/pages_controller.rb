@@ -29,6 +29,27 @@ class Admin::PagesController < AdminController
         flash[:notice] = "Batch update completed."
       end
     end
+    if params[:default_view]
+      if params[:default_view] == "paginate"
+        session[:page_index] = "paginate"
+        @cms_config["site_settings"]["paginate_page_index"] = true
+      elsif params[:default_view] == "tree"
+        session[:page_index] = "tree"
+        @cms_config["site_settings"]["paginate_page_index"] = false
+      end
+      flash[:notice] = "Default view updated successfully."
+      File.open(@cms_path, 'w') { |f| YAML.dump(@cms_config, f) }
+      redirect_to(admin_pages_path)
+    end
+    if (@cms_config['site_settings']['paginate_page_index'] or params[:paginate_page_index] or session[:page_index] == "paginate") and (params[:paginate_page_index] != "false")
+      session[:page_index] = "paginate"
+      @paginate_page_index = true
+      params[:q].blank? ? pages = Page.all(:order => "title") : pages = Page.find(:all, :conditions => ["title like ? or meta_title like ?", "%#{params[:q]}%","%#{params[:q]}%"], :order => "title")
+      @pages = pages.paginate(:page => params[:page], :per_page => 10)
+    elsif params[:paginate_page_index] == "false"
+      session[:page_index] = "tree"
+      @paginate_page_index = false
+    end
   end                
   
   def ajax_index
