@@ -1,7 +1,7 @@
 
 - child = paginated_page.menus.first
 - status = (child.show_in_main_menu == false and child.show_in_side_column == false and child.show_in_footer == false) ? 'hidden' : 'visible'
-%li.menu-item{:id => "#{dom_id(child)}", :class => cycle("odd","even")}
+%li.menu-item{:id => "#{dom_id(child)}"}
   %div{:class => "menu-item-inner #{status}"}
     .page-handle
     .page-title
