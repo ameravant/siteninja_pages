@@ -44,8 +44,12 @@ class Admin::PagesController < AdminController
     if (@cms_config['site_settings']['paginate_page_index'] or params[:paginate_page_index] or session[:page_index] == "paginate") and (params[:paginate_page_index] != "false")
       session[:page_index] = "paginate"
       @paginate_page_index = true
-      params[:q].blank? ? pages = Page.all(:order => "title") : pages = Page.find(:all, :conditions => ["title like ? or meta_title like ?", "%#{params[:q]}%","%#{params[:q]}%"], :order => "title")
-      @pages = pages.paginate(:page => params[:page], :per_page => 10)
+      if params[:letter]
+        pages = Page.all(:conditions => ["title like ?", "#{params[:letter]}%"])
+      else
+        params[:q].blank? ? pages = Page.all(:order => "title") : pages = Page.find(:all, :conditions => ["title like ? or meta_title like ?", "%#{params[:q]}%","%#{params[:q]}%"], :order => "title")
+      end
+      @pages = pages.paginate(:page => params[:page], :per_page => 15)
     elsif params[:paginate_page_index] == "false"
       session[:page_index] = "tree"
       @paginate_page_index = false

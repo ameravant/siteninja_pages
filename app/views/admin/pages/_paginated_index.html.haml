@@ -1,3 +1,11 @@
+%ul.alphabet
+  - ("a".."z").each do |letter|
+    - if params[:letter] and params[:letter] == letter
+      %li.selected= letter.capitalize
+    - else
+      %li= link_to(letter.capitalize, "/admin/pages?letter=#{letter}")
+= clear
+
 %div.page-title-header
   Title
 %div.page-options-header
