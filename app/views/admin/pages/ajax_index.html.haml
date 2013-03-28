@@ -25,17 +25,7 @@
   
 
 %br
-#batch-options.box
-  %h2 Batch Options:
-  #batch-template
-    = label_tag 'template_id', "Template"
-    = select_tag 'template_id', options_for_select(@templates.collect{|c| [c.title, c.id]}.insert(0,""))
-  
-  #batch-layout
-    = label_tag 'main_column_id', "Layout"
-    = select_tag 'main_column_id', options_for_select(@layouts.collect{|c| [c.title, c.id]}.insert(0,""))
-  .submit
-    = submit_tag "Update Selected Pages"
+= render :partial => "batch_options"
 %script{:type => "text/javascript"}
   jQuery(document).ready(function() {
   jQuery(".fancy-mini-iframe").fancybox({ 

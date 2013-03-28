@@ -8,7 +8,7 @@
     - if params[:commit] == "Filter"
       ==#filter-options { display: block; }
     ==#filter-options, #batch-options { padding: 10px; }
-    ==#filter-options h2, #batch-options.box h2 { margin: 0; padding: 0; font-size: 1.2em; }
+    ==#filter-options.box h2, #batch-options.box h2 { margin: 0; padding: 0; font-size: 1.2em; }
     ==#filter-template, #batch-template { padding: 8px 0; }
     ==#filter-options label, #batch-options label { width: 100px; float: left; display: block; padding: 5px 0; }
     ==#filter-options .submit, #batch-options .submit { padding: 0; margin: 10px 0 0; }
@@ -126,8 +126,13 @@
         - if params[:commit] == "Filter"
           = link_to("Clear", "/admin/pages")
       </form>
+    = form_tag('/admin/pages', :method => :get)
+    = hidden_field_tag("batch","true")
     = render :partial => "paginated_index"
-
+    %br
+    
+    = render :partial => "batch_options"
+    </form>
   - else
     = form_tag('/admin/pages', :method => :get)
     = hidden_field_tag("batch","true")
