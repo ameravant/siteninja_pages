@@ -13,6 +13,10 @@ class Admin::PagesController < AdminController
   
   def index
     add_breadcrumb "Pages"
+    @templates = Template.all
+    @layouts = Column.all(:conditions => {:column_location => "main_column"})
+    @side_columns = Column.all(:conditions => {:column_location => "side_column"})
+
     if params[:batch]
       template_id = params[:template_id] ? params[:template_id].to_i : nil
       main_column_id = params[:main_column_id] ? params[:main_column_id].to_i : nil
@@ -50,11 +54,17 @@ class Admin::PagesController < AdminController
         params[:q].blank? ? pages = Page.all(:order => "title") : pages = Page.find(:all, :conditions => ["title like ? or meta_title like ?", "%#{params[:q]}%","%#{params[:q]}%"], :order => "title")
       end
       @pages = pages.paginate(:page => params[:page], :per_page => 15)
+      if params[:filter]
+        template_id = !params[:template_id].blank? ? params[:template_id] : nil
+        main_column_id = !params[:main_column_id].blank? ? params[:main_column_id] : nil
+        side_column_id = !params[:side_column_id].blank? ? params[:side_column_id] : nil
+        @pages = Page.all(:conditions => Page.build_filter_conditions(template_id, main_column_id, side_column_id)).paginate(:page => params[:page], :per_page => 100)
+      end
     elsif params[:paginate_page_index] == "false"
       session[:page_index] = "tree"
       @paginate_page_index = false
     end
-  end                
+  end
   
   def ajax_index
     @templates = Template.all

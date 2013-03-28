@@ -15,6 +15,9 @@ class PagesController < ApplicationController
     @page = Page.find_by_permalink("application-error") if @page.blank?
   end
   
+  def sitemap
+    
+  end
 private
 
   def authenticate
@@ -35,5 +38,7 @@ private
   def set_template
   
   end
+  
+
 end
 

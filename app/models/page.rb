@@ -29,6 +29,14 @@ class Page < ActiveRecord::Base
     self.permalink == "home"
   end
   
+  def self.build_filter_conditions(template_id, main_column_id, side_column_id)
+    cond = []
+    cond << send(:sanitize_sql_array, ["template_id = ?", template_id]) if template_id
+    cond << send(:sanitize_sql_array, ["main_column_id = ? ", main_column_id]) if main_column_id
+    cond << send(:sanitize_sql_array, ["side_column_id = ? ", side_column_id]) if side_column_id
+    cond.join(" and ")
+  end
+  
   def name # for model consistency, title is treated as name
     self.title
   end

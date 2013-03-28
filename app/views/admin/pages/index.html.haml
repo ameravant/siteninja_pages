@@ -4,11 +4,18 @@
 
 - content_for :head do
   %style{:type => "text/css", :media => "screen"}
-    ==#batch-options { padding: 10px; }
-    ==#batch-options.box h2 { margin: 0; padding: 0; font-size: 1.2em; }
-    ==#batch-template { padding: 8px 0; }
-    ==#batch-options label { width: 100px; float: left; display: block; padding: 5px 0; }
-    ==#batch-options .submit { padding: 0; margin: 10px 0 0; }
+    ==#filter-options { display: none; }
+    - if params[:commit] == "Filter"
+      ==#filter-options { display: block; }
+    ==#filter-options, #batch-options { padding: 10px; }
+    ==#filter-options h2, #batch-options.box h2 { margin: 0; padding: 0; font-size: 1.2em; }
+    ==#filter-template, #batch-template { padding: 8px 0; }
+    ==#filter-options label, #batch-options label { width: 100px; float: left; display: block; padding: 5px 0; }
+    ==#filter-options .submit, #batch-options .submit { padding: 0; margin: 10px 0 0; }
+    ==#nav-filters { margin: 10px 0 0; display: none; }
+    ==#nav-filters div { margin: 0 0 0 0; }
+    ==#nav-filters label { display: inline; width: inherit; float: none; }
+    ==#nav-filters input[type='checkbox'] { margin: 8px 3px 0; }
     ul.sortable { list-style: none; margin: 0 0 0 -40px; }
     ul.sortable ul { margin: 0 0 0 -20px; list-style: none; }
     ul.sortable li { line-height: 2em; }
@@ -62,8 +69,7 @@
     ==ul.sortable a .icon { margin: 0 1px; }  
     }
 #page-index
-  = form_tag('/admin/pages', :method => :get)
-  = hidden_field_tag("batch","true")
+  
   -#%form{:action => batch_admin_pages_path, :method => "post"}
   
   - if @paginate_page_index    
@@ -89,10 +95,42 @@
           %span.hmenu
             = icon "Plus", footer_admin_pages_path
             = link_to "Organize Footer Menus", footer_admin_pages_path
-    
+    = link_to("Filter Pages", "javascript:void(0)", :onclick => "jQuery('#filter-options').slideToggle()")
+    .box#filter-options
+      %h2 Filter Pages:
+      = form_tag('/admin/pages', :method => :get)
+      = hidden_field_tag("filter","true")
+      #filter-template
+        = label_tag 'template_id', "Template"
+        = select_tag 'template_id', options_for_select(@templates.collect{|c| [c.title, c.id]}.insert(0,["Filter by Template", nil]), :selected => params[:template_id].to_i)
+      - if @cms_config['site_settings']['enable_responsive_layouts']
+        #filter-layout
+          = label_tag 'main_column_id', "Layout"
+          = select_tag 'main_column_id', options_for_select(@layouts.collect{|c| [c.title, c.id]}.insert(0,["Filter by Layout", nil]), :selected => params[:main_column_id].to_i)
+      - else
+        #filter-main-column
+          = label_tag 'main_column_id', "Main Column"
+          = select_tag 'main_column_id', options_for_select(@layouts.collect{|c| [c.title, c.id]}.insert(0,["Filter by Main Column", nil]))
+        #filter-side-column
+          = label_tag 'column_id', "Side Column"
+          = select_tag 'column_id', options_for_select(@side_columns.collect{|c| [c.title, c.id]}.insert(0,["Filter by Side Column", nil]))
+      #nav-filters
+        #filter-show-in-main-menu
+          = check_box_tag 'show_in_main_menu'
+          = label_tag 'show_in_main_menu', 'Visible in Main Menu'
+        #filter-show-in-secondary-menu
+          = check_box_tag 'show_in_side_menu'
+          = label_tag 'show_in_side_menu', "Visible in Secondary Menus"
+      .submit
+        = submit_tag "Filter"
+        - if params[:commit] == "Filter"
+          = link_to("Clear", "/admin/pages")
+      </form>
     = render :partial => "paginated_index"
 
   - else
+    = form_tag('/admin/pages', :method => :get)
+    = hidden_field_tag("batch","true")
     .float-right
       %ul.top-options
         %li= link_to("Show Alphabetical View", "/admin/pages?paginate_page_index=true", :title => "Display searchable alphabetical view of Pages.")
