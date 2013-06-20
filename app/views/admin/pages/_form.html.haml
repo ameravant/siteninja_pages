@@ -37,7 +37,7 @@
     });
     });
     function addtext(text) {
-    tinyMCE.execInstanceCommand("page_body","mceInsertContent",false,text);
+    tinymce.get("page_body").insertContent(text);
     }
     function set_column(column_location, column_id, column_name) {
     if(column_location == "main_column"){
@@ -55,7 +55,7 @@
     }
     function setLink(){
     try {
-    document.getElementById('preview_page_body').value = tinyMCE.get('page_body').getContent();
+    document.getElementById('preview_page_body').value = tinymce.get('page_body').getContent();
     }
     catch(err) {
     document.getElementById('preview_page_body').value = document.getElementById('page_body').value;
