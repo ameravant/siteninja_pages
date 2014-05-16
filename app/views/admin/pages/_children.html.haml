@@ -11,6 +11,8 @@
           .page-title
             = '<span class="desktop-only">' + link_to("Manage Homepage Features", admin_features_path) + '</span>' if (child.url == "/")
             = link_to(h(child.menu_title), [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], :class => child.hidden? ? 'gray' : nil)
+            .full-url
+              .note= child.url
           .page-options
             = feature_icon_select(child.navigatable, child.navigatable.name) unless child.navigatable.blank? or feature_icon_select(child.navigatable, child.navigatable.name).blank?
             - if child.navigatable.blank?
