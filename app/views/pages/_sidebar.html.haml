@@ -2,6 +2,7 @@
 - unless !@side_column_sections or @side_column_sections.empty?
   - for section in @side_column_sections.uniq
     - content_for :side_column do
+      = section.starting_html
       - unless section.column_section_type.blank?
         - if section.column_section_type.partial_name == "signup_for_side_column"
           = render :partial => "/newsletters/signup_for_side_column" if @page.show_newsletter_signup?  and @cms_config['modules']['newsletters']
@@ -20,3 +21,4 @@
                 = ninja_parse(section.body)
         - else
           = render :partial => "/#{section.column_section_type.controller_name}/#{section.column_section_type.partial_name}", :locals => {  :section => section, :count => section.count, :title => section.title, :show_author => section.show_author, :show_blurb => section.show_blurb } unless section.partial_name == "search_for_side_column" and !@show_site_search
+      = section.ending_html
