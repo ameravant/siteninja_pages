@@ -260,7 +260,7 @@
   = hidden_field :page, :permalink
   - fancy_submit admin_pages_path do
     = submit_tag "Save page"
-= render :partial => 'admin/shared/responsive_preview', :locals => {:controller => "pages", :ajax => true, :extended => false}
+= render :partial => 'responsive_preview', :locals => {:controller => "pages", :ajax => true, :extended => false}
 - content_for :pre_footer do
   %div{:style => "display: none;"}
     - form_remote_for :preview_page, :url => post_preview_admin_pages_path, :method => "put", :success => "setPreviewContent();", :html => {:name => "post_preview"} do
