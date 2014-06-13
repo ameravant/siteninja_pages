@@ -1,0 +1,182 @@
+- unless @cms_config['site_settings']['hide_preview_frame']
+  .responsive-preview.desktop-only
+    .controls
+      %ul.preview-controls.expanders
+        %li= link_to(">>", "#", :id => "show-form", :class => "link-button")
+        - if extended != true
+          %li= link_to(">", "#", :id => "show-details", :class => "link-button")
+        %li= link_to("<<", "#", :id => "hide-form", :class => "link-button")
+        - if extended != true
+          %li= link_to("<", "#", :id => "hide-details", :class => "link-button")
+      %ul.preview-controls.widths
+        %li= link_to("Mobile", "#", :id => "mobile-preview", :class => "link-button")
+        %li= link_to("Tablet", "#", :id => "tablet-preview", :class => "link-button")
+        %li= link_to("Narrow", "#", :id => "narrow-preview", :class => "link-button")
+        %li= link_to("Wide", "#", :id => "wide-preview", :class => "link-button")
+        %li= link_to("Auto", "#", :id => "auto-preview", :class => "link-button")
+      %ul.preview-controls.refresh
+        %li.refresh-preview= link_to("Quick Refresh", "#", :id => "refresh-preview", :class => "link-button")
+        %li.reload-preview= link_to("Reload Frame", "#", :id => "reload-preview", :class => "link-button")
+    .iframe-wrapper
+    - content_for :head do
+      %script{:type => "text/javascript", :async => "true"}
+        jQuery(function() {
+        setLink();
+        ==setTimeout(function(){jQuery('.iframe-wrapper').html('<iframe src="/admin/#{controller}/preview?reload=true" id="preview-iframe"></iframe>')}, 5000);
+        - if extended == true
+          jQuery('#hide-details').hide();
+          jQuery('#refresh-preview').hide();
+          if (jQuery(window).width() > 850) {
+        - else
+          if (jQuery(window).width() > 1100) {
+        jQuery('.preview-link-wrapper').hide();
+        setPreviewDimensions();
+        jQuery('#tablet-preview').bind("click", function(){
+        setPreview('768', (jQuery(window).height() - 75));
+        return false;
+        });
+        jQuery('#mobile-preview').bind("click", function(){
+        setPreview('340', '480');
+        return false;
+        });
+        jQuery('#narrow-preview').bind("click", function(){
+        setPreview('920', (jQuery(window).height() - 75));
+        return false;
+        });
+        jQuery('#wide-preview').bind("click", function(){
+        setPreview('1100', (jQuery(window).height() - 75));
+        return false;
+        });
+        jQuery('#auto-preview').bind("click", function(){
+        setPreview('100%', (jQuery(window).height() - 75));
+        return false;
+        });
+        jQuery('#refresh-preview').bind("click", function(){
+        refreshPreview();
+        return false;
+        });
+        jQuery('#reload-preview').bind("click", function(){
+        reloadPreview();
+        return false;
+        });
+        jQuery('#hide-details').bind("click", function(){
+        jQuery('.responsive-preview').animate({width: (jQuery('.responsive-preview').width() + jQuery('#main-details').width())});
+        jQuery(this).hide();
+        jQuery('#show-details').show();
+        displayControls();
+        return false;
+        });
+        jQuery('#show-details').bind("click", function(){
+        jQuery('.responsive-preview').animate({width: (jQuery('.responsive-preview').width() - jQuery('#main-details').width())});
+        jQuery(this).hide();
+        jQuery('#hide-details').show();
+        displayControls();
+        return false;
+        });
+        jQuery('#hide-form').bind("click", function(){
+        jQuery('.responsive-preview').animate({width: '100%'});
+        jQuery(this).toggle();
+        jQuery('#show-details').hide();
+        jQuery('#hide-details').hide();
+        jQuery('#show-form').show();
+        displayControls();
+        return false;
+        });
+        jQuery('#show-form').bind("click", function(){
+        - if extended == true
+          jQuery('.responsive-preview').animate({width: (jQuery(window).width() - 590), height: (jQuery(window).height() - 75)});      
+        - else
+          jQuery('.responsive-preview').animate({width: (jQuery(window).width() - jQuery('.responsive-form').width()), height: (jQuery(window).height() - 75)});
+        jQuery(this).toggle();
+        jQuery('#hide-details').show();
+        jQuery('#hide-form').show();
+        displayControls();
+        return false;
+        });
+        }
+      
+        });
+      
+        function setPreview(width, height){
+        jQuery('.iframe-wrapper').animate({width: width, height: height});
+        }
+      
+        function setQuickPreview(width, height){
+        jQuery('.iframe-wrapper').css("width", width);
+        jQuery('.iframe-wrapper').css("height", height)
+        }
+      
+        function setPreviewDimensions(){
+        - if extended == true
+          if (jQuery(window).width() > 850) {
+        - else
+          if (jQuery(window).width() > 1100) {
+        displayControls();
+        jQuery('.responsive-preview').show();
+        jQuery('.responsive-preview').css('top', (jQuery('#admin-menu').height() + 10));
+      
+        "//Set Preview width and height to area outside the form."
+        jQuery('.iframe-wrapper').css('width', '100%');
+        jQuery('.iframe-wrapper').css('height', '100%');
+        setQuickPreview('100%', (jQuery(window).height() - 75));
+        jQuery('#show-details').hide();
+        jQuery('#show-form').hide();
+        jQuery('#hide-details').show();
+        jQuery('hide-form').show();
+        jQuery('.responsive-preview').css('width', (jQuery(window).width() - jQuery('.responsive-form').width()));
+        jQuery('.responsive-preview').css('height', (jQuery(window).height() - 75));
+        jQuery('#iframe-wrapper').css('width','100%');
+        jQuery('#iframe-wrapper').css('height','100%');
+        jQuery('#preview-iframe').css('min-height', (jQuery('#iframe-wrapper').height() - 28));
+        }
+        else
+        {
+        jQuery('.responsive-preview').hide();
+        }
+        }
+      
+        jQuery(window).resize(function(){
+        clearTimeout();
+        setTimeout(setPreviewDimensions(), 1000);
+        });
+      
+        function displayControls(){
+        setTimeout(function(){
+        if (jQuery('.responsive-preview').width() > 437) {
+        jQuery('.preview-controls.widths').fadeIn();
+        }
+        else {
+        jQuery('.preview-controls.widths').fadeOut();
+        }
+        }, 500)
+        }
+      
+        function refreshPreview(){
+        $previewMethod = "refresh";
+        jQuery('#refresh-preview').text('...');
+        setLink();
+        }
+      
+        function reloadPreview(){
+        $previewMethod = "reload";
+        jQuery('#reload-preview').text('...');
+        setLink();
+        ==//setTimeout(function(){jQuery('.iframe-wrapper').html('<iframe src="/admin/#{controller}/preview" id="preview-iframe"></iframe>')}, 4000);
+        //document.getElementById('preview-iframe').contentWindow.location.reload();
+        }
+      
+        function refreshLayout(){
+        setLink();
+        setTimeout(document.getElementById('preview-iframe').contentWindow.location.reload(), 5000);
+        }
+      
+        function setPreviewContent(html) {
+        if ($previewMethod == "refresh") {
+        jQuery('#preview-iframe').contents().find('#preview-content').load('/admin/#{controller}/ajax_preview');
+        }
+        else {
+        jQuery('.iframe-wrapper').html('<iframe src="/admin/#{controller}/preview" id="preview-iframe"></iframe>');
+        }
+        jQuery('#refresh-preview').text('Quick Refresh');
+        jQuery('#reload-preview').text('Reload Frame');
+        }
