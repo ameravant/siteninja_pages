@@ -11,6 +11,7 @@ class PagesController < ApplicationController
     get_page_defaults(@page)    
     render 'pages/show'
   end
+  
   def error
     @page = Page.find_by_permalink("application-error") if @page.blank?
   end

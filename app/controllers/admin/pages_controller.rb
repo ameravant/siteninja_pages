@@ -125,6 +125,7 @@ class Admin::PagesController < AdminController
       @menu = @page.menus.new params[:menu]
       @menu.save
       flash[:notice] = "#{@page.name.titleize} page created."
+      log_activity("Created \"#{@page.name.titleize}\"")
       redirect_to admin_pages_path
     else
       render :action => "new"
@@ -197,6 +198,7 @@ class Admin::PagesController < AdminController
     add_person_groups
     if @page.update_attributes params[:page] and @menu.update_attributes params[:menu]
       flash[:notice] = "#{@page.name} page updated."
+      log_activity("Updated \"#{@page.name.titleize}\"")
       redirect_to admin_pages_path
     else
       render :action => "edit", :id => @page
@@ -311,6 +313,11 @@ class Admin::PagesController < AdminController
       end
     end
   end
+  
+  def log_activity(description)
+    add_activity(controller_name.classify, @page.id, description)
+  end
+  
   def add_person_groups
     if @cms_config['modules']['members']
       if params[:page][:permission_level] == "except those checked"
