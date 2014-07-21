@@ -174,4 +174,5 @@
       jQuery('.full-url').toggle();
       });
     </form>
-= #link_to("Generate Cached Menu", cache_exp_menu_admin_menu_path(1))
+- if session[:cache] == true
+  %iframe{:src => "/admin/columns?cache=true", :style => "height: 1px; border: 0; width: 1px"}

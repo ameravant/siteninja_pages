@@ -126,6 +126,7 @@ class Admin::PagesController < AdminController
       @menu.save
       flash[:notice] = "#{@page.name.titleize} page created."
       log_activity("Created \"#{@page.name.titleize}\"")
+      session[:cache] = true
       redirect_to admin_pages_path
     else
       render :action => "new"
@@ -199,6 +200,7 @@ class Admin::PagesController < AdminController
     if @page.update_attributes params[:page] and @menu.update_attributes params[:menu]
       flash[:notice] = "#{@page.name} page updated."
       log_activity("Updated \"#{@page.name.titleize}\"")
+      session[:cache] = true
       redirect_to admin_pages_path
     else
       render :action => "edit", :id => @page
