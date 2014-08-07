@@ -4,6 +4,8 @@ class Page < ActiveRecord::Base
   has_permalink :meta_title
   has_many :comments, :as => :commentable
   has_many :images, :as => :viewable, :dependent => :destroy
+  accepts_nested_attributes_for :images, :allow_destroy => true
+  attr_accessible :title, :description, :attached_assets_attributes
   has_many :activities, :as => :loggable, :dependent => :destroy
   has_many :features, :as => :featurable, :dependent => :destroy
   has_many :testimonials, :as => :quotable, :dependent => :destroy
