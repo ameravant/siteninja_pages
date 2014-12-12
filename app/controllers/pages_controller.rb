@@ -4,7 +4,7 @@ class PagesController < ApplicationController
   before_filter :authenticate, :only => :show
   unloadable # http://dev.rubyonrails.org/ticket/6001  
   def show
-    expires_in 5.minutes, :public => true
+    expires_in 60.minutes, :public => true
     get_page_defaults(@page)
   end
   
