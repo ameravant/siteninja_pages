@@ -166,13 +166,42 @@
     #ajax-loading
       == #{image_tag(spinner_loc, :alt => "loading")} Loading Pages...
     #ajax-index
-    %script{:type => "text/javascript"}
-      jQuery(function() {
-      jQuery('#ajax-index').load('/admin/pages/ajax_index');
-      });
-      jQuery('#show-url').bind("click", function(){
-      jQuery('.full-url').toggle();
-      });
+    - content_for :footer do
+      %script{:type => "text/javascript"}
+        jQuery(function() {
+        jQuery('#ajax-index').load('/admin/pages/ajax_index');
+        });
+        jQuery('#show-url').bind("click", function(){
+        jQuery('.full-url').toggle();
+        });
+        jQuery(document).ready(function() {
+        jQuery(".fancy-mini-iframe").fancybox({ 
+        'zoomSpeedIn': 300,
+        'zoomSpeedOut': 300,
+        'overlayShow': false,
+        'hideOnContentClick': 'false',
+        'easingOut': 'easeOutQuad',
+        'easingIn': 'easeInQuad',
+        'type': 'iframe',
+        'width': 300,
+        'autoScale': true
+        }); 
+        jQuery(".fancy-iframe-large").fancybox({ 
+        'zoomSpeedIn': 300,
+        'zoomSpeedOut': 300,
+        'overlayShow': true,
+        'hideOnContentClick': 'true',
+        'easingOut': 'easeOutQuad',
+        'easingIn': 'easeInQuad',
+        'type': 'iframe',
+        'width': '94%',
+        'autoScale': true,
+        'height':'94%'
+        });
+        jQuery(".select-all").click(function(){
+        jQuery(':checkbox').prop('checked', this.checked);
+        });
+        }); 
     </form>
 - if session[:cache] == true
   %iframe{:src => "/admin/columns?cache=true", :style => "height: 1px; border: 0; width: 1px"}
