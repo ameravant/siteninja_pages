@@ -4,7 +4,9 @@ class PagesController < ApplicationController
   before_filter :authenticate, :only => :show
   unloadable # http://dev.rubyonrails.org/ticket/6001  
   def show
-    if @cms['site_settings']['expires_in']
+    if @cms['site_settings']['expires_in'] and @cms['site_settings']['expires_in'] == "0"
+      # Do Nothing
+    elsif @cms['site_settings']['expires_in']
       expires_in @cms['site_settings']['expires_in'].to_i.minutes, :public => true
     else
       expires_in 60.minutes, :public => true
