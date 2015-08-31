@@ -101,6 +101,7 @@ class Admin::PagesController < AdminController
         logger.info("page id = #{page.id}")
         page.template_id = params[:template_id] if params[:template_id]
         page.main_column_id = params[:main_column_id] if params[:main_column_id]
+        master_layout_id = params[:master_layout_id] if params[:master_layout_id]
         page.save      
       end
       #redirect_to(admin_pages_path)
