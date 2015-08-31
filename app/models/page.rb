@@ -17,6 +17,7 @@ class Page < ActiveRecord::Base
   belongs_to :article_category
   belongs_to :column
   belongs_to :page_layout, :class_name => "Column", :foreign_key => :main_column_id
+  belongs_to :master_layout, :class_name => "Column", :foreign_key => :master_layout_id
   validates_presence_of :title, :meta_title
   validates_uniqueness_of :title
   default_scope :order => "parent_id, position"
