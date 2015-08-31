@@ -72,6 +72,7 @@ class Admin::PagesController < AdminController
   def ajax_index
     @templates = Template.all
     @layouts = Column.all(:conditions => {:column_location => "main_column"})
+    @master_layouts = Column.all(:conditions => {:column_location => "master"})
     @admin = false
     @hide_admin_menu = true
     render :layout => false
