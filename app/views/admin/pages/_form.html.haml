@@ -123,11 +123,11 @@
         = link_to(f.label(:main_column_id, "#{@cms_config['site_settings']['enable_responsive_layouts'] ? "#{icon("Layout")} Layout" : "#{icon("Dots")} Main Column"}", :class => "title"), admin_columns_path(:column_location => "main_column", :fancy => true), :title => "Manage Main Columns", :class => "fancy-iframe")
       
         %br
+        #main-column-div= link_to(@main_column.title, admin_column_column_sections_path(@main_column.id, :column_location => "main_column", :fancy => true), :id => "main-column-title", :class => "fancy-iframe")
         = f.hidden_field :main_column_id
         = f.label :master_layout_id, "Master Layout", :class => "title"
         %br
-        = collection_select(:page, :master_layout_id, @templates, :id, :title, {:include_blank => "Select a Template"}, :class => "select", :selected => (@page.template_id.blank? ? "" : @page.template_id))
-        #main-column-div= link_to(@main_column.title, admin_column_column_sections_path(@main_column.id, :column_location => "main_column", :fancy => true), :id => "main-column-title", :class => "fancy-iframe")
+        = collection_select(:page, :master_layout_id, @master_layouts, :id, :title, {:include_blank => "Master Layout"}, :class => "select", :selected => (@page.master_layout_id.blank? ? "" : @page.master_layout_id))
         = #collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")
         - if !@cms_config['site_settings']['enable_responsive_layouts']
           %div.display-advanced-side-column-options=link_to("Advanced", "#advanced-side-column-options", :class => "fancy-inline")

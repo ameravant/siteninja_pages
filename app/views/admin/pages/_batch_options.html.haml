@@ -3,13 +3,14 @@
   #batch-template
     = label_tag 'template_id', "Template"
     = select_tag 'template_id', options_for_select(@templates.collect{|c| [c.title, c.id]}.insert(0,""))
-  
+  = clear
   #batch-layout
     = label_tag 'main_column_id', "Layout"
     = select_tag 'main_column_id', options_for_select(@layouts.collect{|c| [c.title, c.id]}.insert(0,""))
-
+  = clear
   #batch-master-layout
-    = label_tag 'master_layout_id', "Layout"
+    = label_tag 'master_layout_id', "Master Layout"
     = select_tag 'master_layout_id', options_for_select(@master_layouts.collect{|c| [c.title, c.id]}.insert(0,""))
+  = clear
   .submit
     = submit_tag "Update Selected Pages"
