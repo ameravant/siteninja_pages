@@ -124,6 +124,9 @@
       
         %br
         = f.hidden_field :main_column_id
+        = f.label :master_layout_id, "Master Layout", :class => "title"
+        %br
+        = collection_select(:page, :master_layout_id, @templates, :id, :title, {:include_blank => "Select a Template"}, :class => "select", :selected => (@page.template_id.blank? ? "" : @page.template_id))
         #main-column-div= link_to(@main_column.title, admin_column_column_sections_path(@main_column.id, :column_location => "main_column", :fancy => true), :id => "main-column-title", :class => "fancy-iframe")
         = #collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")
         - if !@cms_config['site_settings']['enable_responsive_layouts']

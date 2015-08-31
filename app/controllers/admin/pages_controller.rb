@@ -14,20 +14,23 @@ class Admin::PagesController < AdminController
   def index
     add_breadcrumb "Pages"
     @templates = Template.all
+    @master_layouts = Column.all(:conditions => {:column_location => "master"})
     @layouts = Column.all(:conditions => {:column_location => "main_column"})
     @side_columns = Column.all(:conditions => {:column_location => "side_column"})
 
     if params[:batch]
       template_id = params[:template_id] ? params[:template_id].to_i : nil
       main_column_id = params[:main_column_id] ? params[:main_column_id].to_i : nil
+      master_layout_id = params[:master_layout_id] ? params[:master_layout_id].to_i : nil
       if params[:page_ids]
         for p in params[:page_ids]
           page = Page.first(:conditions => {:id => p})
           logger.info("params page id = #{p}")
           logger.info("page id = #{page.id}")
-          page.template_id = template_id
-          page.main_column_id = main_column_id
-          page.save      
+          page.template_id = template_id if !template_id == nil
+          page.main_column_id = main_column_id if !main_column_id == nil
+          page.master_layout_id = master_layout_id if !master_layout_id == nil
+          page.save 
         end
         #redirect_to(admin_pages_path)
         flash[:notice] = "Batch update completed."
@@ -303,6 +306,7 @@ class Admin::PagesController < AdminController
     @templates = Template.all
     @side_columns = Column.all(:conditions => {:column_location => "side_column"})
     @main_columns = Column.all(:conditions => {:column_location => "main_column"})
+    @master_layouts = Column.all(:conditions => {:column_location => "master"})
   end
   
   def authenticate
