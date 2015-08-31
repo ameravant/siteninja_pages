@@ -8,7 +8,7 @@
     = label_tag 'main_column_id', "Layout"
     = select_tag 'main_column_id', options_for_select(@layouts.collect{|c| [c.title, c.id]}.insert(0,""))
 
-   #batch-master-layout
+  #batch-master-layout
     = label_tag 'master_layout_id', "Layout"
     = select_tag 'master_layout_id', options_for_select(@master_layouts.collect{|c| [c.title, c.id]}.insert(0,""))
   .submit
