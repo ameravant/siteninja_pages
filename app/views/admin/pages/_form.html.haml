@@ -125,7 +125,7 @@
         %br
         #main-column-div= link_to(@main_column.title, admin_column_column_sections_path(@main_column.id, :column_location => "main_column", :fancy => true), :id => "main-column-title", :class => "fancy-iframe")
         = f.hidden_field :main_column_id
-        = f.label :master_layout_id, "Master Layout", :class => "title"
+        = f.label :master_layout_id, "Select a Master Layout", :class => "title"
         %br
         = collection_select(:page, :master_layout_id, @master_layouts, :id, :title, {:include_blank => "Master Layout"}, :class => "select", :selected => (@page.master_layout_id.blank? ? "" : @page.master_layout_id))
         = #collection_select(:page, :main_column_id, @main_columns, :id, :title, {:include_blank => "Select a Main Column"}, :class => "select")

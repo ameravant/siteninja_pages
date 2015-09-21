@@ -1,3 +1,5 @@
+= form_tag('/admin/pages', :method => :get)
+= hidden_field_tag("batch","true")
 %div.page-title-header
   Title
 %div.page-options-header
@@ -26,3 +28,4 @@
 
 %br
 = render :partial => "batch_options"
+</form>

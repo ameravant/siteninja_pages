@@ -127,16 +127,13 @@
         - if params[:commit] == "Filter"
           = link_to("Clear", "/admin/pages")
       </form>
-    = form_tag('/admin/pages', :method => :get)
-    = hidden_field_tag("batch","true")
+    
     = render :partial => "paginated_index"
     %br
     
     = render :partial => "batch_options"
-    </form>
+
   - else
-    = form_tag('/admin/pages', :method => :get)
-    = hidden_field_tag("batch","true")
     .float-right
       %ul.top-options
         %li= link_to("Show Alphabetical View", "/admin/pages?paginate_page_index=true", :title => "Display searchable alphabetical view of Pages.")
@@ -201,7 +198,6 @@
         jQuery(".select-all").click(function(){
         jQuery(':checkbox').prop('checked', this.checked);
         });
-        }); 
-    </form>
+        });
 - if session[:cache] == true
   %iframe{:src => "/admin/columns?cache=true", :style => "height: 1px; border: 0; width: 1px"}
