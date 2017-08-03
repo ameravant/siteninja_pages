@@ -121,6 +121,7 @@ class Admin::PagesController < AdminController
       @page = Page.find(params[:duplicate_id]).clone
       @page.title = "#{@page.title} (Copy)"
       @page.meta_title = "#{@page.meta_title} (Copy)"
+      @page.permalink = ""
     end
     @page.column_id = nil
     @page.main_column_id = Column.find_by_title("Default").id
