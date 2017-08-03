@@ -5,6 +5,7 @@ class AddMainColumnIdToPages < ActiveRecord::Migration
     rescue
       #do nothing
     end
+    
     body_column = ColumnSectionType.first(:conditions => {:title => "Body Content", :column_location => "main_column"})
     feature = ColumnSectionType.create(:title => "Feature Box", :controller_name => "pages", :partial_name => "homepage_feature", :column_location => "main_column", :required => "['features']['feature_box']")
     homepage_column = Column.create(:title => "Homepage", :column_location => "main_column", :can_delete => false)
@@ -21,6 +22,7 @@ class AddMainColumnIdToPages < ActiveRecord::Migration
     unless homepage.blank?
       homepage.update_attributes(:main_column_id => homepage_column.id)
     end
+    rename_column :column_sections, :format, :section_format
   end
 
   def self.down
