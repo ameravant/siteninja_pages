@@ -91,9 +91,9 @@
       %h2.form-label= f.label :meta_description, "Short Description"
       = f.text_area :meta_description, :class => "big-area", :placeholder => "For features and meta description."
       - if current_user.is_super_user and !f.permalink.blank?
-          %h2.title.form-label= f.label :permalink, "Permalink"
-          = f.text_field :permalink, :class => "big-input", :disabled => @no_edit
-          .note Modifies permalink.
+        %h2.title.form-label= f.label :permalink, "Permalink"
+        = f.text_field :permalink, :class => "big-input", :disabled => @no_edit
+        .note Modifies permalink.
     =link_to("Show Page Details", "javascript:void(0)", :class => "advanced-options mobile-only")
     #main-details.details.options 
       #options
