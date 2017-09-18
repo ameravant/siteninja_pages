@@ -210,6 +210,10 @@ class Admin::PagesController < AdminController
     add_breadcrumb @page.name
     # permalink does not get regenerated
     add_person_groups
+    if params[:page][:permalink]
+      @page.permalink = params[:page][:permalink]
+      @page.save
+    end
     if @page.update_attributes params[:page] and @menu.update_attributes params[:menu]
       flash[:notice] = "#{@page.name} page updated."
       log_activity("Updated \"#{@page.name.titleize}\"")
