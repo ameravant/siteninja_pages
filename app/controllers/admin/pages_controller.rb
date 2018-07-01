@@ -120,8 +120,8 @@ class Admin::PagesController < AdminController
     @page.column_id = nil
     @page.main_column_id = Column.find_by_title("Default").id
     @page.automatically_embed_videos_and_images = false if @cms_config['site_settings']['set_automatically_embed_to_false']
-    if !Page.find_by_id(params[:duplicate_id]).blank? and params[:duplicate_id]
-      @page = Page.find_by_id(params[:duplicate_id]).clone
+    if !Page.find(params[:duplicate_id]).blank? and params[:duplicate_id]
+      @page = Page.find(params[:duplicate_id]).clone
       @page.title = "#{@page.title} (Copy)"
       @page.meta_title = "#{@page.meta_title} (Copy)"
     end
