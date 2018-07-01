@@ -118,7 +118,7 @@ class Admin::PagesController < AdminController
     end
     @page = Page.new
     if params[:duplicate_id]
-      @page = Page.find_by_id(params[:duplicate_id]).clone
+      @page = Page.find(params[:duplicate_id]).clone
       @page.title = "#{@page.title} (Copy)"
       @page.meta_title = "#{@page.meta_title} (Copy)"
       @page.permalink = ""
@@ -210,10 +210,6 @@ class Admin::PagesController < AdminController
     add_breadcrumb @page.name
     # permalink does not get regenerated
     add_person_groups
-    if params[:page][:permalink]
-      @page.permalink = params[:page][:permalink]
-      @page.save
-    end
     if @page.update_attributes params[:page] and @menu.update_attributes params[:menu]
       flash[:notice] = "#{@page.name} page updated."
       log_activity("Updated \"#{@page.name.titleize}\"")
