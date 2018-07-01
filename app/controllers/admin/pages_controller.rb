@@ -118,7 +118,7 @@ class Admin::PagesController < AdminController
     end
     @page = Page.new
     if params[:duplicate_id]
-      @page = Page.find(params[:duplicate_id]).clone
+      @page = Page.find_by_id(params[:duplicate_id]).clone
       @page.title = "#{@page.title} (Copy)"
       @page.meta_title = "#{@page.meta_title} (Copy)"
       @page.permalink = ""
