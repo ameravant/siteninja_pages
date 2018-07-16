@@ -124,6 +124,7 @@ class Admin::PagesController < AdminController
       @page = Page.find_by_id(params[:duplicate_id]).clone
       @page.title = "#{@page.title} (Copy)"
       @page.meta_title = "#{@page.meta_title} (Copy)"
+      @page.permalink = ""
     end
     @menu = Menu.new
   end

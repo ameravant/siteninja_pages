@@ -264,7 +264,7 @@
         = f.label :body
     = f.text_area :body, :class => "mceEditor"
   %div
-  = hidden_field :page, :permalink
+  = hidden_field :page, :permalink unless current_user.is_super_user and !@page.permalink.blank?
   - fancy_submit admin_pages_path do
     = submit_tag "Save page"
 = render :partial => 'responsive_preview', :locals => {:controller => "pages", :ajax => true, :extended => false}
