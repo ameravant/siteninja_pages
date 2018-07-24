@@ -159,7 +159,7 @@
         %br
         = render :partial => "admin/shared/parser_help"
       
-        - unless @page.title.blank?
+        - unless @page.id.blank?
           = link_to("#{icon('Picture')} Attached Image", admin_page_images_path(@page, :fancy => "true"), :class => "fancy-iframe")
         = render :partial => "admin/shared/asset_options"
         = render :partial => "admin/shared/insert_link"

@@ -15,7 +15,7 @@
               .note= link_to(child.url, child.url, :class => "fancy-iframe-large")
           .page-options
             = feature_icon_select(child.navigatable, child.navigatable.name) unless child.navigatable.blank? or feature_icon_select(child.navigatable, child.navigatable.name).blank?
-            = link_to("", new_admin_page_path(:duplicate_id => child.navigatable.id), :class => "icon fa fa-files-o", :title => "Copy")
+            = link_to("", new_admin_page_path(:duplicate_id => child.navigatable.id), :class => "icon fa fa-files-o", :title => "Copy") if child.navigatable_type == "Page"
             - if child.navigatable.blank? 
               .trash-spacer
             = ' ' + icon("Write", [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], "Edit", "", "48x48", "blue") + ' '
