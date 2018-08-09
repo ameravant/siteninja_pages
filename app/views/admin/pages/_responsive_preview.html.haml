@@ -2,18 +2,18 @@
   .responsive-preview.desktop-only
     .controls
       %ul.preview-controls.expanders
-        %li= link_to(">>", "#", :id => "show-form", :class => "link-button")
+        %li= link_to('<i class="fas fa-angle-double-right"></i>', "#", :id => "show-form", :class => "link-button")
         - if extended != true
-          %li= link_to(">", "#", :id => "show-details", :class => "link-button")
-        %li= link_to("<<", "#", :id => "hide-form", :class => "link-button")
+          %li= link_to('<i class="fas fa-angle-right"></i>', "#", :id => "show-details", :class => "link-button")
+        %li= link_to('<i class="fas fa-angle-double-left"></i>', "#", :id => "hide-form", :class => "link-button")
         - if extended != true
-          %li= link_to("<", "#", :id => "hide-details", :class => "link-button")
+          %li= link_to('<i class="fas fa-angle-left"></i>', "#", :id => "hide-details", :class => "link-button")
       %ul.preview-controls.widths
-        %li= link_to("Mobile", "#", :id => "mobile-preview", :class => "link-button")
-        %li= link_to("Tablet", "#", :id => "tablet-preview", :class => "link-button")
-        %li= link_to("Narrow", "#", :id => "narrow-preview", :class => "link-button")
-        %li= link_to("Wide", "#", :id => "wide-preview", :class => "link-button")
-        %li= link_to("Auto", "#", :id => "auto-preview", :class => "link-button")
+        %li= link_to('<i class="fas fa-mobile-alt"></i>', "#", :id => "mobile-preview", :class => "link-button", :title => "Phone")
+        %li= link_to('<i class="fas fa-tablet-alt"></i>', "#", :id => "tablet-preview", :class => "link-button", :title => "Tablet")
+        %li= link_to('<i class="fas fa-laptop"></i>', "#", :id => "narrow-preview", :class => "link-button", :title => "Narrow")
+        %li= link_to('<i class="fas fa-desktop"></i>', "#", :id => "wide-preview", :class => "link-button", :title => "Wide")
+        %li= link_to('<i class="fas fa-arrows-alt-h"></i>', "#", :id => "auto-preview", :class => "link-button", :title => "Auto")
       %ul.preview-controls.refresh
         %li.refresh-preview= link_to("Quick Refresh", "#", :id => "refresh-preview", :class => "link-button")
         %li.reload-preview= link_to("Reload Frame", "#", :id => "reload-preview", :class => "link-button")
@@ -113,7 +113,7 @@
           if (jQuery(window).width() > 1100) {
         displayControls();
         jQuery('.responsive-preview').show();
-        jQuery('.responsive-preview').css('top', (jQuery('#admin-menu').height() + 10));
+        //jQuery('.responsive-preview').css('top', (jQuery('#admin-menu').height() + 10));
       
         "//Set Preview width and height to area outside the form."
         jQuery('.iframe-wrapper').css('width', '100%');
