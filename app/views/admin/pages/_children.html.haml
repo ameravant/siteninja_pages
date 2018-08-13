@@ -7,24 +7,23 @@
       - status = (child.show_in_main_menu == false and child.show_in_side_column == false and child.show_in_footer == false) ? 'hidden' : 'visible'
       %li.menu-item{:id => "#{dom_id(child)}"}
         %div{:class => "menu-item-inner #{status}"}
-          .page-handle= image_tag("#{move_loc}", :class => "icon handle")
+          .page-handle= '<i class="fas fa-arrows-alt-v handle"></i>'
           .page-title
-            = '<span class="desktop-only">' + link_to("Manage Homepage Features", admin_features_path) + '</span>' if (child.url == "/")
             = link_to(h(child.menu_title), [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], :class => child.hidden? ? 'gray' : nil)
             .full-url
               .note= link_to(child.url, child.url, :class => "fancy-iframe-large")
           .page-options
             = feature_icon_select(child.navigatable, child.navigatable.name) unless child.navigatable.blank? or feature_icon_select(child.navigatable, child.navigatable.name).blank?
-            = link_to("", new_admin_page_path(:duplicate_id => child.navigatable.id), :class => "icon fa fa-copy", :title => "Copy") if child.navigatable_type == "Page"
+            = link_to("<i class='far fa-copy'></i>", new_admin_page_path(:duplicate_id => child.navigatable.id), :title => "Copy") if child.navigatable_type == "Page"
             - if child.navigatable.blank? 
               .trash-spacer
-            = ' ' + icon("Write", [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], "Edit", "", "48x48", "blue") + ' '
+            = ' ' + link_to("<i class='far fa-edit'></i>", [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)]) + ' '
             -#Check page is allowed to be deleted and provide icon to allow it
             - if child.can_delete
               - if !child.navigatable.blank? and child.navigatable_type == "Page"
-                = (link_to_remote(image_tag("#{icons_loc}/blue/48x48/Trash.png", :class => "icon", :alt => "Delete -#{child.menu_title}", :id => "#{dom_id(child)}_trash_icon"),{:url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really delete -#{child.navigatable.title}? There is no undo!", :delay => 1 }, :class => "icon"))
+                = (link_to_remote('<i class="far fa-trash-alt"></i>',{:url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really delete -#{child.navigatable.title}? There is no undo!", :delay => 1 }, :class => "icon"))
               - else
-                = (link_to_remote(image_tag("#{icons_loc}/green/48x48/Link.png", :class => "icon", :alt => "Remove -#{child.menu_title} from navigation", :title => "Remove -#{child.menu_title} from navigation", :id => "#{dom_id(child)}_trash_icon"), { :url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really remove -#{child.menu_title} from navigation?", :delay => 1 }, :class => "icon"))
+                = (link_to_remote('<i class="fas fa-unlink"></i>', { :url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really remove -#{child.menu_title} from navigation?", :delay => 1 }, :class => "icon"))
             - else
               .trash-spacer
             - if child.navigatable_type == "Page"
@@ -33,11 +32,11 @@
           - if @cms_config['features']['testimonials']
             .page-testimonials
               - if child.navigatable_type == "Page"
-                = icon("Bubble 1", [:admin, child.navigatable, :testimonials], "Testimonials", "", "48x48", "blue") + ' ' + link_to(child.navigatable.testimonials_count, [:admin, child.navigatable, :testimonials])
+                = link_to("<i class='far fa-comments'></i> #{child.navigatable.testimonials_count}", [:admin, child.navigatable, :testimonials])
               - else
                 = "&nbsp;"
           .page-images
-            = icon("Picture", [:admin, child.navigatable, :images], "Images", "", "48x48", "blue") + ' ' + link_to(child.navigatable.images_count, [:admin, child.navigatable, :images]) unless child.navigatable.blank?
+            = link_to("<i class='fas fa-images'></i> #{child.navigatable.images_count}", [:admin, child.navigatable, :images])  unless child.navigatable.blank?
             = '&nbsp;' if child.navigatable.blank?
           .page-type
             = (child.navigatable.blank? ? "Link" : child.navigatable.class.to_s)
