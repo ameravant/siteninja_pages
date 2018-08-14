@@ -7,7 +7,7 @@
       - status = (child.show_in_main_menu == false and child.show_in_side_column == false and child.show_in_footer == false) ? 'hidden' : 'visible'
       %li.menu-item{:id => "#{dom_id(child)}"}
         %div{:class => "menu-item-inner #{status}"}
-          .page-handle= '<i class="fas fa-arrows-alt-v handle"></i>'
+          .page-handle= '<i class="fas fa-grip-vertical handle"></i>'
           .page-title
             = link_to(h(child.menu_title), [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], :class => child.hidden? ? 'gray' : nil)
             .full-url
