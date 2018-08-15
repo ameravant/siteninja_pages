@@ -5,10 +5,24 @@
     -# Output the list elements for these children, and recursively
     - for child in children
       - status = (child.show_in_main_menu == false and child.show_in_side_column == false and child.show_in_footer == false) ? 'hidden' : 'visible'
+      - navigatable_type = child.navigatable_type
+      - if navigatable_type == "Page"
+        - navigatable_icon = '<i class="fas fa-file-alt"></i>'
+      - elsif child.navigatable.blank?
+        - navigatable_icon = '<i class="fas fa-external-link-alt"></i>'
+      - elsif navigatable_type == "ArticleCategory"
+        - navigatable_icon = '<i class="fas fa-newspaper"></i>'
+      - elsif navigatable_type == "LinkCategory"
+        - navigatable_icon = '<i class="fas fa-link"></i>'
+      - elsif navigatable_type == "Gallery"
+        - navigatable_icon = '<i class="fas fa-images"></i>'
+      - else
+        - navigatable_icon = '<i class="fas fa-file"></i>'
       %li.menu-item{:id => "#{dom_id(child)}"}
         %div{:class => "menu-item-inner #{status}"}
           .page-handle= '<i class="fas fa-grip-vertical handle"></i>'
           .page-title
+            = navigatable_icon
             = link_to(h(child.menu_title), [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)], :class => child.hidden? ? 'gray' : nil)
             .full-url
               .note= link_to(child.url, child.url, :class => "fancy-iframe-large")
@@ -16,7 +30,10 @@
             = feature_icon_select(child.navigatable, child.navigatable.name) unless child.navigatable.blank? or feature_icon_select(child.navigatable, child.navigatable.name).blank?
             = link_to("<i class='far fa-copy'></i>", new_admin_page_path(:duplicate_id => child.navigatable.id), :title => "Copy") if child.navigatable_type == "Page"
             - if child.navigatable.blank? 
+              .trash-spacer.link
+            - elsif child.navigatable_type != "Page"
               .trash-spacer
+
             = ' ' + link_to("<i class='far fa-edit'></i>", [:edit, :admin, (child.navigatable.blank? ? child : child.navigatable)]) + ' '
             -#Check page is allowed to be deleted and provide icon to allow it
             - if child.can_delete
@@ -25,7 +42,7 @@
               - else
                 = (link_to_remote('<i class="fas fa-unlink"></i>', { :url => [:admin, child], :method => :delete, :loading => "$('#{dom_id(child)}_trash_icon').src = '#{spinner_loc}'", :failure => "$('#{dom_id(child)}_trash_icon').src = '#{exclamation_loc}'", :success => "$('#{dom_id(child)}_trash_icon').src = '#{ok_loc}'", :confirm => "Really remove -#{child.menu_title} from navigation?", :delay => 1 }, :class => "icon"))
             - else
-              .trash-spacer
+              .trash-spacer.page
             - if child.navigatable_type == "Page"
               = check_box_tag "page_ids[]", child.navigatable.id, false, :id => "page_checkbox_#{child.navigatable.id}"
               -#= check_box_tag("page_#{child.id}", "", false, :name => "page[#{child.id}]")
