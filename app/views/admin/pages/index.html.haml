@@ -193,7 +193,8 @@
         'easingIn': 'easeInQuad',
         'type': 'iframe',
         'width': 300,
-        'autoScale': true
+        'autoScale': true,
+        iframe : { css : { width : '300px'} }
         }); 
         jQuery(".fancy-iframe-large").fancybox({ 
         'zoomSpeedIn': 300,
@@ -205,7 +206,8 @@
         'type': 'iframe',
         'width': '94%',
         'autoScale': true,
-        'height':'94%'
+        'height':'94%',
+        iframe : { css : { width : '94vw', height: '94vh'} } 
         });
         jQuery(".select-all").click(function(){
         jQuery(':checkbox').prop('checked', this.checked);
@@ -215,13 +217,14 @@
         jQuery(function(){
         if (window.location.href.indexOf("?fancy=true") > -1) {
         parent.fancyBoxClose();
-        
+        parent.jQuery(".fancybox-button--close").click();
         }
         });
 
         function fancyBoxClose(){
         jQuery("#fancybox-frame").load(function(){
         jQuery.fancybox.close();
+
         });
         }
         
