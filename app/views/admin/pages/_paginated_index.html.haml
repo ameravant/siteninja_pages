@@ -23,3 +23,11 @@
   = render :partial => "paginated_page", :collection => @pages
   
 = will_paginate @pages
+
+
+%script{:type => "text/javascript"}
+  jQuery(document).ready(function() {
+  jQuery(".select-all").click(function(){
+  jQuery(':checkbox').prop('checked', this.checked);
+  });
+  });

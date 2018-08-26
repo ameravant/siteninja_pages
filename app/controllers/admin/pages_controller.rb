@@ -8,7 +8,7 @@ class Admin::PagesController < AdminController
   before_filter :find_page, :only => [ :edit, :update, :show ]
   
   # Configure breadcrumbs
-  add_breadcrumb "Pages", "admin_pages_path", :only => [ :new, :create, :edit, :update ]
+  add_breadcrumb "Pages", "admin_pages_path", :only => [ :new, :create, :edit, :update, :footer ]
   add_breadcrumb "New", nil, :only => [ :new, :create ]
   
   def index
@@ -251,6 +251,7 @@ class Admin::PagesController < AdminController
   end
   
   def footer
+    add_breadcrumb "Footer Menu Organization"
     @footer_menus = Menu.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
   end
   

@@ -12,12 +12,18 @@
   #reorder_status.gray.float-right{:style => "display: none"}
     = spinner
     Reordering pages...
-  %span.hmenu
-    = icon "Plus", new_admin_page_path
-    = link_to "Make a new page", new_admin_page_path
-  %span.hmenu
-    = icon "Plus", footer_admin_pages_path
-    = link_to "Organize Footer Menus", footer_admin_pages_path
+  %ul
+    %li
+      %span.hmenu
+        = link_to "<i class=\"fas fa-plus-circle\"></i> Make a New Page", new_admin_page_path
+    %li
+      %span.hmenu
+        = link_to "<i class=\"fas fa-plus-circle\"></i> Add Menu", new_admin_menu_path
+    %li.desktop-only
+      %span.hmenu
+        = link_to "<i class=\"fas fa-arrows-alt-v\"></i> Organize Footer Menus", footer_admin_pages_path
+      %span.hmenu
+        = link_to("<i class=\"fas fa-star\"></i> Manage Homepage Features", admin_features_path)
 %br
 
 - build_footer_menu
