@@ -6,6 +6,9 @@ class PagesController < ApplicationController
   def show
     #expires_in 60.minutes, :public => true
     get_page_defaults(@page)
+    @edit_path = [:edit, :admin, @page]
+    @edit_type = "Page"
+    session[:redirect_path] = @page.menus.first.url
   end
   
   def index

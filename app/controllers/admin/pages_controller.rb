@@ -13,6 +13,7 @@ class Admin::PagesController < AdminController
   
   def index
     add_breadcrumb "Pages"
+    session[:redirect_path] = admin_pages_path
     @templates = Template.all
     @master_layouts = Column.all(:conditions => {:column_location => "master"})
     @layouts = Column.all(:conditions => {:column_location => "main_column"})
@@ -140,7 +141,7 @@ class Admin::PagesController < AdminController
       flash[:notice] = "#{@page.name.titleize} page created."
       log_activity("Created \"#{@page.name.titleize}\"")
       session[:cache] = true
-      redirect_to admin_pages_path
+      redirect_to session[:redirect_path] ? session[:redirect_path] : admin_pages_path
     else
       render :action => "new"
     end
@@ -214,7 +215,7 @@ class Admin::PagesController < AdminController
       flash[:notice] = "#{@page.name} page updated."
       log_activity("Updated \"#{@page.name.titleize}\"")
       session[:cache] = true
-      redirect_to admin_pages_path
+      redirect_to session[:redirect_path] ? session[:redirect_path] : admin_pages_path
     else
       render :action => "edit", :id => @page
     end
