@@ -9,10 +9,14 @@ class PagesController < ApplicationController
     @edit_path = [:edit, :admin, @page]
     @edit_type = "Page"
     session[:redirect_path] = @page.menus.first.url
+    if params[:edit_mode]
+      session[:edit_mode] = params[:edit_mode]
+      redirect_to session[:redirect_path]
+    end    
   end
   
   def index
-    get_page_defaults(@page)    
+    get_page_defaults(@page)
     render 'pages/show'
   end
   
