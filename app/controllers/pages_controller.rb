@@ -8,11 +8,11 @@ class PagesController < ApplicationController
     get_page_defaults(@page)
     @edit_path = [:edit, :admin, @page]
     @edit_type = "Page"
-    session[:redirect_path] = @page.menus.first.url
     if params[:edit_mode]
       session[:edit_mode] = params[:edit_mode]
       redirect_to session[:redirect_path]
     end    
+    session[:redirect_path] = @page.menus.first.url
   end
   
   def index
