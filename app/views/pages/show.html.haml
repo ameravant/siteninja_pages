@@ -1,4 +1,3 @@
 = render :partial => "pages/show"
-
-= render :partial => "pages/sidebar"
-
+- if !@cms_config['site_settings']['enable_responsive_layouts']
+  = render :partial => "pages/sidebar"
