@@ -135,6 +135,7 @@ class Admin::PagesController < AdminController
     @main_column = Column.find_by_id(@page.main_column_id)
     @menu = Menu.new(params[:menu])
     add_person_groups
+    expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
     if @page.save
       @menu = @page.menus.new params[:menu]
       @menu.save
@@ -224,6 +225,7 @@ class Admin::PagesController < AdminController
   def reorder
     @templates = Template.all
     @layouts = Column.all(:conditions => {:column_location => "main_column"})
+    expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
     params["menu_list_#{params[:menu_id]}"].each_with_index do |id, position|
       Menu.update(id, :position => position + 1)
     end

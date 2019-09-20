@@ -17,7 +17,8 @@
   %span Drop to top level navigation.
 = drop_receiving_element("droppable_top", :hoverclass => "draghover", :url => receive_drop_admin_pages_path + "?parent_id=", :method => :get, :loading => "$('ajax_spinner').src='#{spinner_loc}'; $('reorder_status').show();", :success => "$('ajax_spinner').src='#{ok_loc}'", :failure => "$('ajax_spinner').src='#{exclamation_loc}'", :update => "page-index" )
 - #build_menu
-= render :partial => "children", :locals => {:parent_id => nil}
+- cache(:action => 'ajax_index', :action_suffix => 'all_pages') do
+  = render :partial => "children", :locals => {:parent_id => nil}, :cache => true
 
 %script{:type => "text/javascript"}
   jQuery(function() {
