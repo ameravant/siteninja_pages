@@ -135,9 +135,9 @@ class Admin::PagesController < AdminController
     @main_column = Column.find_by_id(@page.main_column_id)
     @menu = Menu.new(params[:menu])
     add_person_groups
-    expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
-    expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'dropdown-menus')
-    expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'expandable-menus')
+    ActionController::Base.new.expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
+    ActionController::Base.new.expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'dropdown-menus')
+    ActionController::Base.new.expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'expandable-menus')
     if @page.save
       @menu = @page.menus.new params[:menu]
       @menu.save
@@ -214,9 +214,9 @@ class Admin::PagesController < AdminController
     add_breadcrumb @page.name
     # permalink does not get regenerated
     if params[:page][:title] != @page.title or (params[:menu][:permalink] and params[:page][:permalink] != @page.permalink)
-      expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
-      expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'dropdown-menus')
-      expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'expandable-menus')
+      ActionController::Base.new.expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
+      ActionController::Base.new.expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'dropdown-menus')
+      ActionController::Base.new.expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'expandable-menus')
     end
     add_person_groups
     if @page.update_attributes params[:page] and @menu.update_attributes params[:menu]
@@ -232,9 +232,9 @@ class Admin::PagesController < AdminController
   def reorder
     @templates = Template.all
     @layouts = Column.all(:conditions => {:column_location => "main_column"})
-    expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
-      expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'dropdown-menus')
-      expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'expandable-menus')
+    ActionController::Base.new.expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
+      ActionController::Base.new.expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'dropdown-menus')
+      ActionController::Base.new.expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'expandable-menus')
     params["menu_list_#{params[:menu_id]}"].each_with_index do |id, position|
       Menu.update(id, :position => position + 1)
     end
@@ -242,9 +242,9 @@ class Admin::PagesController < AdminController
   end
   
   def receive_drop
-    expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
-    expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'dropdown-menus')
-    expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'expandable-menus')
+    ActionController::Base.new.expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
+    ActionController::Base.new.expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'dropdown-menus')
+    ActionController::Base.new.expire_fragment(:controller => 'pages', :action => 'index', :action_suffix => 'expandable-menus')
     @templates = Template.all
     @layouts = Column.all(:conditions => {:column_location => "main_column"})
     menu_id = params[:id].to_s.gsub("menu_", "").to_i
