@@ -211,6 +211,9 @@ class Admin::PagesController < AdminController
     @menu = @page.menus.first
     add_breadcrumb @page.name
     # permalink does not get regenerated
+    if params[:page][:title] != @page.title or (params[:menu][:permalink] and params[:page][:permalink] != @page.permalink)
+      expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
+    end
     add_person_groups
     if @page.update_attributes params[:page] and @menu.update_attributes params[:menu]
       flash[:notice] = "#{@page.name} page updated."
@@ -233,6 +236,7 @@ class Admin::PagesController < AdminController
   end
   
   def receive_drop
+    expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
     @templates = Template.all
     @layouts = Column.all(:conditions => {:column_location => "main_column"})
     menu_id = params[:id].to_s.gsub("menu_", "").to_i
