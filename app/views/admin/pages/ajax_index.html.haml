@@ -62,12 +62,10 @@
   jQuery(".select-all").click(function(){
   jQuery(':checkbox').prop('checked', this.checked);
   });
-  jQuery('a.icon').each(function(i, obj) {
-  jQuery(this).click(function(){
+  jQuery('a.icon').each(function() {
   var click = this.attr('onclick')
   jQuery(this).off('click')
   ==jQuery(this).click(function() {click.replace(/encodeURIComponent\('([^}]*)'\)/, 'encodeURIComponent("#{form_authenticity_token}")')})
-  });
   });
   });
 
