@@ -63,9 +63,8 @@
   jQuery(':checkbox').prop('checked', this.checked);
   });
   jQuery('a.icon').each(function() {
-  var click = this.attr('onclick')
-  jQuery(this).off('click')
-  ==jQuery(this).click(function() {click.replace(/encodeURIComponent\('([^}]*)'\)/, 'encodeURIComponent("#{form_authenticity_token}")')})
+  var click = jQuery(this).attr('onclick')
+  ==jQuery(this).attr('onclick', click.replace(/encodeURIComponent\('([^}]*)'\)/, 'encodeURIComponent("#{form_authenticity_token}")'))
   });
   });
 
