@@ -1,3 +1,4 @@
+
 = form_tag('/admin/pages', :method => :get)
 = hidden_field_tag("batch","true")
 %div.page-title-header.header
@@ -61,4 +62,12 @@
   jQuery(".select-all").click(function(){
   jQuery(':checkbox').prop('checked', this.checked);
   });
+  jQuery('a.icon').each(function(i, obj) {
+  jQuery(this).click(function(){
+  var click = this.attr('onclick')
+  jQuery(this).off('click')
+  ==jQuery(this).click(function() {click.replace(/encodeURIComponent\('([^}]*)'\)/, 'encodeURIComponent("#{form_authenticity_token}")')})
   });
+  });
+  });
+
