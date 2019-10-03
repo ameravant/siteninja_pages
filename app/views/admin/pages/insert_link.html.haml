@@ -33,4 +33,8 @@
             %li= link_to(link.title, gallery_path(link), :class => "link-url")
 
 :javascript
-  jQuery('.link-url').click(function(){jQuery('#link_url').attr('value', jQuery(this).attr('href')); return false; })
+  jQuery('.link-url').click(function(){
+  jQuery('#link_url').attr('value', jQuery(this).attr('href')); 
+  jQuery('#link_text').attr('value', jQuery(this).text()); 
+  return false; 
+  })
