@@ -1,0 +1,36 @@
+- if params[:q]
+  .results-wrapper
+    - if @pages.size > 0
+      .results
+        %h2 Pages
+        %ul
+          - for link in @pages
+            %li= link_to(link.title, "/#{link.permalink}", :class => "link-url")
+    - if @events.size > 0
+      .results
+        %h2 Events
+        %ul
+          - for link in @events
+            %li= link_to(link.title, event_path(link), :class => "link-url")
+    - if @articles.size > 0
+      .results
+        %h2 Articles
+        %ul
+          - for link in @articles
+            %li= link_to(link.title, article_path(link), :class => "link-url")
+    - if @links.size > 0
+      .results
+        %h2 Links
+        %ul
+          - for link in @links
+            - if link.link_category
+              %li= link_to(link.title, link_category_link_path(link.link_category, link), :class => "link-url")
+    - if @galleries.size > 0
+      .results
+        %h2 Galleries
+        %ul
+          - for link in @galleries
+            %li= link_to(link.title, gallery_path(link), :class => "link-url")
+
+:javascript
+  jQuery('.link-url').click(function(){jQuery('#link_url').attr('value', jQuery(this).attr('href')); return false; })

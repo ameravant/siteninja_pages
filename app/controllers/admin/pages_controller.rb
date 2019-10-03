@@ -80,6 +80,19 @@ class Admin::PagesController < AdminController
     @hide_admin_menu = true
     render :layout => false
   end
+
+  def insert_link
+    if params[:q]
+      @pages = Page.find(:all, :conditions => ["title like ? or meta_title like ?", "%#{params[:q]}%","%#{params[:q]}%"], :order => "title")
+      @events = Event.find(:all, :conditions => ["name like ?", "%#{params[:q]}%"], :order => "name")
+      @links = Link.find(:all, :conditions => ["title like ?", "%#{params[:q]}%",], :order => "title")
+      @articles = Article.find(:all, :conditions => ["title like ?", "%#{params[:q]}%"], :order => "title")
+      @galleries = Gallery.find(:all, :conditions => ["title like ?", "%#{params[:q]}%"], :order => "title")
+    end
+    @admin = false
+    @hide_admin_menu = true
+    render :layout => false
+  end
   
   def ajax_page_for_list
     @admin = false
