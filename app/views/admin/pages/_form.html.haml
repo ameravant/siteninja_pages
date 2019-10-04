@@ -167,22 +167,19 @@
         = render :partial => "admin/shared/parser_help"
       
         - unless @page.id.blank?
-          = link_to("#{icon('Picture')} Attached Image", admin_page_images_path(@page, :fancy => "true"), :class => "fancy-iframe")
+          = link_to("<i class=\"fas fa-image\"></i> Attached Image", admin_page_images_path(@page, :fancy => "true"), :class => "fancy-iframe")
         = render :partial => "admin/shared/asset_options"
         = render :partial => "admin/shared/insert_link"
         = render :partial => "admin/shared/insert_map"
         = render :partial => "admin/shared/insert_youtube"
         - unless @page.testimonials.empty?
           = render :partial => "admin/testimonials/testimonial_options", :locals => {:testimonials => @page.testimonials}
-        %br
         = f.check_box :automatically_embed_videos_and_images
         = f.label :automatically_embed_videos_and_images, "Use <strong>Ninja Code</strong> to embed objects."
         
-      = link_to("#{image_tag(css_icon("Css", "", "16x16", "gray"), :alt => "Additional Styles", :title => "Additional Styles")} Additional Styles", "#additional-styles", :class => "fancy-inline")
-      %br
-      = link_to("#{image_tag(css_icon("Code", "", "16x16", "gray"), :alt => "Head Script", :title => "Additional Styles")} Head Script", "#head-script", :class => "fancy-inline")
-      %br
-      = link_to("#{image_tag(css_icon("Code", "", "16x16", "gray"), :alt => "Foot Script", :title => "Additional Styles")} Foot Script", "#foot-script", :class => "fancy-inline")
+      = link_to("<i class=\"fab fa-css3\"></i> Additional Styles", "#additional-styles", :class => "fancy-inline")
+      = link_to("<i class=\"fas fa-code\"></i> Head Script", "#head-script", :class => "fancy-inline")
+      = link_to("<i class=\"fas fa-code\"></i> Foot Script", "#foot-script", :class => "fancy-inline")
       %div{ :style => "display: none;" }
         #advanced-side-column-options
           %img{:src =>"#{css_icon("Cancel","","16x16","red")}", :title =>"close", :alt=> "close box icon", :class => "close-icon", :onclick => "jQuery.fancybox.close()"}
