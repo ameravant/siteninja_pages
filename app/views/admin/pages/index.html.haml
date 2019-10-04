@@ -33,6 +33,8 @@
             = link_to "<i class=\"fas fa-arrows-alt-v\"></i> Organize Footer Menus", footer_admin_pages_path
           %span.hmenu
             = link_to("<i class=\"fas fa-star\"></i> Manage Homepage Features", admin_features_path)
+          %span.hmenu
+            = link_to("<i class=\"fas fa-star\"></i> Clear Menu Cache", admin_pages_path(:params => {:clear_cache => true}))
     = link_to("Filter Pages", "javascript:void(0)", :onclick => "jQuery('#filter-options').slideToggle()")
     .box#filter-options
       %h2 Filter Pages:
@@ -93,6 +95,8 @@
             = link_to "<i class=\"fas fa-arrows-alt-v\"></i> Organize Footer Menus", footer_admin_pages_path
           %span.hmenu
             = link_to("<i class=\"fas fa-star\"></i> Manage Homepage Features", admin_features_path)
+          %span.hmenu
+            = link_to("<i class=\"fas fa-save\"></i> Clear Menu Cache", admin_pages_path(:params => {:clear_cache => true}))
     %br
     #ajax-loading
       == #{image_tag(spinner_loc, :alt => "loading")} Loading Pages...

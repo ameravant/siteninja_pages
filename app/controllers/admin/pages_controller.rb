@@ -12,6 +12,13 @@ class Admin::PagesController < AdminController
   add_breadcrumb "New", nil, :only => [ :new, :create ]
   
   def index
+    if params[:clear_cache]
+      expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
+      expire_fragment("dropdown-menus-#{$CURRENT_ACCOUNT.id}")
+      expire_fragment("expandable-menus-#{$CURRENT_ACCOUNT.id}")
+      flash[:notice] = "Menu fragment cache cleared."
+      redirect_to admin_pages_path
+    end
     add_breadcrumb "Pages"
     session[:redirect_path] = admin_pages_path
     @templates = Template.all
