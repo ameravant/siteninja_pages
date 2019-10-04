@@ -41,6 +41,9 @@
       function addtext(text) {
       tinymce.get("page_body").insertContent(text);
       }
+      jQuery("#add-links").click(function() {
+      setupLinkFields("page_body");
+      })
       function set_column(column_location, column_id, column_name) {
       if(column_location == "main_column"){
       jQuery('#page_main_column_id').val(column_id);
@@ -79,6 +82,8 @@
       document.getElementById('preview_page_permalink').value = document.getElementById('page_permalink').value
       document.getElementById('submit-preview').click();
       }
+      
+
 = f.error_messages :message => "Please fix these things and try again:", :header_message => "We couldn't save your page"
 - fields_for @menu do |m|
   

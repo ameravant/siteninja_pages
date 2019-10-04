@@ -35,6 +35,8 @@
 :javascript
   jQuery('.link-url').click(function(){
   jQuery('#insert_link_url').attr('value', jQuery(this).attr('href')); 
+  if (jQuery('#insert_link_text').attr('value') == ''){
   jQuery('#insert_link_text').attr('value', jQuery(this).text()); 
-  return false; 
+  }
+  return false;
   })
