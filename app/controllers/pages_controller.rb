@@ -6,13 +6,13 @@ class PagesController < ApplicationController
   def show
     #expires_in 60.minutes, :public => true
     get_page_defaults(@page)
-    @edit_path = [:edit, :admin, @page]
+    @edit_path = edit_admin_page_path(@page, :params => {:redirect_path => request.request_uri})#[:edit, :admin, @page, ]
     @edit_type = "Page"
     if params[:edit_mode]
       session[:edit_mode] = params[:edit_mode]
       redirect_to session[:redirect_path]
     end    
-    session[:redirect_path] = @page.menus.first.url
+    #session[:redirect_path] = @page.menus.first.url
   end
   
   def index
