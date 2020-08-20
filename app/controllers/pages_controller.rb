@@ -12,7 +12,7 @@ class PagesController < ApplicationController
       session[:edit_mode] = params[:edit_mode]
       redirect_to session[:redirect_path]
     end    
-    #session[:redirect_path] = @page.menus.first.url
+    session[:redirect_path] = @page.menus.first.url
   end
   
   def index
