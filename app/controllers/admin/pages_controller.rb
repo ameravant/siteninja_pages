@@ -27,7 +27,7 @@ class Admin::PagesController < AdminController
     @side_columns = Column.all(:conditions => {:column_location => "side_column"})
 
     if params[:batch]
-      template_id = params[:template_id] ? params[:template_id] : nil
+      template_id = params[:templte_id] ? params[:templte_id] : nil
       main_column_id = params[:main_column_id] ? params[:main_column_id] : nil
       master_layout_id = params[:master_layout_id] ? params[:master_layout_id] : nil
 

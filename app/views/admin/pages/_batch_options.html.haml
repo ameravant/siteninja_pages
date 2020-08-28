@@ -2,10 +2,13 @@
 #placeholder#batch-options.box
   %h2 Batch Options:
   %span#batch-template
-    = select_tag 'template_id', options_for_select(@templates.collect{|c| [c.title, c.id]}.insert(0,"Template"))
+    -# @template_list = []
+    -# @template_list << ["Template", ""]
+    -# @template_list << 
+    = select_tag 'templte_id', options_for_select([["Template", '']] + @templates.collect{|c| [c.title, c.id]})
   %span#batch-layout
-    = select_tag 'main_column_id', options_for_select(@layouts.collect{|c| [c.title, c.id]}.insert(0,"Layout"))
+    = select_tag 'main_column_id', options_for_select([["Layout", '']] + @layouts.collect{|c| [c.title, c.id]})
   %span#batch-master-layout
-    = select_tag 'master_layout_id', options_for_select(@master_layouts.collect{|c| [c.title, c.id]}.insert(0,"Master Layout"))
+    = select_tag 'master_layout_id', options_for_select([["Master Layout", '']] + @master_layouts.collect{|c| [c.title, c.id]})
   %span.submit
     = submit_tag "Update Selected Pages"
