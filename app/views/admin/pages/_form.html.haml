@@ -1,3 +1,4 @@
+
 = hidden_field_tag(:redirect_path, params[:redirect_path])
 - @responsive = true
 - @body_class = "responsive-form-body"
@@ -99,7 +100,7 @@
       = f.text_area :meta_description, :class => "big-area", :placeholder => "For features and meta description.", :maxlength => 255
       - if current_user.is_super_user and !@page.permalink.blank?
         %h2.title.form-label= f.label :permalink, "Permalink"
-        = f.text_field :permalink, :class => "big-input", :disabled => @no_edit
+        = f.text_field :permalink, :class => "big-input", :disabled => (@no_edit or @page.permalink == "home") ? "true" : "false"
         .note Modifies permalink.
     =link_to("Show Page Details", "javascript:void(0)", :class => "advanced-options mobile-only")
     #main-details.details.options 
