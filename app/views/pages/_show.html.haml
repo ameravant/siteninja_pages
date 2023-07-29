@@ -28,7 +28,7 @@
   "image": [
   - if @page.images.size > 0
     - if !Image.first(:conditions => {:show_as_cover_image => true, :viewable_type => "Page", :viewable_id => @page.id}).blank?
-      == "#{Image.first(:conditions => {:show_as_cover_image => true}).image.url}"
+      == "#{Image.first(:conditions => {:show_as_cover_image => true, :viewable_type => "Page", :viewable_id => @page.id}).image.url}"
   ],
   =="datePublished": "#{@page.created_at.strftime("%Y-%m-%d")}T#{@page.created_at.strftime("%H:%M:00+08:00")}",
   =="dateModified": "#{@page.updated_at.strftime("%Y-%m-%d")}T#{@page.updated_at.strftime("%H:%M:00+08:00")}",
