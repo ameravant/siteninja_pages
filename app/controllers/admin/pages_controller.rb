@@ -11,71 +11,126 @@ class Admin::PagesController < AdminController
   add_breadcrumb "Pages", "admin_pages_path", :only => [ :new, :create, :edit, :update, :footer ]
   add_breadcrumb "New", nil, :only => [ :new, :create ]
   
+  require 'fastercsv'
+  require 'csv'
+
+  def save_render
+    page = Page.find_by_id(params[:page][:id])
+    page.update_attributes(:rendered_body => params[:page][:rendered_body])
+    if page == Page.all(:order => "id").last
+      redirect_to ("/admin/pages?csv=true")
+    else
+      next_page = Page.all(:order => "id", :conditions => ['id > ?', page.id]).first
+      redirect_to("/admin/pages/#{next_page.permalink}?render=true")
+    end
+  end
+
   def index
-    if params[:clear_cache]
-      expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
-      expire_fragment("dropdown-menus-#{$CURRENT_ACCOUNT.id}")
-      expire_fragment("expandable-menus-#{$CURRENT_ACCOUNT.id}")
-      flash[:notice] = "Menu fragment cache cleared."
-      redirect_to admin_pages_path
-    end
-    add_breadcrumb "Pages"
-    #session[:redirect_path] = admin_pages_path
-    @templates = Template.all
-    @master_layouts = Column.all(:conditions => {:column_location => "master"})
-    @layouts = Column.all(:conditions => {:column_location => "main_column"})
-    @side_columns = Column.all(:conditions => {:column_location => "side_column"})
+    if params[:csv]
+      redirect_to("/admin/pages.csv")
+    else
+      if params[:clear_cache]
+        expire_fragment(:controller => 'admin/pages', :action => 'ajax_index', :action_suffix => 'all_pages')
+        expire_fragment("dropdown-menus-#{$CURRENT_ACCOUNT.id}")
+        expire_fragment("expandable-menus-#{$CURRENT_ACCOUNT.id}")
+        flash[:notice] = "Menu fragment cache cleared."
+        redirect_to admin_pages_path
+      end
+      add_breadcrumb "Pages"
+      #session[:redirect_path] = admin_pages_path
+      @templates = Template.all
+      @master_layouts = Column.all(:conditions => {:column_location => "master"})
+      @layouts = Column.all(:conditions => {:column_location => "main_column"})
+      @side_columns = Column.all(:conditions => {:column_location => "side_column"})
 
-    if params[:batch]
-      template_id = params[:templte_id] ? params[:templte_id] : nil
-      main_column_id = params[:main_column_id] ? params[:main_column_id] : nil
-      master_layout_id = params[:master_layout_id] ? params[:master_layout_id] : nil
+      if params[:batch]
+        template_id = params[:templte_id] ? params[:templte_id] : nil
+        main_column_id = params[:main_column_id] ? params[:main_column_id] : nil
+        master_layout_id = params[:master_layout_id] ? params[:master_layout_id] : nil
 
-      if params[:page_ids]
-        for p in params[:page_ids]
-          page = Page.first(:conditions => {:id => p})
-          logger.info("params page id = #{p}")
-          logger.info("page id = #{page.id}")
-          page.template_id = template_id if template_id != ""
-          page.main_column_id = main_column_id if main_column_id != ""
-          page.master_layout_id = master_layout_id if master_layout_id != ""
-          page.save 
+        if params[:page_ids]
+          for p in params[:page_ids]
+            page = Page.first(:conditions => {:id => p})
+            logger.info("params page id = #{p}")
+            logger.info("page id = #{page.id}")
+            page.template_id = template_id if template_id != ""
+            page.main_column_id = main_column_id if main_column_id != ""
+            page.master_layout_id = master_layout_id if master_layout_id != ""
+            page.save 
 
+          end
+          #redirect_to(admin_pages_path)
+          flash[:notice] = "Batch update completed."
         end
-        #redirect_to(admin_pages_path)
-        flash[:notice] = "Batch update completed."
       end
-    end
-    if params[:default_view]
-      if params[:default_view] == "paginate"
+      if params[:default_view]
+        if params[:default_view] == "paginate"
+          session[:page_index] = "paginate"
+          @cms_config["site_settings"]["paginate_page_index"] = true
+        elsif params[:default_view] == "tree"
+          session[:page_index] = "tree"
+          @cms_config["site_settings"]["paginate_page_index"] = false
+        end
+        flash[:notice] = "Default view updated successfully."
+        File.open(@cms_path, 'w') { |f| YAML.dump(@cms_config, f) }
+        redirect_to(admin_pages_path)
+      end
+      if (@cms_config['site_settings']['paginate_page_index'] or params[:paginate_page_index] or session[:page_index] == "paginate") and (params[:paginate_page_index] != "false")
         session[:page_index] = "paginate"
-        @cms_config["site_settings"]["paginate_page_index"] = true
-      elsif params[:default_view] == "tree"
+        @paginate_page_index = true
+        if params[:letter]
+          pages = Page.all(:conditions => ["title like ?", "#{params[:letter]}%"])
+        else
+          params[:q].blank? ? pages = Page.all(:order => "title") : pages = Page.find(:all, :conditions => ["title like ? or meta_title like ?", "%#{params[:q]}%","%#{params[:q]}%"], :order => "title")
+        end
+        @pages = pages.paginate(:page => params[:page], :per_page => 15)
+        if params[:filter]
+          template_id = !params[:template_id].blank? ? params[:template_id] : nil
+          main_column_id = !params[:main_column_id].blank? ? params[:main_column_id] : nil
+          side_column_id = !params[:side_column_id].blank? ? params[:side_column_id] : nil
+          @pages = Page.all(:conditions => Page.build_filter_conditions(template_id, main_column_id, side_column_id)).paginate(:page => params[:page], :per_page => 100)
+        end
+      elsif params[:paginate_page_index] == "false"
         session[:page_index] = "tree"
-        @cms_config["site_settings"]["paginate_page_index"] = false
+        @paginate_page_index = false
       end
-      flash[:notice] = "Default view updated successfully."
-      File.open(@cms_path, 'w') { |f| YAML.dump(@cms_config, f) }
-      redirect_to(admin_pages_path)
-    end
-    if (@cms_config['site_settings']['paginate_page_index'] or params[:paginate_page_index] or session[:page_index] == "paginate") and (params[:paginate_page_index] != "false")
-      session[:page_index] = "paginate"
-      @paginate_page_index = true
-      if params[:letter]
-        pages = Page.all(:conditions => ["title like ?", "#{params[:letter]}%"])
-      else
-        params[:q].blank? ? pages = Page.all(:order => "title") : pages = Page.find(:all, :conditions => ["title like ? or meta_title like ?", "%#{params[:q]}%","%#{params[:q]}%"], :order => "title")
+
+      # Export CSV
+      respond_to do |wants|
+        require 'fastercsv'
+        @all_pages = Page.all
+        wants.html
+        wants.csv do
+          @outfile = "pages_" + Time.now.strftime("%Y-%m-%d-%H-%M-%S") + ".csv"
+          csv_data = FasterCSV.generate do |csv|
+            csv << ["ID", "Title", "Content", "Excerpt", "Date", "Post Type", "Permalink", "Image URL", "Image Title", "Image Caption", "Image Description", "Image Alt Text", "Image Featured", "Attachment URL", "Status", "Slug", "Comment Status", "Ping Status", "Post Modified Date"]#, "images_count", "assets_count", "features_count"]
+            @all_pages.each do |page|
+              page_body = page.rendered_body.blank? ? page.body : page.rendered_body.gsub('data-src', 'src')
+              i = Image.first(:conditions => {:viewable_id => page.id, :viewable_type => "Page", :show_as_cover_image => true})
+              i = Image.first(:conditions => {:viewable_id => page.id, :viewable_type => "Page", :show_in_image_box => true}) if i.blank?
+              i = Image.first(:conditions => {:viewable_id => page.id, :viewable_type => "Page", :show_in_slideshow => true}) if i.blank?
+              if !i.blank?
+                image_url = i.image(:original)
+                image_title = i.title
+                image_caption = i.caption
+                image_description = i.description
+              else
+                image_url = ""
+                image_title = ""
+                image_caption = ""
+                image_description = ""
+              end
+              images = Image.all(:conditions => {:viewable_id => page.id, :viewable_type => "Page"}, :order => "show_as_cover_image, position asc")
+              status = page.status == "visible" ? "publish" : "draft"
+              csv << [page.id, page.title, page_body, page.meta_description, page.created_at.strftime("%Y-%m-%d %H:%M:%S"), "page", page_url(page), images.collect{|i| i.image(:original)}.join(','), images.collect{|i| i.title}.join(','), images.collect{|i| i.caption}.join(','), images.collect{|i| i.description}.join(','), images.collect{|i| i.title}.join(','), image_url, "", status, page.permalink, "closed", "closed", page.updated_at.strftime("%Y-%m-%d %H:%M:%S")]
+            end
+          end
+          send_data csv_data,
+          :type => 'text/csv; charset=iso-8859-1; header=present',
+          :disposition => "attachment; filename=#{@outfile}"
+          flash[:notice] = "Export complete!"
+        end
       end
-      @pages = pages.paginate(:page => params[:page], :per_page => 15)
-      if params[:filter]
-        template_id = !params[:template_id].blank? ? params[:template_id] : nil
-        main_column_id = !params[:main_column_id].blank? ? params[:main_column_id] : nil
-        side_column_id = !params[:side_column_id].blank? ? params[:side_column_id] : nil
-        @pages = Page.all(:conditions => Page.build_filter_conditions(template_id, main_column_id, side_column_id)).paginate(:page => params[:page], :per_page => 100)
-      end
-    elsif params[:paginate_page_index] == "false"
-      session[:page_index] = "tree"
-      @paginate_page_index = false
     end
   end
   

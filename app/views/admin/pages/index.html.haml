@@ -35,6 +35,8 @@
             = link_to("<i class=\"fas fa-star\"></i> Manage Homepage Features", admin_features_path)
           %span.hmenu
             = link_to("<i class=\"fas fa-star\"></i> Clear Menu Cache", admin_pages_path(:params => {:clear_cache => true}))
+          %span.hmenu
+            = link_to("<i class=\"fas fa-save\"></i> Export CSV", admin_page_path(Page.all(:order => "id", :conditions => {:account_id => $CURRENT_ACCOUNT.id}).first, :params => {:render => true}))
     = link_to("Filter Pages", "javascript:void(0)", :onclick => "jQuery('#filter-options').slideToggle()")
     .box#filter-options
       %h2 Filter Pages:
@@ -97,6 +99,10 @@
             = link_to("<i class=\"fas fa-star\"></i> Manage Homepage Features", admin_features_path)
           %span.hmenu
             = link_to("<i class=\"fas fa-save\"></i> Clear Menu Cache", admin_pages_path(:params => {:clear_cache => true}))
+          %span.hmenu
+            = link_to("<i class=\"fas fa-save\"></i> Export CSV", admin_page_path(Page.all(:order => "id", :conditions => {:account_id => $CURRENT_ACCOUNT.id}).first, :params => {:render => true}))
+
+
     %br
     #ajax-loading
       == #{image_tag(spinner_loc, :alt => "loading")} Loading Pages...

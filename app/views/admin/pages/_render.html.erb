@@ -1,0 +1,13 @@
+<%= text_area(:page, :id, :value => @page.id) %>
+<%= text_area(:page, :rendered_body, :value => ninja_parse(@page.body)) %>
+
+<%= submit_tag "Update", :id => "render_submit" %>
+
+
+<%- content_for :head do -%>
+	<script>
+    	jQuery(function() {
+    	document.getElementById('render_submit').click();
+    	});
+ 	</script>
+ <%- end -%>
